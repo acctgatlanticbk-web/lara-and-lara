@@ -2,25 +2,36 @@
 
 import { useEffect, useState, type ReactNode } from "react"
 import { motion } from "motion/react"
-import { Instagram, Facebook, Twitter, Share2, Copy, Download, Check, Camera } from "lucide-react"
+import { Instagram, Facebook, Twitter, Share2, Copy, Download, Check } from "lucide-react"
 import { Section } from "@/components/section"
 import { QRCodeCanvas } from "qrcode.react"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import Image from "next/image"
 import { Cinzel } from "next/font/google"
+import {
+  coastalPalette,
+  displayScript,
+} from "@/lib/coastal-palette"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600"],
 })
 
+const OUTSIDE_TEXT = coastalPalette.cream
+const OUTSIDE_TEXT_MUTED = "rgba(255, 252, 248, 0.88)"
+const OUTSIDE_LABEL = "rgba(255, 252, 248, 0.72)"
+const OUTSIDE_TITLE_SHADOW =
+  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
+
+const BUTTON_COLOR = "#FBCFC6"
+
 const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-  cream: "var(--color-motif-cream)",
+  body: coastalPalette.body,
+  heading: coastalPalette.deep,
+  label: coastalPalette.dustyRose,
+  accent: coastalPalette.title,
+  deep: coastalPalette.deep,
 } as const
 
 const bodyFont: React.CSSProperties = {
@@ -35,12 +46,18 @@ const ct = {
   btn: "text-xs sm:text-sm md:text-base",
 } as const
 
-const DECO_FILTER = "brightness(0) invert(1)"
-const QR_FG = "#1a1a1a"
+const cardStyle = {
+  background: `linear-gradient(
+    155deg,
+    color-mix(in srgb, ${coastalPalette.peach} 88%, white) 0%,
+    color-mix(in srgb, ${coastalPalette.lavenderBlue} 92%, white) 50%,
+    color-mix(in srgb, ${coastalPalette.blueGray} 55%, white) 100%
+  )`,
+  borderColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 38%, white)`,
+  boxShadow: `0 12px 32px color-mix(in srgb, ${coastalPalette.teal} 12%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.72)`,
+} as const
 
-const cardClass =
-  "relative w-full min-w-0 rounded-2xl border-2 border-motif-deep/30 bg-motif-cream p-4 sm:p-5 md:p-6 flex flex-col gap-3 sm:gap-4"
-const cardShadow = { boxShadow: "0 12px 30px color-mix(in srgb, var(--color-motif-deep) 12%, transparent)" }
+const QR_FG = coastalPalette.deep
 
 function CardShell({
   children,
@@ -52,8 +69,14 @@ function CardShell({
   padding?: string
 }) {
   return (
-    <div className={`${cardClass} ${padding} ${className}`} style={cardShadow}>
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-motif-accent/[0.06] via-transparent to-transparent" aria-hidden />
+    <div
+      className={`relative w-full min-w-0 rounded-xl sm:rounded-2xl border backdrop-blur-md flex flex-col gap-3 sm:gap-4 p-4 sm:p-5 md:p-6 ${padding} ${className}`}
+      style={cardStyle}
+    >
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/30 via-transparent to-transparent"
+        aria-hidden
+      />
       <div className="relative z-[1] flex flex-col gap-3 sm:gap-4 min-w-0">{children}</div>
     </div>
   )
@@ -158,58 +181,17 @@ export function SnapShare() {
     animate: { transition: { staggerChildren: 0.15 } },
   }
 
-  const primaryBtnClass = `${cinzel.className} ${ct.btn} font-semibold uppercase tracking-[0.1em] sm:tracking-[0.12em] inline-flex items-center justify-center gap-1.5 sm:gap-2 w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-3 rounded-full text-motif-cream border border-motif-deep/80 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]`
+  const primaryBtnClass = `${cinzel.className} ${ct.btn} font-semibold uppercase tracking-[0.1em] sm:tracking-[0.12em] inline-flex items-center justify-center gap-1.5 sm:gap-2 w-full sm:w-auto px-4 sm:px-5 py-2.5 sm:py-3 rounded-full border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]`
+
+  const softBorder = `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)`
 
   return (
-    <Section id="snap-share" className="relative py-12 sm:py-16 md:py-20 lg:py-24">
-      {/* Corner florals — white on pink silk */}
-      {/* <div className="absolute left-0 top-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-50 scale-y-[-1]"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div> */}
-      {/* <div className="absolute right-0 top-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-50 scale-x-[-1] scale-y-[-1]"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div> */}
-      {/* <div className="absolute left-0 bottom-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-50"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div> */}
-      {/* <div className="absolute right-0 bottom-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-50 scale-x-[-1]"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div> */}
-
+    <Section
+      id="snap-share"
+      className="relative bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14"
+    >
       <div className="relative z-10 w-full max-w-6xl mx-auto px-3 sm:px-4 md:px-6 min-w-0">
-        {/* Header — cream on silk */}
+        {/* Header — on silk backdrop */}
         <motion.div
           className="text-center mb-6 sm:mb-10 md:mb-12"
           initial={{ opacity: 0, y: 40 }}
@@ -218,31 +200,30 @@ export function SnapShare() {
         >
           <p
             className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
-            style={{ color: palette.cream }}
+            style={{ color: OUTSIDE_LABEL }}
           >
             Share Your Memories
           </p>
           <h2
-            className="leading-none mb-2 sm:mb-3"
+            className="mx-auto my-4 whitespace-nowrap leading-[1.08] sm:my-5 md:my-6"
             style={{
-              fontFamily: "var(--font-brittany), cursive",
-              fontSize: "clamp(1.85rem, 8vw, 4.5rem)",
-              color: palette.cream,
-              letterSpacing: "0.01em",
+              ...displayScript,
+              fontSize: "clamp(2rem, 6.5vw, 4.25rem)",
+              color: OUTSIDE_TEXT,
+              letterSpacing: "0.02em",
+              textShadow: OUTSIDE_TITLE_SHADOW,
             }}
           >
             Snap &amp; Share
           </h2>
           <p
             className={`${ct.bodyLg} max-w-2xl mx-auto leading-relaxed px-2`}
-            style={{ ...bodyFont, color: palette.cream }}
+            style={{ ...bodyFont, color: OUTSIDE_TEXT_MUTED }}
           >
-            Help us remember the little moments of {coupleDisplayName}&apos;s day — every smile, embrace, and candid laugh. Your photos and clips complete our love story.
+            Help us remember the little moments of {coupleDisplayName}&apos;s day — every smile, embrace, and candid laugh.
           </p>
-          <div className="flex items-center justify-center gap-2 pt-2 sm:pt-3">
-            <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-cream/40" />
-            <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-motif-cream" />
-            <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-cream/40" />
+          <div className="flex items-center justify-center pt-2 sm:pt-3">
+            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
           </div>
         </motion.div>
 
@@ -253,7 +234,7 @@ export function SnapShare() {
           animate="animate"
         >
           {/* Photo collage */}
-          <motion.div className="w-full min-w-0 lg:order-1" variants={fadeInUp}>
+          {/* <motion.div className="w-full min-w-0 lg:order-1" variants={fadeInUp}>
             <CardShell>
               <h4
                 className={`${cinzel.className} ${ct.cardTitle} font-semibold text-center uppercase tracking-[0.08em]`}
@@ -262,13 +243,22 @@ export function SnapShare() {
                 Our Favorite Moments
               </h4>
               <div className="grid grid-cols-2 gap-2 sm:gap-3 w-full min-w-0">
-                <div className="relative aspect-square rounded-xl overflow-hidden border-2 border-motif-deep/20 shadow-sm">
+                <div
+                  className="relative aspect-square rounded-xl overflow-hidden"
+                  style={{ border: `1px solid ${softBorder}` }}
+                >
                   <Image src="/mobile-background/couple (8).webp" alt="Wedding moment 1" fill className="object-cover" style={{ imageOrientation: "from-image" }} />
                 </div>
-                <div className="relative aspect-square rounded-xl overflow-hidden border-2 border-motif-deep/20 shadow-sm">
+                <div
+                  className="relative aspect-square rounded-xl overflow-hidden"
+                  style={{ border: `1px solid ${softBorder}` }}
+                >
                   <Image src="/mobile-background/couple (3).webp" alt="Wedding moment 2" fill className="object-cover" style={{ imageOrientation: "from-image" }} />
                 </div>
-                <div className="relative col-span-2 aspect-[3/2] rounded-xl overflow-hidden border-2 border-motif-deep/20 shadow-sm">
+                <div
+                  className="relative col-span-2 aspect-[3/2] rounded-xl overflow-hidden"
+                  style={{ border: `1px solid ${softBorder}` }}
+                >
                   <Image src="/desktop-background/couple (2).webp" alt="Wedding moment 3" fill className="object-cover" />
                 </div>
               </div>
@@ -276,11 +266,10 @@ export function SnapShare() {
                 Share your snapshots to be featured in our keepsake gallery.
               </p>
             </CardShell>
-          </motion.div>
+          </motion.div> */}
 
           {/* Right column */}
           <motion.div className="w-full min-w-0 space-y-5 sm:space-y-6 lg:order-2" variants={fadeInUp}>
-            {/* Website QR */}
             <CardShell>
               <h4
                 className={`${cinzel.className} ${ct.cardTitle} font-semibold text-center uppercase tracking-[0.08em]`}
@@ -291,36 +280,35 @@ export function SnapShare() {
               <p className={`${ct.body} leading-relaxed text-center`} style={{ ...bodyFont, color: palette.body }}>
                 Spread the word about {coupleDisplayName}&apos;s celebration. Share this QR code so friends and family can join us.
               </p>
-              <div className="mx-auto w-full max-w-[240px] flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-motif-deep/15 shadow-sm">
-                <div className="w-full max-w-full overflow-visible flex justify-center">
-                  <QRCodeCanvas
-                    id="snapshare-qr"
-                    value={websiteUrl}
-                    size={isMobile ? 160 : 200}
-                    includeMargin
-                    className="max-w-full h-auto bg-white"
-                    fgColor={QR_FG}
-                  />
-                </div>
+              <div
+                className="mx-auto w-full max-w-[240px] flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl"
+                style={{ border: `1px solid ${softBorder}`, boxShadow: `0 4px 14px color-mix(in srgb, ${coastalPalette.teal} 8%, transparent)` }}
+              >
+                <QRCodeCanvas
+                  id="snapshare-qr"
+                  value={websiteUrl}
+                  size={isMobile ? 160 : 200}
+                  includeMargin
+                  className="max-w-full h-auto bg-white"
+                  fgColor={QR_FG}
+                />
               </div>
               <div className="flex justify-center">
                 <button
                   onClick={downloadQRCode}
                   className={primaryBtnClass}
-                  style={{ backgroundColor: palette.deep }}
-                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = palette.accent }}
-                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = palette.deep }}
+                  style={{
+                    backgroundColor: BUTTON_COLOR,
+                    borderColor: coastalPalette.dustyRose,
+                    color: coastalPalette.deep,
+                  }}
                 >
                   <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                   Download QR
                 </button>
               </div>
-              <p className={`${ct.body} text-center leading-relaxed`} style={{ ...bodyFont, color: palette.body }}>
-                Scan with any camera app to open the full invitation and schedule.
-              </p>
             </CardShell>
 
-            {/* Hashtags */}
             <CardShell padding="!p-4 sm:!p-5">
               <h5
                 className={`${cinzel.className} ${ct.body} font-semibold text-center uppercase tracking-[0.1em]`}
@@ -333,11 +321,13 @@ export function SnapShare() {
                   <motion.button
                     key={index}
                     onClick={() => copyHashtag(hashtag, index)}
-                    className={`w-full min-w-0 flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border transition-all duration-200 active:scale-[0.98] ${
-                      copiedHashtagIndex === index
-                        ? "bg-motif-accent/10 border-motif-accent"
-                        : "bg-white border-motif-deep/20 hover:border-motif-accent/40 hover:bg-white/90"
-                    }`}
+                    className="w-full min-w-0 flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg border transition-all duration-200 active:scale-[0.98]"
+                    style={{
+                      borderColor: copiedHashtagIndex === index ? coastalPalette.teal : softBorder,
+                      backgroundColor: copiedHashtagIndex === index
+                        ? `color-mix(in srgb, ${coastalPalette.teal} 10%, white)`
+                        : "white",
+                    }}
                     initial={{ opacity: 0, y: 6 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.08 }}
@@ -367,20 +357,18 @@ export function SnapShare() {
               </div>
               <button
                 onClick={copyAllHashtags}
-                className={`w-full flex items-center justify-center gap-1.5 py-2.5 rounded-lg border transition-all duration-200 active:scale-[0.98] ${
-                  copiedAllHashtags
-                    ? "bg-motif-accent/10 border-motif-accent text-motif-accent"
-                    : "bg-motif-deep/5 border-motif-deep/30 hover:bg-motif-deep hover:text-motif-cream hover:border-motif-deep"
-                }`}
+                className={`w-full flex items-center justify-center gap-1.5 py-2.5 rounded-full border transition-all duration-200 active:scale-[0.98] ${primaryBtnClass}`}
+                style={{
+                  backgroundColor: copiedAllHashtags ? coastalPalette.teal : BUTTON_COLOR,
+                  borderColor: copiedAllHashtags ? coastalPalette.teal : coastalPalette.dustyRose,
+                  color: copiedAllHashtags ? coastalPalette.cream : coastalPalette.deep,
+                }}
               >
                 {copiedAllHashtags ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span className={`${cinzel.className} ${ct.btn} font-semibold uppercase tracking-[0.1em]`}>
-                  {copiedAllHashtags ? "All Copied!" : "Copy All"}
-                </span>
+                {copiedAllHashtags ? "All Copied!" : "Copy All"}
               </button>
             </CardShell>
 
-            {/* Social share */}
             <CardShell>
               <h5
                 className={`${cinzel.className} ${ct.cardTitle} font-semibold text-center uppercase tracking-[0.08em]`}
@@ -403,9 +391,10 @@ export function SnapShare() {
                   <button
                     key={platform}
                     onClick={() => shareOnSocial(platform)}
-                    className="group w-full min-w-0 flex items-center justify-center gap-2 bg-white border border-motif-deep/25 px-3 py-3 rounded-lg hover:border-motif-accent/50 hover:bg-motif-accent/5 transition-all duration-200 shadow-sm hover:shadow-md"
+                    className="group w-full min-w-0 flex items-center justify-center gap-2 bg-white px-3 py-3 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md"
+                    style={{ border: `1px solid ${softBorder}` }}
                   >
-                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: palette.accent }} />
+                    <Icon className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: coastalPalette.teal }} />
                     <span className={`${cinzel.className} ${ct.btn} font-semibold uppercase tracking-[0.08em] truncate`} style={{ color: palette.heading }}>
                       {label}
                     </span>
@@ -414,30 +403,34 @@ export function SnapShare() {
               </div>
             </CardShell>
 
-            {/* Upload photos */}
             {uploadLink && (
               <CardShell>
                 <p
-                  className={`${cinzel.className} ${ct.label} w-full text-center rounded-full border border-motif-deep/30 bg-motif-deep/10 px-3 py-1.5 uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-snug break-words`}
-                  style={{ color: palette.label }}
+                  className={`${cinzel.className} ${ct.label} w-full text-center rounded-full px-3 py-1.5 uppercase tracking-[0.14em] sm:tracking-[0.18em] leading-snug break-words`}
+                  style={{
+                    color: coastalPalette.deep,
+                    border: `1px solid ${softBorder}`,
+                    backgroundColor: `color-mix(in srgb, ${coastalPalette.lavenderBlue} 40%, white)`,
+                  }}
                 >
                   Upload Your Photos &amp; Videos
                 </p>
                 <p className={`${ct.body} leading-relaxed text-center break-words`} style={{ ...bodyFont, color: palette.body }}>
                   {siteConfig.snapShare.instructions}
                 </p>
-                <div className="mx-auto w-full max-w-[240px] flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl border border-motif-deep/15 shadow-sm">
-                  <div className="w-full max-w-full overflow-visible flex justify-center">
-                    <QRCodeCanvas
-                      id="album-qr"
-                      value={uploadLink}
-                      size={isMobile ? 160 : 200}
-                      level="H"
-                      includeMargin
-                      className="max-w-full h-auto bg-white"
-                      fgColor={QR_FG}
-                    />
-                  </div>
+                <div
+                  className="mx-auto w-full max-w-[240px] flex flex-col items-center bg-white p-3 sm:p-4 rounded-xl"
+                  style={{ border: `1px solid ${softBorder}` }}
+                >
+                  <QRCodeCanvas
+                    id="album-qr"
+                    value={uploadLink}
+                    size={isMobile ? 160 : 200}
+                    level="H"
+                    includeMargin
+                    className="max-w-full h-auto bg-white"
+                    fgColor={QR_FG}
+                  />
                   <p className={`${ct.body} mt-2 sm:mt-3 text-center`} style={{ ...bodyFont, color: palette.label }}>
                     Scan with your camera app
                   </p>
@@ -445,20 +438,24 @@ export function SnapShare() {
                 <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-2 sm:gap-3 w-full">
                   <button
                     onClick={copyUploadLink}
-                    className={`${primaryBtnClass} sm:min-w-[9.5rem] ${copiedDriveLink ? "!bg-motif-accent !border-motif-accent" : ""}`}
-                    style={{ backgroundColor: copiedDriveLink ? palette.accent : palette.deep }}
-                    onMouseEnter={(e) => { if (!copiedDriveLink) e.currentTarget.style.backgroundColor = palette.accent }}
-                    onMouseLeave={(e) => { if (!copiedDriveLink) e.currentTarget.style.backgroundColor = palette.deep }}
+                    className={primaryBtnClass}
+                    style={{
+                      backgroundColor: copiedDriveLink ? coastalPalette.teal : BUTTON_COLOR,
+                      borderColor: copiedDriveLink ? coastalPalette.teal : coastalPalette.dustyRose,
+                      color: copiedDriveLink ? coastalPalette.cream : coastalPalette.deep,
+                    }}
                   >
                     {copiedDriveLink ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" /> : <Copy className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />}
                     {copiedDriveLink ? "Copied!" : "Copy Link"}
                   </button>
                   <button
                     onClick={downloadAlbumQRCode}
-                    className={`${primaryBtnClass} sm:min-w-[9.5rem]`}
-                    style={{ backgroundColor: palette.deep }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = palette.accent }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = palette.deep }}
+                    className={primaryBtnClass}
+                    style={{
+                      backgroundColor: BUTTON_COLOR,
+                      borderColor: coastalPalette.dustyRose,
+                      color: coastalPalette.deep,
+                    }}
                   >
                     <Download className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                     Download QR
@@ -467,8 +464,12 @@ export function SnapShare() {
                     href={uploadLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`${primaryBtnClass} sm:min-w-[9.5rem] !text-motif-deep border-motif-deep/30 hover:!bg-motif-accent/5`}
-                    style={{ backgroundColor: "white", color: palette.heading }}
+                    className={primaryBtnClass}
+                    style={{
+                      backgroundColor: "white",
+                      borderColor: softBorder,
+                      color: palette.heading,
+                    }}
                   >
                     <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" />
                     Upload Photos
@@ -479,7 +480,6 @@ export function SnapShare() {
           </motion.div>
         </motion.div>
 
-        {/* Thank you */}
         <motion.div className="text-center mt-6 sm:mt-10 md:mt-12 w-full min-w-0" variants={fadeInUp}>
           <CardShell className="max-w-3xl mx-auto" padding="!p-4 sm:!p-6">
             <p className={`${ct.bodyLg} leading-relaxed break-words`} style={{ ...bodyFont, color: palette.body }}>

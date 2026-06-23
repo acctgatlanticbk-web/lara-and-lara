@@ -5,12 +5,12 @@ import {
 
 export const siteConfig = {
   couple: {
-    bride: "Mia Lyn Reyes ", //Noenyl Bryle M. Gonzaga
-    brideNickname: "Mia", //Ltryl
-    groom: "Jovelyn Lao", //Ltryl B. Benitez
-    groomNickname: "Jov",
-    monogram:"/monogram/monog.png" ,//Ltryl
-    backgroundMusic:"/background_music/Dalangin by Earl Agustin (Lyrics).mp3"
+    bride: "Denise Biong", //Noenyl Bryle M. Gonzaga
+    brideNickname: "Denise", //Ltryl
+    groom: "Mark Allison Cada", //Ltryl B. Benitez
+    groomNickname: "Mark",
+    monogram:"/monogram/monogram-new.png" ,//Ltryl
+    backgroundMusic:"/background_music/Sea Waves - Sound Effect.mp4"
   },
   googleAPI:{
     messageForm: "https://docs.google.com/forms/d/e/1FAIpQLScwEUSUyxUUWQDHIW738kciHPBA_lRMEas0X4rN44dFuv6PmQ/formResponse",   //done
@@ -25,9 +25,9 @@ export const siteConfig = {
     googleShare: "https://docs.google.com/spreadsheets/d/1MXqoVM4S4hxyaAu8SR4SrPD7xIbWH_1nbufJiMah26s/edit?usp=sharing", 
   },
   wedding: {
-    date: "October 4, 2026",
-    time: "4:00 PM",
-    venue: "Ville Sommet Tagaytay",
+    date: "August 26, 2026",
+    time: "3:00 PM",
+    venue: "St. Anthony of Padua Parish Sulangan",
     tagline: "are getting married!",
     theme: "Our wedding palette is inspired by timeless elegance and warmth.Motif Colors: Champagne Gold, Soft Beige, Warm Soft Brown",
     motif: "#BBCED5, #B9C3A8, #F3D8C5, #D1C4D4, #ECD8BA, #F4E8D8, #E1DCCF",
@@ -40,9 +40,9 @@ export const siteConfig = {
   },
   details: {
     rsvp: {
-      deadline: "October 3, 2026",
-      contact: "Mia Lyn Reyes",
-      phone: "+63 956 482 5255",
+      deadline: "August 1, 2026",
+      contact: "Denise Biong",
+      phone: "0965 490 6240",
     },
   },
   contact: {
@@ -65,24 +65,24 @@ export const siteConfig = {
     }
   },
   ceremony: {
-    location: "Ville Sommet Tagaytay",
-    venue: "Tagaytay-Nasugbu Hiway, Cavite, Philippines, 4120",
-    map: "https://maps.app.goo.gl/7yPpZCRixiNVjauBA",
-    date: "October 4, 2026",
-    day: "Sunday",
-    time: "4:00 PM",
-    entourageTime: "3:00 PM",
-    guestsTime: "3:30 PM",
-    image: ["/Details/ceremony1.png", "/Details/ceremony2.png"],
+    location: "St. Anthony of Padua Parish Sulangan",
+    venue: "Eastern Samar PH, Real St, Guiuan, 6809",
+    map: "https://maps.app.goo.gl/tcGfBAeEvJQ6pPzF7",
+    date: "August 26, 2026",
+    day: "Wednesday",
+    time: "3:00 PM",
+    entourageTime: "2:00 PM",
+    guestsTime: "2:30 PM",
+    image: ["/Details/ceremony.png", "/Details/ceremony.png"],
   },
   reception: {
-    location: "Ville Sommet Tagaytay",
-    venue: "Tagaytay-Nasugbu Hiway, Cavite, Philippines, 4120",
-    map: "https://maps.app.goo.gl/7yPpZCRixiNVjauBA",
+    location: "Baybayon Ni Tata Joven",
+    venue: "Brgy. Ngolos, Guiuan, Eastern Samar ",
+    map: "https://maps.app.goo.gl/LBsKoJMUGNVwKSqK8",
     date: "October 4, 2026",
-    day: "Sunday",
+    day: "Wednesday",
     time: "6:00 PM",
-    image: ["/Details/ceremony1.png", "/Details/ceremony2.png"],
+    image: ["/Details/reception.png", "/Details/reception.png"],
   },
   dressCode: {
       theme: "SEMI-FORMAL",
@@ -145,6 +145,54 @@ Now, as they prepare to say yes before God and the people they love most, Cather
     albumQR: "/QR/AlbumQR.png",
     hashtag: ["#MiaAndJovWedding"],
     instructions: "Please scan this QR Code and upload the photos and videos you have taken during our wedding reception. We are delighted to see your snaps too!",
+  },
+  accommodation: {
+    coordinator: {
+      name: "Teri DelaCruz",
+      phone: "0909 912 3844",
+    },
+    hotels: [
+      {
+        name: "La Luna Resort",
+        discount: "Offered 20% discount for early booking",
+        facebook: "https://www.facebook.com/lalunabeachresortofficial",
+      },
+      {
+        name: "GOSAM Beach Resort",
+        discount: "Offered 10% discount",
+        facebook: "https://www.facebook.com/profile.php?id=100083461714073",
+      },
+      {
+        name: "Calicoan Villa",
+        discount: "Offered 10% discount",
+        facebook: "https://www.facebook.com/CalicoanVilla",
+      },
+      {
+        name: "G Camp Beachfront",
+        discount: "Offered 10% discount",
+        facebook: "https://www.facebook.com/profile.php?id=100085772194096",
+      },
+      {
+        name: "Punta Viajero Beach Resort",
+        discount: "Offered 15% discount",
+        phone: "0932 214 6408",
+        facebook: "https://www.facebook.com/puntoviajeroresort",
+      },
+      { name: "Balay Sunset" },
+      { name: "Balay Pacifico" },
+      { name: "Casa Nala" },
+      { name: "The Grey Inn" },
+    ],
+    carRentals: [
+      {
+        name: "Apex Car Rental Tacloban",
+        facebook: "https://www.facebook.com/profile.php?id=61574882327115",
+      },
+      {
+        name: "Cassey Wheels Car Rental",
+        facebook: "https://www.facebook.com/search/top?q=casseywheels%20car%20rental",
+      },
+    ],
   },
 }
 

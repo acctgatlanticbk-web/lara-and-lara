@@ -7,55 +7,52 @@ interface LoadingScreenProps {
   onComplete: () => void;
 }
 
-const TEXT = '#909E79';
-const TEXT_DEEP = '#979430';
-const ACCENT = '#F95483';
+const TEXT = '#3A5566';
+const TEXT_DEEP = '#2D434F';
+const ACCENT = '#9E5A5A';
+const NAME_COLOR = '#6A9BB8';
 const PALETTE = {
-  cream: '#F8ECDA',
-  creamMid: '#F4DCBB',
-  peach: '#F4DBB4',
-  gold: '#EFC796',
-  blush: '#FBAFB5',
-  rose: '#F95483',
-  coral: '#FB6A67',
-  orange: '#FC7406',
-  apricot: '#FCB484',
-  sun: '#FDD461',
-  lavender: '#D0B2D2',
-  sage: '#BDBF86',
-  olive: '#979430',
-  moss: '#909E79',
+  cream: '#F1EDE2',
+  sand: '#E8D5C4',
+  seafoam: '#AFC8E6',
+  sky: '#B8D4E3',
+  blush: '#D8B0B0',
+  coral: '#C98B8B',
+  peach: '#E8C4B8',
+  shell: '#F5E6DC',
+  aqua: '#9EC5D4',
+  mist: '#D4E8EF',
 } as const;
 const PALETTE_COLORS = Object.values(PALETTE);
 const TOTAL_DURATION_MS = 15000;
 
-const DECORATION_IMAGES = [
-  '/decoration/decoration/left-top-decoration.png',
-  '/decoration/decoration/right-top-decoration.png',
-  '/decoration/decoration/left-bottom-decoration.png',
-  '/decoration/decoration/right-bottom-decoration.png',
-  '/decoration/decoration/bottom-center-decoration.png',
+const PRELOAD_IMAGES = [
+  '/decoration/oceanpastelbackground.png',
+  '/decoration/top-left-corner-deco.png',
+  '/decoration/bottom-right-corner-deco.png',
 ] as const;
 
-const BACKGROUND_GRADIENT = `linear-gradient(
-  165deg,
-  #FEFAF5 0%,
-  #FDF6ED 22%,
-  #FFFFFF 48%,
-  ${PALETTE.blush}28 74%,
-  ${PALETTE.lavender}33 100%
-)`;
+const BACKGROUND_IMAGE = '/decoration/oceanpastelbackground.png';
 
 const CORNER_DECO_CLASS =
-  'block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[250px]';
+  'block h-auto w-auto max-w-[140px] sm:max-w-[180px] md:max-w-[240px] lg:max-w-[280px]';
 
-const smg: React.CSSProperties = {
-  fontFamily: "'SortsMillGoudy', Georgia, serif",
+const displayScript: React.CSSProperties = {
+  fontFamily: "'Brightwall', cursive",
+  fontWeight: 400,
+};
+const bodySerif: React.CSSProperties = {
+  fontFamily: "'SortsMillGoudy', Georgia, 'Times New Roman', serif",
   fontStyle: 'normal',
 };
-const hps: React.CSSProperties = {
-  fontFamily: "'HelloParisSans', serif",
+const labelSerif: React.CSSProperties = {
+  fontFamily: "'Cinzel', 'Times New Roman', serif",
+  fontStyle: 'normal',
+  fontWeight: 500,
 };
+
+const NAME_SHADOW =
+  '0 2px 4px rgba(255, 255, 255, 0.9), 0 0 18px rgba(175, 200, 230, 0.55)';
 
 function parseCeremonyDate(dateStr: string) {
   const match = dateStr.match(/(\w+)\s+(\d{1,2}),\s+(\d{4})/);
@@ -141,7 +138,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [loadPercent, setLoadPercent] = useState(0);
 
   useEffect(() => {
-    DECORATION_IMAGES.forEach((src) => {
+    PRELOAD_IMAGES.forEach((src) => {
       const img = new Image();
       img.src = src;
     });
@@ -187,16 +184,20 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const sparkParticles = useMemo(() => createSparkParticles(16), []);
 
   return (
-    <div
-      className="fixed inset-0 z-30 flex items-center justify-center overflow-hidden"
-      style={{ background: '#FEFAF5' }}
-    >
-      {/* ── Ambient color wash + floating particles (visible from first paint) ── */}
+    <div className="fixed inset-0 z-30 flex items-center justify-center overflow-hidden">
+      {/* ── Ocean pastel background ── */}
       <div
-        className="particle-field pointer-events-none absolute inset-0 z-0"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url('${BACKGROUND_IMAGE}')` }}
         aria-hidden
-        style={{ background: BACKGROUND_GRADIENT }}
-      >
+      />
+      <div
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.5)_0%,rgba(255,255,255,0.22)_52%,rgba(255,255,255,0.1)_100%)]"
+        aria-hidden
+      />
+
+      {/* ── Soft ambient particles ── */}
+      <div className="particle-field pointer-events-none absolute inset-0 z-[1]" aria-hidden>
         <div className="particle-gradient" />
         {ambientOrbs.map((orb) => (
           <span
@@ -236,43 +237,37 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           />
         ))}
       </div>
-      {/* ── Corner florals ── */}
-      <div className="pointer-events-none absolute left-0 top-0 z-[1]">
+
+      {/* ── Corner decorations ── */}
+      <div className="pointer-events-none absolute left-0 top-0 z-[2]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-top-decoration.png" alt="" className={CORNER_DECO_CLASS} />
+        <img src="/decoration/top-left-corner-deco.png" alt="" className={CORNER_DECO_CLASS} />
       </div>
 
-      <div className="pointer-events-none absolute right-0 top-0 z-[1]">
+      <div className="pointer-events-none absolute bottom-0 right-0 z-[2]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-top-decoration.png" alt="" className={CORNER_DECO_CLASS} />
+        <img src="/decoration/bottom-right-corner-deco.png" alt="" className={CORNER_DECO_CLASS} />
       </div>
 
-      <div className="pointer-events-none absolute bottom-0 left-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-bottom-decoration.png" alt="" className={CORNER_DECO_CLASS} />
-      </div>
-
-      <div className="pointer-events-none absolute bottom-0 right-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-bottom-decoration.png" alt="" className={CORNER_DECO_CLASS} />
-      </div>
-
-      {/* ── Bottom-center floral — mobile only ── */}
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-[1] md:hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/bottom-center-decoration.png" alt="" className="block h-auto w-full" />
-      </div>
-
-      {/* ── Card content ──
-           Mobile : 310px max-width, 26% viewport padding handled via max-w
-           Desktop: 520px card centered, flanked by the tall florals            ── */}
+      {/* ── Card content ── */}
       <div
-        className="relative z-10 mx-auto flex w-full max-w-[310px] flex-col items-center text-center md:max-w-[520px]"
+        className="relative z-10 mx-auto w-full max-w-[340px] px-5 py-8 md:max-w-[560px] md:px-12 md:py-10"
         style={{
-          color: TEXT,
-          WebkitFontSmoothing: 'antialiased',
+          background: 'rgba(255, 252, 248, 0.82)',
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
+          borderRadius: '1.25rem',
+          boxShadow:
+            '0 4px 28px rgba(45, 67, 79, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85)',
         }}
       >
+        <div
+          className="mx-auto flex w-full max-w-[310px] flex-col items-center text-center md:max-w-[480px]"
+          style={{
+            color: TEXT,
+            WebkitFontSmoothing: 'antialiased',
+          }}
+        >
         {/* SAVE THE DATE — arch */}
         <div className="mb-1 w-full">
           {/* Mobile SVG */}
@@ -285,7 +280,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             <defs>
               <path id="stdArcMob" d="M 6 86 A 178 178 0 0 1 294 86" fill="none" />
             </defs>
-            <text fill={TEXT_DEEP} style={{ ...smg, fontSize: '24px', letterSpacing: '0.32em' }}>
+            <text fill={TEXT_DEEP} style={{ ...labelSerif, fontSize: '22px', letterSpacing: '0.28em' }}>
               <textPath href="#stdArcMob" startOffset="50%" textAnchor="middle">
                 SAVE THE DATE
               </textPath>
@@ -302,7 +297,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             <defs>
               <path id="stdArcDsk" d="M 10 112 A 280 280 0 0 1 470 112" fill="none" />
             </defs>
-            <text fill={TEXT_DEEP} style={{ ...smg, fontSize: '36px', letterSpacing: '0.3em' }}>
+            <text fill={TEXT_DEEP} style={{ ...labelSerif, fontSize: '34px', letterSpacing: '0.26em' }}>
               <textPath href="#stdArcDsk" startOffset="50%" textAnchor="middle">
                 SAVE THE DATE
               </textPath>
@@ -313,53 +308,49 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         {/* for the wedding of */}
         <div className="mt-1">
           <p
-            className="text-[14px] md:text-[18px]"
-            style={{ ...smg, color: TEXT }}
+            className="text-[14px] md:text-[17px]"
+            style={{ ...bodySerif, color: TEXT, fontStyle: 'italic' }}
           >
             for the wedding of
           </p>
         </div>
 
-        {/* Groom name */}
-        <div className="mt-4 w-full">
+        {/* Couple names */}
+        <div className="mt-5 flex w-full flex-col items-center gap-4 md:mt-7 md:gap-5">
           <h1
-            className="w-full leading-none"
+            className="w-full leading-[1.05]"
             style={{
-              ...hps,
-              fontSize: 'clamp(52px, 14vw, 72px)',
-              color: ACCENT,
+              ...displayScript,
+              fontSize: 'clamp(56px, 15vw, 80px)',
+              color: NAME_COLOR,
               fontWeight: 400,
-              letterSpacing: '0.04em',
-              textTransform: 'capitalize',
+              letterSpacing: '0.02em',
+              textShadow: NAME_SHADOW,
             }}
           >
             {groomNickname}
           </h1>
-        </div>
 
-        {/* and */}
-        <div className="my-2 flex w-full items-center justify-center gap-2 md:my-3">
-          <DottedRule compact />
-          <span
-            className="shrink-0 text-[13px] md:text-[16px]"
-            style={{ ...smg, color: TEXT }}
-          >
-            and
-          </span>
-          <DottedRule compact />
-        </div>
+          <div className="flex w-full max-w-[220px] items-center justify-center gap-2 md:max-w-[280px] md:gap-3">
+            <DottedRule compact />
+            <span
+              className="shrink-0 text-[13px] italic md:text-[16px]"
+              style={{ ...bodySerif, color: TEXT, fontStyle: 'italic' }}
+            >
+              and
+            </span>
+            <DottedRule compact />
+          </div>
 
-        {/* Bride name */}
-        <div className="w-full">
           <h1
-            className="w-full leading-none"
+            className="w-full leading-[1.05]"
             style={{
-              ...hps,
-              fontSize: 'clamp(52px, 14vw, 72px)',
-              color: ACCENT,
+              ...displayScript,
+              fontSize: 'clamp(56px, 15vw, 80px)',
+              color: NAME_COLOR,
               fontWeight: 400,
-              letterSpacing: '0.04em',
-              textTransform: 'capitalize',
+              letterSpacing: '0.02em',
+              textShadow: NAME_SHADOW,
             }}
           >
             {brideNickname}
@@ -367,10 +358,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         </div>
 
         {/* Together with their families */}
-        <div className="mt-4 w-[115%] md:mt-5 md:w-full">
+        <div className="mt-6 w-[115%] md:mt-8 md:w-full">
           <p
-            className="whitespace-nowrap text-[12px] leading-[1.65] md:whitespace-normal md:text-[14px] md:leading-[1.75]"
-            style={{ ...smg, color: TEXT }}
+            className="whitespace-nowrap text-[13px] leading-[1.65] md:whitespace-normal md:text-[15px] md:leading-[1.75]"
+            style={{ ...bodySerif, color: TEXT }}
           >
             Together with their families
             <br />
@@ -393,8 +384,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               style={{ borderColor: TEXT_DEEP }}
             >
               <span
-                className="text-[10px] font-bold tracking-[0.18em] uppercase md:text-[12px]"
-                style={{ ...smg, color: TEXT }}
+                className="text-[10px] tracking-[0.18em] uppercase md:text-[12px]"
+                style={{ ...labelSerif, color: TEXT_DEEP }}
               >
                 {month}
               </span>
@@ -405,7 +396,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               <div className="border-t border-dotted" style={{ borderColor: TEXT_DEEP }} />
               <span
                 className="text-center text-[10px] tracking-[0.14em] uppercase md:text-[12px]"
-                style={{ ...smg, color: TEXT }}
+                style={{ ...labelSerif, color: TEXT_DEEP }}
               >
                 {day}
               </span>
@@ -420,9 +411,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               <span
                 className="leading-[0.85]"
                 style={{
-                  ...hps,
-                  fontSize: 'clamp(52px, 14vw, 68px)',
+                  ...labelSerif,
+                  fontSize: 'clamp(48px, 13vw, 64px)',
                   color: ACCENT,
+                  fontWeight: 600,
                 }}
               >
                 {dateNum}
@@ -434,7 +426,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               <div className="border-t border-dotted" style={{ borderColor: TEXT_DEEP }} />
               <span
                 className="whitespace-nowrap text-center text-[10px] tracking-[0.12em] uppercase md:text-[12px]"
-                style={{ ...smg, color: TEXT }}
+                style={{ ...labelSerif, color: TEXT_DEEP }}
               >
                 At {time}
               </span>
@@ -447,8 +439,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               style={{ borderColor: TEXT_DEEP }}
             >
               <span
-                className="text-[14px] font-bold leading-none tracking-[0.12em] md:text-[18px]"
-                style={{ ...smg, color: TEXT_DEEP, fontWeight: 700 }}
+                className="text-[14px] leading-none tracking-[0.1em] md:text-[18px]"
+                style={{ ...labelSerif, color: TEXT_DEEP, fontWeight: 600 }}
               >
                 {year}
               </span>
@@ -463,7 +455,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               className="w-[3.25rem] border-t border-dotted md:w-[4rem]"
               style={{ borderColor: TEXT_DEEP }}
             />
-            <span className="text-[13px] md:text-[15px]" style={{ ...smg, color: TEXT }}>
+            <span
+              className="text-[13px] italic md:text-[15px]"
+              style={{ ...bodySerif, color: TEXT, fontStyle: 'italic' }}
+            >
               at
             </span>
             <div
@@ -472,8 +467,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             />
           </div>
           <p
-            className="mt-2 text-[13px] leading-snug md:mt-2.5 md:text-[15px]"
-            style={{ ...smg, color: TEXT }}
+            className="mt-2 text-[14px] leading-snug md:mt-2.5 md:text-[16px]"
+            style={{ ...bodySerif, color: TEXT }}
           >
             {venue}
           </p>
@@ -483,24 +478,25 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         <div className="mt-7 w-full max-w-[220px] pb-2 md:max-w-[320px]">
           <p
             className="loading-dots-text text-[11px] tracking-[0.28em] uppercase md:text-[12px]"
-            style={{ ...smg, color: TEXT, opacity: 0.85 }}
+            style={{ ...labelSerif, color: TEXT_DEEP, opacity: 0.9, letterSpacing: '0.22em' }}
             aria-live="polite"
           >
             Loading {loadPercent}%
           </p>
           <div
             className="mt-2 h-[3px] w-full overflow-hidden rounded-full"
-            style={{ backgroundColor: `${PALETTE.sage}33` }}
+            style={{ backgroundColor: `${PALETTE.aqua}44` }}
           >
             <div
               className="h-full rounded-full transition-[width] duration-150 ease-out"
               style={{
                 width: `${loadPercent}%`,
-                background: `linear-gradient(90deg, ${PALETTE.rose}, ${PALETTE.apricot}, ${PALETTE.sun})`,
+                background: `linear-gradient(90deg, ${PALETTE.seafoam}, ${PALETTE.blush}, ${PALETTE.peach})`,
               }}
             />
           </div>
         </div>
+      </div>
       </div>
 
       <style jsx>{`
@@ -514,18 +510,18 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
         }
 
         .particle-field {
-          opacity: 1;
+          opacity: 0.55;
         }
 
         .particle-gradient {
           position: absolute;
           inset: -20%;
           background:
-            radial-gradient(circle at 14% 18%, ${PALETTE.sun}22 0%, transparent 40%),
-            radial-gradient(circle at 86% 14%, ${PALETTE.blush}28 0%, transparent 38%),
-            radial-gradient(circle at 78% 82%, ${PALETTE.apricot}22 0%, transparent 42%),
-            radial-gradient(circle at 20% 78%, ${PALETTE.lavender}28 0%, transparent 38%),
-            radial-gradient(circle at 50% 50%, ${PALETTE.gold}18 0%, transparent 52%);
+            radial-gradient(circle at 14% 18%, ${PALETTE.seafoam}28 0%, transparent 40%),
+            radial-gradient(circle at 86% 14%, ${PALETTE.blush}24 0%, transparent 38%),
+            radial-gradient(circle at 78% 82%, ${PALETTE.peach}22 0%, transparent 42%),
+            radial-gradient(circle at 20% 78%, ${PALETTE.mist}30 0%, transparent 38%),
+            radial-gradient(circle at 50% 50%, ${PALETTE.sand}20 0%, transparent 52%);
           animation: gradientBreath 22s ease-in-out infinite alternate;
         }
 

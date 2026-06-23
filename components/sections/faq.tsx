@@ -2,22 +2,34 @@
 
 import { useMemo, useState, type ReactNode } from "react"
 import type { SiteConfig } from "@/lib/site-config"
-import { ChevronDown, HelpCircle } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import {
+  coastalLightBg,
+  coastalPalette,
+  coastalTitleShadow,
+  displayScript,
+} from "@/lib/coastal-palette"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600"],
 })
 
+const CORNER_DECO_CLASS =
+  "block h-auto w-auto max-w-[120px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
+
+const BLUE_SHELL_FILTER =
+  `brightness(0) saturate(100%) invert(58%) sepia(18%) saturate(612%) hue-rotate(152deg) brightness(95%) contrast(88%) drop-shadow(0 4px 14px color-mix(in srgb, ${coastalPalette.blueGray} 55%, transparent))`
+
 const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-  cream: "var(--color-motif-cream)",
+  body: coastalPalette.body,
+  heading: coastalPalette.deep,
+  label: coastalPalette.dustyRose,
+  accent: coastalPalette.title,
+  deep: coastalPalette.deep,
+  cream: coastalPalette.cream,
 } as const
 
 const bodyFont: React.CSSProperties = {
@@ -35,9 +47,13 @@ const linkClass =
   "underline font-semibold transition-colors hover:opacity-80"
 
 const glassCardStyle = {
-  backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 68%, transparent)",
-  boxShadow:
-    "0 18px 40px color-mix(in srgb, var(--color-motif-deep) 10%, transparent), inset 0 1px 0 color-mix(in srgb, white 60%, transparent)",
+  backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 38%, transparent)`,
+  borderColor: "rgba(255, 255, 255, 0.62)",
+  boxShadow: `0 28px 72px color-mix(in srgb, ${coastalPalette.teal} 10%, transparent), 0 12px 32px color-mix(in srgb, ${coastalPalette.blueGray} 16%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.82), inset 0 -1px 0 rgba(255, 255, 255, 0.12)`,
+} as const
+
+const glassAmbientGlowStyle = {
+  background: `linear-gradient(135deg, color-mix(in srgb, ${coastalPalette.blueGray} 32%, transparent) 0%, color-mix(in srgb, ${coastalPalette.dustyRose} 22%, transparent) 48%, color-mix(in srgb, ${coastalPalette.teal} 18%, transparent) 100%)`,
 } as const
 
 interface FAQItem {
@@ -105,9 +121,35 @@ function getFaqItems(siteConfig: SiteConfig): FAQItem[] {
       ),
     },
     {
+      question: 'Do we really need to RSVP? We already said "Yes" to the couple.',
+      answer:
+        "Yes, please. We will be needing your formal RSVP to consolidate guest details and finalize the headcount for catering and seating purposes.",
+    },
+    {
       question: "Can I sit anywhere at the reception?",
       answer:
-        "Please don't. We kindly ask our guests to follow the seating arrangement prepared for the reception.\n\nA great deal of thought and care went into planning the seating so that everyone will feel comfortable and be seated with friends, family, or guests who share similar connections. Each seat was thoughtfully arranged with every guest in mind. Our reception team will gladly assist you in finding your assigned table.",
+        "Please don't. It took us a lot of effort and discussion to finish the seating arrangement, which is planned for everyone's convenience and preference.",
+    },
+    {
+      question: 'Can I bring a "Plus One" to the event?',
+      answer:
+        "As much as we would love to accommodate all our friends and family, we have a limited number of guests. Please understand that this event is strictly by invitation only.",
+    },
+    {
+      question: "Can I bring my child to the event?",
+      answer:
+        'As much as we each adore your little ones, we cannot include children at our ceremony and reception, other than those that are part of the entourage, due to constraints on our venue\'s capacity. We are looking forward to celebrating a Parents\' "Night Out" with you!',
+    },
+    {
+      question:
+        'I said "No" to the RSVP but I had a change of plans—I can attend now! What should I do?',
+      answer:
+        "Please check with us first as we have a strict guest list. If seats become available, we will let you know as soon as possible. Please do not attend unannounced, as we may not have any available seats for you.",
+    },
+    {
+      question: "What if I RSVP'd but cannot attend?",
+      answer:
+        "We would love to have you at our wedding, but we understand that there are circumstances beyond our control. However, please let us know as soon as possible so we can reallocate your seat/s.",
     },
     {
       question: "Is there parking available?",
@@ -130,24 +172,9 @@ function getFaqItems(siteConfig: SiteConfig): FAQItem[] {
         "Yes! While our I DO's will be unplugged, our reception will not be. As a couple who loves photos and memories, we would love for you to capture the fun moments throughout the evening. We prepared this celebration wholeheartedly and we want everyone to enjoy it fully.",
     },
     {
-      question: "What should I do if I can't make it?",
-      answer:
-        "Your presence will truly be missed, but we completely understand.\n\nPlease kindly let us know through RSVP as soon as possible so we may adjust arrangements accordingly.",
-    },
-    {
-      question: 'I said "No" to RSVP but my plans changed. Can I still attend?',
-      answer:
-        "Please check with us first before making arrangements. Due to limited seating and a carefully planned guest list, attendance cannot be guaranteed without prior confirmation.",
-    },
-    {
       question: "When is the appropriate time to leave?",
       answer:
         "It took us some time to plan for a heartfelt wedding that everyone would hopefully enjoy. We humbly request that you celebrate with us until the program ends. Please don't eat and run! Let's laugh, take pictures, sing, and have fun!",
-    },
-    {
-      question: "Can I bring my children to the wedding?",
-      answer:
-        "We adore your little ones — truly. However, we have lovingly planned this as an adults-only celebration so that every guest, including you, can fully relax, enjoy the program, and be present in the moment.\n\nWe kindly ask that you make childcare arrangements for the day. We hope you understand, and we are so grateful that you are celebrating this milestone with us.",
     },
     {
       question: "What if I have dietary restrictions or allergies?",
@@ -221,87 +248,80 @@ export function FAQ() {
   return (
     <section
       id="faq"
-      className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 isolate"
-      style={{ backgroundColor: palette.cream }}
+      className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14 isolate overflow-hidden"
+      style={{ backgroundColor: coastalLightBg }}
     >
-      {/* Layered background */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div
-          className="absolute inset-0 opacity-[0.25]"
-          style={{
-            background:
-              "linear-gradient(165deg, var(--color-motif-cream) 0%, color-mix(in srgb, var(--color-motif-silver) 14%, transparent) 35%, color-mix(in srgb, var(--color-motif-medium) 6%, transparent) 70%, color-mix(in srgb, var(--color-motif-deep) 3%, transparent) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            background: "radial-gradient(ellipse 80% 50% at 50% 15%, var(--color-motif-silver) 0%, transparent 55%)",
-          }}
+      {/* Shell corner decorations */}
+      <div className="pointer-events-none absolute left-0 top-0 z-[1]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/decoration/top-left-shell-deco.png"
+          alt=""
+          className={CORNER_DECO_CLASS}
+          style={{ filter: BLUE_SHELL_FILTER }}
         />
       </div>
-
-      {/* Corner florals — behind content */}
-      <div className="decor-corner decor-top-left decor-visible pointer-events-none absolute left-0 top-0 z-[1]">
+      <div className="pointer-events-none absolute bottom-0 right-0 z-[1]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-top-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-top-right decor-visible pointer-events-none absolute right-0 top-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-top-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-bottom-left decor-visible pointer-events-none absolute bottom-0 left-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-bottom-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-bottom-right decor-visible pointer-events-none absolute bottom-0 right-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-bottom-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-bottom decor-visible pointer-events-none absolute bottom-0 left-0 right-0 z-[1] md:hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/bottom-center-decoration.png" alt="" className="block h-auto w-full" />
+        <img
+          src="/decoration/right-bottom-shell-deco.png"
+          alt=""
+          className={CORNER_DECO_CLASS}
+          style={{ filter: BLUE_SHELL_FILTER }}
+        />
       </div>
 
       {/* Header */}
-      <div className="relative z-20 text-center mt-12 sm:mt-16 md:mt-20 lg:mt-24 mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10 md:px-12">
-          <p
-            className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
-            style={{ color: palette.label }}
-          >
-            For {coupleDisplayName}
-          </p>
-          <h2
-            className="leading-none mb-2 sm:mb-3"
-            style={{
-              fontFamily: "var(--font-brittany), cursive",
-              fontSize: "clamp(1.85rem, 8vw, 4.5rem)",
-              color: palette.accent,
-              letterSpacing: "0.01em",
-            }}
-          >
-            Frequently Asked Questions
-          </h2>
-          <p
-            className={`${ct.bodyLg} max-w-2xl mx-auto leading-relaxed px-2`}
-            style={{ ...bodyFont, color: palette.body }}
-          >
-            Helpful notes so you can simply arrive, celebrate, and enjoy this new chapter with us.
-          </p>
-          <div className="flex items-center justify-center gap-2 pt-2 sm:pt-3">
-            <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
-            <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: palette.accent }} />
-            <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
-          </div>
+      <div className="relative z-20 text-center mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10 md:px-12">
+        <p
+          className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
+          style={{ color: coastalPalette.dustyRose }}
+        >
+          For {coupleDisplayName}
+        </p>
+        <h2
+          className="mx-auto my-4 whitespace-nowrap text-center sm:my-5 md:my-6 leading-[1.08]"
+          style={{
+            ...displayScript,
+            fontSize: "clamp(1.35rem, 3.2vw + 0.5rem, 4.25rem)",
+            color: coastalPalette.title,
+            letterSpacing: "0.02em",
+            textShadow: coastalTitleShadow,
+          }}
+        >
+          Frequently Asked Questions
+        </h2>
+        <p
+          className={`${ct.bodyLg} max-w-2xl mx-auto leading-relaxed px-2`}
+          style={{ ...bodyFont, color: coastalPalette.body }}
+        >
+          Helpful notes so you can simply arrive, celebrate, and enjoy this new chapter with us.
+        </p>
+        <div className="flex items-center justify-center pt-2 sm:pt-3">
+          <span
+            className="h-px w-16 sm:w-24 md:w-32"
+            style={{ backgroundColor: `color-mix(in srgb, ${coastalPalette.blueGray} 70%, white)` }}
+          />
         </div>
+      </div>
 
-        {/* FAQ accordion */}
-        <div className="relative z-20 max-w-3xl mx-auto px-6 sm:px-10 md:px-12 my-6 sm:my-8 md:my-10 mb-12 sm:mb-16 md:mb-20">
+      {/* FAQ accordion */}
+      <div className="relative z-20 max-w-3xl mx-auto px-4 sm:px-6 md:px-8 my-6 sm:my-8 md:my-10 mb-12 sm:mb-16 md:mb-20">
+        <div className="relative">
           <div
-            className="relative z-20 rounded-2xl border border-white/50 backdrop-blur-xl overflow-hidden"
+            className="pointer-events-none absolute -inset-1 rounded-2xl opacity-50 blur-2xl sm:-inset-2"
+            style={glassAmbientGlowStyle}
+            aria-hidden
+          />
+          <div
+            className="relative z-20 rounded-xl sm:rounded-2xl border backdrop-blur-xl sm:backdrop-blur-2xl overflow-hidden"
             style={glassCardStyle}
           >
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-motif-accent/[0.04]" aria-hidden />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent" aria-hidden />
+            <div
+              className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl ring-1 ring-inset ring-white/35"
+              aria-hidden
+            />
 
             <div className="relative z-20 p-3 sm:p-4 md:p-5 space-y-2 sm:space-y-2.5">
               {faqItems.map((item, index) => {
@@ -310,16 +330,21 @@ export function FAQ() {
                 return (
                   <div
                     key={index}
-                    className={`relative z-20 rounded-xl border transition-all duration-300 ${
-                      isOpen
-                        ? "border-motif-accent/35 shadow-sm"
-                        : "border-motif-deep/15 hover:border-motif-deep/30"
-                    }`}
-                    style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 80%, white)" }}
+                    className="relative z-20 rounded-xl border transition-all duration-300"
+                    style={{
+                      borderColor: isOpen
+                        ? `color-mix(in srgb, ${coastalPalette.teal} 35%, white)`
+                        : `color-mix(in srgb, ${coastalPalette.blueGray} 30%, white)`,
+                      backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 42%, white)`,
+                      boxShadow: isOpen
+                        ? `0 4px 16px color-mix(in srgb, ${coastalPalette.teal} 8%, transparent)`
+                        : "none",
+                    }}
                   >
                     <button
                       onClick={() => toggleItem(index)}
-                      className="group w-full px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 flex items-center justify-between text-left outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-motif-accent transition-colors"
+                      className="group w-full px-3 sm:px-4 md:px-5 py-2.5 sm:py-3 flex items-center justify-between text-left outline-none transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      style={{ outlineColor: coastalPalette.teal }}
                       aria-expanded={isOpen}
                       aria-controls={contentId}
                     >
@@ -345,7 +370,10 @@ export function FAQ() {
                       }`}
                     >
                       <div className="overflow-hidden">
-                        <div className="px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 pt-0 border-t border-motif-deep/12">
+                        <div
+                          className="px-3 sm:px-4 md:px-5 pb-3 sm:pb-4 pt-0 border-t"
+                          style={{ borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 25%, white)` }}
+                        >
                           <FaqAnswer answer={item.answer} />
                         </div>
                       </div>
@@ -356,6 +384,7 @@ export function FAQ() {
             </div>
           </div>
         </div>
+      </div>
     </section>
   )
 }

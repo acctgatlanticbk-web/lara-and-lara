@@ -177,22 +177,20 @@ export function Countdown() {
       className="relative py-10 sm:py-12 md:py-16 lg:py-20 overflow-hidden"
     >
       {/* Corner florals — matches hero / loading screen */}
-      <div className="pointer-events-none absolute left-0 top-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+      {/* <div className="pointer-events-none absolute left-0 top-0 z-0">
         <img
           src="/decoration/decoration/left-top-decoration.png"
           alt=""
           className={CORNER_DECO_CLASS}
         />
-      </div>
-      <div className="pointer-events-none absolute right-0 top-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+      </div> */}
+      {/* <div className="pointer-events-none absolute right-0 top-0 z-0">
         <img
           src="/decoration/decoration/right-top-decoration.png"
           alt=""
           className={CORNER_DECO_CLASS}
         />
-      </div>
+      </div> */}
       {/* <div className="pointer-events-none absolute bottom-0 left-0 z-0">
 
         <img

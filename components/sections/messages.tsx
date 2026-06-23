@@ -1,9 +1,7 @@
 "use client"
 
 import { useRef, useState, useCallback, useEffect } from "react"
-import { MessageCircle, Heart, Sparkles, Send } from "lucide-react"
 import { Section } from "@/components/section"
-import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -12,23 +10,23 @@ import { useToast } from "@/hooks/use-toast"
 import MessageWallDisplay from "./message-wall-display"
 import { Cinzel } from "next/font/google"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import { coastalPalette, displayScript } from "@/lib/coastal-palette"
+
+const OUTSIDE_TEXT = coastalPalette.cream
+const OUTSIDE_TEXT_MUTED = "rgba(255, 252, 248, 0.88)"
+const OUTSIDE_LABEL = "rgba(255, 252, 248, 0.72)"
+const OUTSIDE_TITLE_SHADOW =
+  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600"],
 })
 
-const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-  cream: "var(--color-motif-cream)",
-} as const
+const BUTTON_COLOR = "#FBCFC6"
 
 const bodyFont: React.CSSProperties = {
-  fontFamily: "'SortsMillGoudy', Georgia, serif",
+  fontFamily: "'SortsMillGoudy', Georgia, 'Times New Roman', serif",
 }
 
 const ct = {
@@ -36,10 +34,19 @@ const ct = {
   body: "text-xs sm:text-sm md:text-base",
   bodyLg: "text-sm sm:text-base md:text-lg",
   formTitle: "text-sm sm:text-base md:text-lg",
-  btn: "text-xs sm:text-sm md:text-base",
+  btn: "text-xs sm:text-sm",
 } as const
 
-const DECO_FILTER = "brightness(0) invert(1)"
+const cardStyle = {
+  background: `linear-gradient(
+    155deg,
+    color-mix(in srgb, ${coastalPalette.peach} 88%, white) 0%,
+    color-mix(in srgb, ${coastalPalette.lavenderBlue} 92%, white) 50%,
+    color-mix(in srgb, ${coastalPalette.blueGray} 55%, white) 100%
+  )`,
+  borderColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 38%, white)`,
+  boxShadow: `0 16px 48px color-mix(in srgb, ${coastalPalette.teal} 14%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.72)`,
+} as const
 
 interface Message {
   timestamp: string
@@ -112,11 +119,14 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
     }
   }
 
+  const inputBorder = (field: string) =>
+    focusedField === field
+      ? coastalPalette.teal
+      : `color-mix(in srgb, ${coastalPalette.blueGray} 55%, white)`
+
   const inputClass = (field: string) =>
     `message-form-input w-full border-2 rounded-xl py-2 sm:py-2.5 md:py-3 px-3 sm:px-4 ${ct.body} placeholder:italic transition-all duration-300 bg-white shadow-sm hover:shadow-md focus:shadow-lg ${
-      focusedField === field
-        ? "border-motif-deep focus:border-motif-deep focus:ring-4 focus:ring-motif-deep/20 shadow-lg"
-        : "border-motif-deep/30 hover:border-motif-deep/45"
+      focusedField === field ? "shadow-lg" : ""
     }`
 
   return (
@@ -129,48 +139,35 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
         }
       `}</style>
 
-      <div className="absolute -top-3 -left-3 w-8 h-8 bg-motif-accent/20 rounded-full blur-sm animate-pulse-slow" />
-      <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-motif-accent/20 rounded-full blur-md animate-pulse-slow" />
-
       <Card
-        className={`relative w-full border-2 border-motif-deep/30 bg-motif-cream backdrop-blur-md transition-all duration-500 overflow-hidden rounded-2xl ${
-          isFocused ? "scale-[1.01] border-motif-deep/60" : "hover:border-motif-deep/45"
+        className={`relative w-full border backdrop-blur-md transition-all duration-500 overflow-hidden rounded-2xl ${
+          isFocused ? "scale-[1.01]" : ""
         } ${isSubmitted ? "animate-bounce" : ""}`}
-        style={{ boxShadow: "0 12px 30px color-mix(in srgb, var(--color-motif-deep) 12%, transparent)" }}
+        style={cardStyle}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-motif-accent/5 via-transparent to-transparent pointer-events-none" />
-
         {isSubmitted && (
-          <div className="absolute inset-0 bg-motif-cream/90 flex items-center justify-center z-20 pointer-events-none">
-            <div className="flex flex-col items-center gap-2 animate-pulse">
-              <div
-                className="w-14 h-14 rounded-full flex items-center justify-center shadow-lg"
-                style={{ backgroundColor: palette.accent }}
-              >
-                <Sparkles className="h-7 w-7 text-white" />
-              </div>
-              <p className={`${cinzel.className} font-semibold ${ct.formTitle}`} style={{ color: palette.accent }}>
-                Sent!
-              </p>
-            </div>
+          <div
+            className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none"
+            style={{ backgroundColor: `color-mix(in srgb, ${coastalPalette.lavenderBlue} 92%, white)` }}
+          >
+            <p
+              className={`${cinzel.className} font-semibold ${ct.formTitle}`}
+              style={{ color: coastalPalette.title }}
+            >
+              Sent!
+            </p>
           </div>
         )}
 
         <CardContent className="relative p-4 sm:p-5 md:p-6 lg:p-8">
           <div className="text-center mb-4 sm:mb-5 md:mb-6">
-            <div className="relative inline-block mb-3">
-              <div className="absolute inset-0 bg-motif-accent/25 rounded-full blur-lg scale-150" />
-              <div
-                className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center mx-auto shadow-lg"
-                style={{ backgroundColor: palette.accent }}
-              >
-                <MessageCircle className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 text-white" />
-              </div>
-            </div>
-            <h3 className={`${cinzel.className} ${ct.formTitle} font-semibold mb-1.5`} style={{ color: palette.heading }}>
+            <h3
+              className={`${cinzel.className} ${ct.formTitle} font-semibold mb-1.5`}
+              style={{ color: coastalPalette.deep }}
+            >
               Share Your Love
             </h3>
-            <p className={ct.body} style={{ ...bodyFont, color: palette.body }}>
+            <p className={ct.body} style={{ ...bodyFont, color: coastalPalette.body }}>
               Leave a note for {coupleDisplayName} to read and keep.
             </p>
           </div>
@@ -184,15 +181,9 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
           >
             <div className="space-y-1.5 sm:space-y-2">
               <label
-                className={`${cinzel.className} ${ct.body} font-medium flex items-center gap-2`}
-                style={{ color: palette.label }}
+                className={`${cinzel.className} ${ct.body} font-medium`}
+                style={{ color: coastalPalette.dustyRose }}
               >
-                <div
-                  className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-all duration-300 ${focusedField === "name" ? "scale-110" : ""}`}
-                  style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 12%, transparent)" }}
-                >
-                  <Heart className="h-3 w-3 sm:h-3.5 sm:w-3.5" style={{ color: palette.accent }} />
-                </div>
                 Your Name
               </label>
               <Input
@@ -204,28 +195,26 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                 onBlur={() => setFocusedField(null)}
                 placeholder="Full name"
                 className={inputClass("name")}
-                style={{ color: palette.body, fontFamily: bodyFont.fontFamily }}
+                style={{
+                  color: coastalPalette.body,
+                  fontFamily: bodyFont.fontFamily,
+                  borderColor: inputBorder("name"),
+                }}
               />
             </div>
 
             <div className="space-y-1.5 sm:space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <label
-                  className={`${cinzel.className} ${ct.body} font-medium flex items-center gap-2`}
-                  style={{ color: palette.label }}
+                  className={`${cinzel.className} ${ct.body} font-medium`}
+                  style={{ color: coastalPalette.dustyRose }}
                 >
-                  <div
-                    className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center transition-all duration-300 ${focusedField === "message" ? "scale-110" : ""}`}
-                    style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 12%, transparent)" }}
-                  >
-                    <MessageCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5" style={{ color: palette.accent }} />
-                  </div>
                   Your Message
                 </label>
                 {messageValue && (
                   <span
                     className={`${ct.label} ${messageValue.length > 500 ? "text-red-500" : ""}`}
-                    style={messageValue.length <= 500 ? { color: palette.label } : undefined}
+                    style={messageValue.length <= 500 ? { color: coastalPalette.teal } : undefined}
                   >
                     {messageValue.length}/500
                   </span>
@@ -244,25 +233,31 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                 onBlur={() => setFocusedField(null)}
                 placeholder={`Write your wishes, prayer, or kind words for ${coupleDisplayName}...`}
                 className={`message-form-textarea ${inputClass("message")} min-h-[90px] sm:min-h-[110px] md:min-h-[130px] resize-none placeholder:leading-relaxed`}
-                style={{ color: palette.body, fontFamily: bodyFont.fontFamily }}
+                style={{
+                  color: coastalPalette.body,
+                  fontFamily: bodyFont.fontFamily,
+                  borderColor: inputBorder("message"),
+                }}
               />
             </div>
 
             <Button
               type="submit"
               disabled={isSubmitting || !nameValue.trim() || !messageValue.trim()}
-              className={`${cinzel.className} w-full text-motif-cream py-2.5 sm:py-3 px-5 rounded-xl ${ct.btn} font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none border border-motif-deep/80`}
+              className={`${cinzel.className} w-full py-2.5 sm:py-3 px-5 rounded-full ${ct.btn} uppercase tracking-[0.18em] font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none border`}
               style={{
-                backgroundColor: palette.deep,
-                boxShadow: "0 6px 20px color-mix(in srgb, var(--color-motif-deep) 25%, transparent)",
+                backgroundColor: BUTTON_COLOR,
+                borderColor: coastalPalette.dustyRose,
+                color: coastalPalette.deep,
+                boxShadow: `0 6px 20px color-mix(in srgb, ${BUTTON_COLOR} 45%, transparent)`,
               }}
               onMouseEnter={(e) => {
                 if (!e.currentTarget.disabled) {
-                  e.currentTarget.style.backgroundColor = palette.accent
+                  e.currentTarget.style.backgroundColor = coastalPalette.peach
                 }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = palette.deep
+                e.currentTarget.style.backgroundColor = BUTTON_COLOR
               }}
             >
               {isSubmitting ? (
@@ -274,10 +269,7 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
                   Sending...
                 </span>
               ) : (
-                <span className="flex items-center justify-center gap-2">
-                  <Send className="h-4 w-4 sm:h-5 sm:w-5" />
-                  Send Message
-                </span>
+                "Send Message"
               )}
             </Button>
           </form>
@@ -323,85 +315,66 @@ export function Messages() {
   }, [fetchMessages])
 
   return (
-    <Section id="messages" className="relative overflow-hidden">
-      <div className="absolute left-0 bottom-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-60"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div>
-      <div className="absolute right-0 bottom-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-60 scale-x-[-1]"
-          priority={false}
-          style={{ filter: DECO_FILTER }}
-        />
-      </div>
-
+    <Section
+      id="messages"
+      className="relative bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14"
+    >
       <div className="relative z-10 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-        {/* Header */}
+        {/* Header — outside container */}
         <div className="text-center mb-6 sm:mb-8 md:mb-10">
           <p
             className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
-            style={{ color: palette.cream }}
+            style={{ color: OUTSIDE_LABEL }}
           >
             For {coupleDisplayName}
           </p>
           <h2
-            className="leading-none mb-3"
+            className="mx-auto my-4 max-w-[18ch] leading-[1.08] sm:my-5 md:my-6 md:max-w-none"
             style={{
-              fontFamily: "var(--font-brittany), cursive",
-              fontSize: "clamp(1.85rem, 8vw, 4.5rem)",
-              color: palette.cream,
-              letterSpacing: "0.01em",
+              ...displayScript,
+              fontSize: "clamp(2.35rem, 7.5vw, 4.25rem)",
+              color: OUTSIDE_TEXT,
+              letterSpacing: "0.02em",
+              textShadow: OUTSIDE_TITLE_SHADOW,
             }}
           >
             Love Notes &amp; Prayers
           </h2>
           <p
             className={`${ct.bodyLg} max-w-2xl mx-auto leading-relaxed px-2`}
-            style={{ ...bodyFont, color: palette.cream }}
+            style={{ ...bodyFont, color: OUTSIDE_TEXT_MUTED }}
           >
             Share a short note, wish, or prayer for {coupleDisplayName}. Every message becomes part of their story.
           </p>
-        </div>
 
-        {/* Form */}
-        <div className="flex justify-center mb-6 sm:mb-8 md:mb-10">
-          <div className="relative max-w-xl w-full">
-            <MessageForm onMessageSent={fetchMessages} />
+          <div className="flex items-center justify-center pt-2 sm:pt-3">
+            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
           </div>
         </div>
 
-        {/* Message wall */}
-        <div className="relative max-w-4xl mx-auto details-container-inner">
-          <div className="text-center mb-4 sm:mb-6 md:mb-8">
-            <div className="relative inline-block mb-3 sm:mb-4">
-              <div
-                className="relative w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center mx-auto shadow-lg"
-                style={{ backgroundColor: palette.accent }}
-              >
-                <MessageCircle className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 text-white" />
-              </div>
+          {/* Form */}
+          <div className="flex justify-center mb-6 sm:mb-8 md:mb-10">
+            <div className="relative max-w-xl w-full">
+              <MessageForm onMessageSent={fetchMessages} />
             </div>
+          </div>
+
+        {/* Message wall */}
+        <div className="relative max-w-4xl mx-auto pb-2 sm:pb-3">
+          <div className="text-center mb-4 sm:mb-6 md:mb-8">
             <h3
               className={`${cinzel.className} text-sm sm:text-base md:text-lg lg:text-xl font-semibold mb-1.5 sm:mb-2`}
-              style={{ color: palette.cream }}
+              style={{ color: OUTSIDE_TEXT }}
             >
               Messages from Loved Ones
             </h3>
-            <p className={ct.body} style={{ ...bodyFont, color: palette.cream, opacity: 0.92 }}>
+            <p className={ct.body} style={{ ...bodyFont, color: OUTSIDE_TEXT_MUTED }}>
               Warm words from family and friends
             </p>
+
+            <div className="flex items-center justify-center pt-3 sm:pt-4">
+              <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
+            </div>
           </div>
 
           <MessageWallDisplay messages={messages} loading={loading} />

@@ -5,8 +5,10 @@ import { Section } from "@/components/section"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { useAudio } from "@/contexts/audio-context"
 import { Cinzel } from "next/font/google"
-import { ExternalLink, Music } from "lucide-react"
-import Image from "next/image"
+import {
+  coastalPalette,
+  displayScript,
+} from "@/lib/coastal-palette"
 
 interface SpotifyPlaybackUpdate {
   playingURI: string
@@ -86,13 +88,13 @@ const cinzel = Cinzel({
   weight: ["400", "600"],
 })
 
-const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-} as const
+const OUTSIDE_TEXT = coastalPalette.cream
+const OUTSIDE_TEXT_MUTED = "rgba(255, 252, 248, 0.88)"
+const OUTSIDE_LABEL = "rgba(255, 252, 248, 0.72)"
+const OUTSIDE_TITLE_SHADOW =
+  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
+
+const BUTTON_COLOR = "#FBCFC6"
 
 const bodyFont: React.CSSProperties = {
   fontFamily: "'SortsMillGoudy', Georgia, serif",
@@ -102,6 +104,17 @@ const ct = {
   label: "text-[11px] sm:text-xs md:text-sm",
   body: "text-xs sm:text-sm md:text-base lg:text-lg",
   btn: "text-xs sm:text-sm md:text-base",
+} as const
+
+const cardStyle = {
+  background: `linear-gradient(
+    155deg,
+    color-mix(in srgb, ${coastalPalette.peach} 88%, white) 0%,
+    color-mix(in srgb, ${coastalPalette.lavenderBlue} 92%, white) 50%,
+    color-mix(in srgb, ${coastalPalette.blueGray} 55%, white) 100%
+  )`,
+  borderColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 38%, white)`,
+  boxShadow: `0 16px 48px color-mix(in srgb, ${coastalPalette.teal} 14%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.72)`,
 } as const
 
 export function WeddingPlaylist() {
@@ -172,102 +185,70 @@ export function WeddingPlaylist() {
   }, [pauseMusic, resumeMusic, spotifyUri])
 
   return (
-    <Section id="playlist" className="relative overflow-hidden bg-transparent py-12 sm:py-16 md:py-20">
-      {/* Corner floral decorations */}
-      <div className="absolute left-0 top-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-60 scale-y-[-1]"
-          priority={false}
-        />
-      </div>
-      <div className="absolute right-0 top-0 z-0 pointer-events-none">
-        <Image
-          src="/decoration/flower-decoration-left-bottom-corner2.png"
-          alt=""
-          width={300}
-          height={300}
-          className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] opacity-60 scale-x-[-1] scale-y-[-1]"
-          priority={false}
-        />
-      </div>
-
+    <Section
+      id="playlist"
+      className="relative bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14"
+    >
       <div className="relative z-10 max-w-3xl mx-auto px-4 sm:px-6 md:px-8">
-        <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl md:rounded-[2rem] border border-motif-accent/30 bg-motif-cream shadow-[0_16px_60px_rgba(91,102,85,0.12)] px-4 sm:px-5 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10 lg:py-12">
-          {/* Subtle accent overlay */}
-          <div className="pointer-events-none absolute inset-0">
-            <div
-              className="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80"
-              style={{
-                background:
-                  "radial-gradient(circle at center, color-mix(in srgb, var(--color-motif-accent) 6%, transparent), transparent 60%)",
-              }}
-            />
-            <div className="absolute inset-[1px] rounded-[inherit] border border-motif-accent/10" />
+        {/* Header — on silk backdrop */}
+        <div className="text-center mb-6 sm:mb-8 md:mb-10">
+          <p
+            className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
+            style={{ color: OUTSIDE_LABEL }}
+          >
+            {playlistName}
+          </p>
+          <h2
+            className="mx-auto my-4 max-w-[16ch] leading-[1.08] sm:my-5 md:my-6 md:max-w-none"
+            style={{
+              ...displayScript,
+              fontSize: "clamp(2.35rem, 7.5vw, 4.25rem)",
+              color: OUTSIDE_TEXT,
+              letterSpacing: "0.02em",
+              textShadow: OUTSIDE_TITLE_SHADOW,
+            }}
+          >
+            {title}
+          </h2>
+          <p
+            className={`${ct.body} max-w-lg mx-auto leading-relaxed px-2`}
+            style={{ ...bodyFont, color: OUTSIDE_TEXT_MUTED }}
+          >
+            {subtitle}
+          </p>
+          <div className="flex items-center justify-center pt-2 sm:pt-3">
+            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
           </div>
+        </div>
 
-          <div className="relative text-center space-y-5 sm:space-y-6 md:space-y-7">
-            {/* Header */}
-            <div className="space-y-2 sm:space-y-2.5">
-              <p
-                className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em]`}
-                style={{ color: palette.label }}
-              >
-                {playlistName}
-              </p>
-              <h2
-                className="leading-none"
-                style={{
-                  fontFamily: "var(--font-brittany), cursive",
-                  fontSize: "clamp(1.85rem, 8vw, 4rem)",
-                  color: palette.accent,
-                  letterSpacing: "0.01em",
-                }}
-              >
-                {title}
-              </h2>
-              <p className={`${ct.body} max-w-lg mx-auto leading-relaxed`} style={{ ...bodyFont, color: palette.body }}>
-                {subtitle}
-              </p>
+        {/* Playlist card */}
+        <div
+          className="relative overflow-hidden rounded-xl sm:rounded-2xl border backdrop-blur-md px-4 sm:px-5 md:px-8 lg:px-10 py-6 sm:py-8 md:py-10"
+          style={cardStyle}
+        >
+          <div
+            ref={embedContainerRef}
+            title={`${playlistName} — Spotify playlist`}
+            className="w-full min-h-[232px] md:min-h-[352px] rounded-xl overflow-hidden [&_iframe]:border-0"
+            style={{
+              borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)`,
+            }}
+          />
 
-              <div className="flex items-center justify-center gap-2 pt-1">
-                <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
-                <Music className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: palette.accent }} />
-                <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
-              </div>
-            </div>
-
-            {/* Spotify embed */}
-            <div
-              ref={embedContainerRef}
-              title={`${playlistName} — Spotify playlist`}
-              className="w-full min-h-[232px] md:min-h-[352px] rounded-xl overflow-hidden border border-motif-deep/15 shadow-sm [&_iframe]:border-0"
-            />
-
-            {/* Open in Spotify */}
+          <div className="flex justify-center mt-5 sm:mt-6">
             <a
               href={spotifyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={`group inline-flex items-center gap-2 sm:gap-2.5 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full ${ct.btn} shadow-md transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95`}
+              className={`${cinzel.className} ${ct.btn} inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full uppercase tracking-[0.12em] font-semibold transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border`}
               style={{
-                backgroundColor: palette.deep,
-                color: "var(--color-motif-cream)",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = palette.accent
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = palette.deep
+                backgroundColor: BUTTON_COLOR,
+                borderColor: coastalPalette.dustyRose,
+                color: coastalPalette.deep,
+                boxShadow: `0 6px 20px color-mix(in srgb, ${BUTTON_COLOR} 45%, transparent)`,
               }}
             >
-              <span className={`${cinzel.className} uppercase tracking-[0.12em] font-semibold`}>
-                Open in Spotify
-              </span>
-              <ExternalLink className="w-3.5 h-3.5 sm:w-4 sm:h-4 opacity-80 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              Open in Spotify
             </a>
           </div>
         </div>

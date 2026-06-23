@@ -1,22 +1,34 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Heart, RefreshCw, TrendingUp, Users, MapPin, Calendar, Crown } from "lucide-react"
+import { RefreshCw } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import {
+  coastalLightBg,
+  coastalPalette,
+  coastalTitleShadow,
+  displayScript,
+} from "@/lib/coastal-palette"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600"],
 })
 
+const CORNER_DECO_CLASS =
+  "block h-auto w-auto max-w-[120px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
+
+const BLUE_SHELL_FILTER =
+  `brightness(0) saturate(100%) invert(58%) sepia(18%) saturate(612%) hue-rotate(152deg) brightness(95%) contrast(88%) drop-shadow(0 4px 14px color-mix(in srgb, ${coastalPalette.blueGray} 55%, transparent))`
+
 const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-  cream: "var(--color-motif-cream)",
+  body: coastalPalette.body,
+  heading: coastalPalette.deep,
+  label: coastalPalette.dustyRose,
+  accent: coastalPalette.title,
+  deep: coastalPalette.deep,
+  cream: coastalPalette.cream,
 } as const
 
 const bodyFont: React.CSSProperties = {
@@ -33,9 +45,19 @@ const ct = {
 } as const
 
 const glassCardStyle = {
-  backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 68%, transparent)",
-  boxShadow:
-    "0 18px 40px color-mix(in srgb, var(--color-motif-deep) 10%, transparent), inset 0 1px 0 color-mix(in srgb, white 60%, transparent)",
+  backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 38%, transparent)`,
+  borderColor: "rgba(255, 255, 255, 0.62)",
+  boxShadow: `0 28px 72px color-mix(in srgb, ${coastalPalette.teal} 10%, transparent), 0 12px 32px color-mix(in srgb, ${coastalPalette.blueGray} 16%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.82), inset 0 -1px 0 rgba(255, 255, 255, 0.12)`,
+} as const
+
+const glassAmbientGlowStyle = {
+  background: `linear-gradient(135deg, color-mix(in srgb, ${coastalPalette.blueGray} 32%, transparent) 0%, color-mix(in srgb, ${coastalPalette.dustyRose} 22%, transparent) 48%, color-mix(in srgb, ${coastalPalette.teal} 18%, transparent) 100%)`,
+} as const
+
+const refreshButtonStyle = {
+  borderColor: "rgba(255, 255, 255, 0.75)",
+  backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 52%, transparent)`,
+  boxShadow: `0 4px 14px color-mix(in srgb, ${coastalPalette.blueGray} 18%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.85)`,
 } as const
 
 interface Guest {
@@ -88,6 +110,9 @@ export function BookOfGuests() {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   }
+
+  const formatLastUpdate = (date: Date): string =>
+    date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })
 
   const fetchGuests = async (showLoading = false) => {
     if (showLoading) setIsRefreshing(true)
@@ -201,135 +226,175 @@ export function BookOfGuests() {
   return (
     <div
       id="guests"
-      className="relative z-10 py-8 sm:py-12 md:py-16 lg:py-20 isolate"
-      style={{ backgroundColor: palette.cream }}
+      className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14 isolate overflow-hidden"
+      style={{ backgroundColor: coastalLightBg }}
     >
-      {/* Layered background — same as entourage/footer */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div
-          className="absolute inset-0 opacity-[0.25]"
-          style={{
-            background:
-              "linear-gradient(165deg, var(--color-motif-cream) 0%, color-mix(in srgb, var(--color-motif-silver) 14%, transparent) 35%, color-mix(in srgb, var(--color-motif-medium) 6%, transparent) 70%, color-mix(in srgb, var(--color-motif-deep) 3%, transparent) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            background: "radial-gradient(ellipse 80% 50% at 50% 15%, var(--color-motif-silver) 0%, transparent 55%)",
-          }}
+      {/* Shell corner decorations */}
+      <div className="pointer-events-none absolute left-0 top-0 z-[1]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/decoration/top-left-shell-deco.png"
+          alt=""
+          className={CORNER_DECO_CLASS}
+          style={{ filter: BLUE_SHELL_FILTER }}
         />
       </div>
-
-      {/* Corner florals — behind content */}
-      <div className="decor-corner decor-top-left decor-visible pointer-events-none absolute left-0 top-0 z-[1]">
+      <div className="pointer-events-none absolute bottom-0 right-0 z-[1]">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-top-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-top-right decor-visible pointer-events-none absolute right-0 top-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-top-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-bottom-left decor-visible pointer-events-none absolute bottom-0 left-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/left-bottom-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-corner decor-bottom-right decor-visible pointer-events-none absolute bottom-0 right-0 z-[1]">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/right-bottom-decoration.png" alt="" className="block h-auto w-auto max-w-[130px] sm:max-w-[160px] md:max-w-[210px] lg:max-w-[260px]" />
-      </div>
-      <div className="decor-bottom decor-visible pointer-events-none absolute bottom-0 left-0 right-0 z-[1] md:hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/decoration/decoration/bottom-center-decoration.png" alt="" className="block h-auto w-full" />
+        <img
+          src="/decoration/right-bottom-shell-deco.png"
+          alt=""
+          className={CORNER_DECO_CLASS}
+          style={{ filter: BLUE_SHELL_FILTER }}
+        />
       </div>
 
       {/* Section Header */}
-      <div className="relative z-20 text-center mt-12 sm:mt-16 md:mt-20 lg:mt-24 mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10 md:px-12">
+      <div className="relative z-20 text-center mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10 md:px-12">
         <p
           className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] sm:tracking-[0.24em] mb-2`}
-          style={{ color: palette.label }}
+          style={{ color: coastalPalette.dustyRose }}
         >
           Celebrating With {coupleDisplayName}
         </p>
         <h2
-          className="leading-none mb-2 sm:mb-3"
+          className="mx-auto my-4 whitespace-nowrap text-center sm:my-5 md:my-6 leading-[1.08]"
           style={{
-            fontFamily: "var(--font-brittany), cursive",
-            fontSize: "clamp(1.85rem, 8vw, 4.5rem)",
-            color: palette.accent,
-            letterSpacing: "0.01em",
+            ...displayScript,
+            fontSize: "clamp(1.55rem, 4.1vw + 0.65rem, 4.25rem)",
+            color: coastalPalette.title,
+            letterSpacing: "0.02em",
+            textShadow: coastalTitleShadow,
           }}
         >
           Book of Guests
         </h2>
         <p
           className={`${ct.bodyLg} max-w-2xl mx-auto leading-relaxed px-2`}
-          style={{ ...bodyFont, color: palette.body }}
+          style={{ ...bodyFont, color: coastalPalette.body }}
         >
           Meet the cherished souls joining us in celebration — your presence makes our day truly special.
         </p>
-        <div className="flex items-center justify-center gap-2 pt-2 sm:pt-3">
-          <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
-          <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: palette.accent }} />
-          <span className="h-px w-10 sm:w-16 md:w-20 bg-motif-accent/40" />
+        <div className="flex items-center justify-center pt-2 sm:pt-3">
+          <span
+            className="h-px w-16 sm:w-24 md:w-32"
+            style={{ backgroundColor: `color-mix(in srgb, ${coastalPalette.blueGray} 70%, white)` }}
+          />
         </div>
       </div>
 
       {/* Guests content */}
       <div className="relative z-20 my-6 sm:my-8 md:my-10 mb-12 sm:mb-16 md:mb-20 px-6 sm:px-10 md:px-12">
         {/* Stats card */}
-        <div className="text-center mb-6 sm:mb-8 md:mb-10">
+        <div className="text-center mb-8 sm:mb-10 md:mb-12">
           <div className="relative max-w-3xl mx-auto z-20">
             <div
-              className="relative z-20 backdrop-blur-xl rounded-2xl p-4 sm:p-5 md:p-6 border border-white/50 transition-all duration-300 overflow-hidden"
+              className="pointer-events-none absolute -inset-1 rounded-2xl opacity-50 blur-2xl sm:-inset-2"
+              style={glassAmbientGlowStyle}
+              aria-hidden
+            />
+            <div
+              className="relative z-20 rounded-xl sm:rounded-2xl border backdrop-blur-xl sm:backdrop-blur-2xl transition-all duration-300 overflow-hidden"
               style={glassCardStyle}
             >
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/25 via-transparent to-motif-accent/[0.04]" aria-hidden />
-              <div className="relative z-[1]">
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/40 via-white/10 to-transparent" aria-hidden />
+              <div
+                className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl ring-1 ring-inset ring-white/35"
+                aria-hidden
+              />
+
+              {/* Refresh — corner icon, outside centered content flow */}
               <button
+                type="button"
                 onClick={() => fetchGuests(true)}
                 disabled={isRefreshing}
-                className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1.5 sm:p-2 rounded-full transition-all duration-300 disabled:opacity-50 group z-10 hover:scale-110"
-                style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 12%, transparent)" }}
-                title="Refresh counts"
+                className="group absolute top-3 right-3 sm:top-4 sm:right-4 z-30 flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border transition-all duration-300 hover:scale-105 active:scale-95 disabled:opacity-45 disabled:hover:scale-100"
+                style={refreshButtonStyle}
+                title="Refresh guest counts"
+                aria-label="Refresh guest counts"
               >
                 <RefreshCw
                   className={`h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-500 ${isRefreshing ? "animate-spin" : "group-hover:rotate-180"}`}
-                  style={{ color: palette.accent }}
+                  style={{ color: coastalPalette.teal }}
+                  aria-hidden
                 />
               </button>
 
-              <div className="mb-2 sm:mb-3">
-                <div className="flex items-center justify-center gap-2 sm:gap-2.5 flex-wrap">
-                  <h3
-                    className={`${cinzel.className} ${ct.stat} font-semibold transition-all duration-500 ${showIncrease ? "scale-110" : ""}`}
+              <div className="relative z-[1] px-6 sm:px-10 md:px-12 py-5 sm:py-6 md:py-8 text-center">
+                <p
+                  className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] font-semibold mb-3 sm:mb-4`}
+                  style={{ color: palette.label }}
+                >
+                  Our Celebration
+                </p>
+
+                <div className="flex items-center justify-center gap-3 sm:gap-4 mb-1 sm:mb-2">
+                  <span
+                    className={`${cinzel.className} ${ct.stat} font-semibold tabular-nums leading-none transition-transform duration-500 ${showIncrease ? "scale-110" : ""}`}
                     style={{ color: palette.accent }}
                   >
                     {totalGuests}
-                  </h3>
-                  {showIncrease && (
-                    <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 animate-bounce" style={{ color: palette.accent }} />
-                  )}
-                  <p className={`${cinzel.className} ${ct.bodyLg} font-medium leading-tight`} style={{ color: palette.heading }}>
-                    {totalGuests === 1 ? "Guest" : "Guests"} Celebrating With Us
+                  </span>
+                  <p
+                    className={`${cinzel.className} ${ct.bodyLg} font-medium leading-snug text-left max-w-[10rem] sm:max-w-none`}
+                    style={{ color: palette.heading }}
+                  >
+                    {totalGuests === 1 ? "Guest" : "Guests"}
+                    <span className="block text-[0.85em] font-normal opacity-90">Celebrating With Us</span>
                   </p>
                 </div>
-              </div>
 
-              <p className={`${ct.body} mb-2 sm:mb-3`} style={{ ...bodyFont, color: palette.body }}>
-                {rsvpCount} confirmed {rsvpCount === 1 ? "RSVP" : "RSVPs"}
-              </p>
-              <p className={`${ct.body} leading-relaxed`} style={{ ...bodyFont, color: palette.body, opacity: 0.9 }}>
-                Thank you for confirming your RSVP — your presence means the world to us.
-              </p>
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-4 sm:mt-5 mb-4 sm:mb-5">
+                  <span
+                    className={`${cinzel.className} ${ct.meta} px-3 py-1 rounded-full border font-semibold uppercase tracking-[0.12em]`}
+                    style={{
+                      color: coastalPalette.deep,
+                      borderColor: `color-mix(in srgb, ${coastalPalette.teal} 30%, white)`,
+                      backgroundColor: `color-mix(in srgb, ${coastalPalette.teal} 12%, transparent)`,
+                    }}
+                  >
+                    {rsvpCount} {rsvpCount === 1 ? "RSVP" : "RSVPs"}
+                  </span>
+                  <span
+                    className={`${cinzel.className} ${ct.meta} px-3 py-1 rounded-full border font-semibold uppercase tracking-[0.12em]`}
+                    style={{
+                      color: coastalPalette.deep,
+                      borderColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 30%, white)`,
+                      backgroundColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 10%, transparent)`,
+                    }}
+                  >
+                    {confirmedGuests.length} {confirmedGuests.length === 1 ? "Party" : "Parties"}
+                  </span>
+                </div>
+
+                <div className="mx-auto h-px w-12 sm:w-16 mb-4 sm:mb-5" style={{ backgroundColor: `color-mix(in srgb, ${coastalPalette.blueGray} 55%, white)` }} />
+
+                <p className={`${ct.body} leading-relaxed max-w-md mx-auto`} style={{ ...bodyFont, color: palette.body }}>
+                  Thank you for confirming your RSVP — your presence means the world to us.
+                </p>
+
+                <p className={`${cinzel.className} ${ct.meta} mt-3 sm:mt-4 uppercase tracking-[0.14em] opacity-70`} style={{ color: palette.body }}>
+                  Updated {formatLastUpdate(lastUpdate)}
+                </p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Guest List Display - 4 cards with carousel */}
+        {/* Guest List Display */}
         {confirmedGuests.length > 0 && (
           <div className="relative z-20 max-w-5xl mx-auto">
+            <div className="text-center mb-4 sm:mb-6 md:mb-8">
+              <p
+                className={`${cinzel.className} ${ct.label} uppercase tracking-[0.2em] font-semibold`}
+                style={{ color: palette.label }}
+              >
+                Joining Us
+              </p>
+              <p className={`${ct.body} mt-1.5`} style={{ ...bodyFont, color: palette.body }}>
+                A glimpse of the wonderful guests celebrating with us
+              </p>
+            </div>
             <div
               className="relative overflow-hidden"
               style={{
@@ -345,7 +410,7 @@ export function BookOfGuests() {
                 {getVisibleGuests().map((guest, index) => (
                   <div
                     key={`${guest.id}-${currentIndex}-${index}`}
-                    className={`relative z-20 group rounded-2xl p-3 sm:p-4 md:p-5 transition-all duration-300 border border-white/50 backdrop-blur-xl hover:border-white/70 hover:shadow-lg overflow-hidden ${justEntered ? "animate-guest-roll-in" : ""}`}
+                    className={`relative z-20 group rounded-xl sm:rounded-2xl p-3.5 sm:p-4 md:p-5 transition-all duration-300 border backdrop-blur-xl overflow-hidden hover:shadow-xl ${justEntered ? "animate-guest-roll-in" : ""}`}
                     style={{
                       ...glassCardStyle,
                       ...(justEntered
@@ -356,91 +421,113 @@ export function BookOfGuests() {
                         : {}),
                     }}
                   >
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-motif-accent/[0.03]" aria-hidden />
-                  <div className="relative z-[1] flex items-start gap-2.5 sm:gap-3 md:gap-4 mb-2 sm:mb-3">
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" aria-hidden />
+                  <div
+                    className="pointer-events-none absolute inset-0 rounded-xl sm:rounded-2xl ring-1 ring-inset ring-white/20 group-hover:ring-white/40 transition-all duration-300"
+                    aria-hidden
+                  />
+                  <div className="relative z-[1] flex items-start gap-3 sm:gap-4">
                     <div className="relative flex-shrink-0">
                       <div
-                        className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-md ring-2 ring-white/70"
-                        style={{ backgroundColor: palette.accent }}
+                        className="w-11 h-11 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-md ring-2 ring-white/80"
+                        style={{
+                          background: `linear-gradient(145deg, ${coastalPalette.teal} 0%, color-mix(in srgb, ${coastalPalette.title} 85%, ${coastalPalette.teal}) 100%)`,
+                        }}
                       >
                         <span className={`${cinzel.className} text-white font-semibold text-xs sm:text-sm md:text-base`}>
                           {getInitials(guest.name)}
                         </span>
                       </div>
-                      {guest.isVip && (
-                        <div className="absolute -top-0.5 -right-0.5">
-                          <div className="flex items-center justify-center w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 bg-gradient-to-r from-amber-500 to-amber-600 rounded-full shadow-md border-2 border-white">
-                            <Crown className="h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3.5 md:w-3.5 text-white fill-current" />
-                          </div>
-                        </div>
-                      )}
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="mb-1.5 sm:mb-2">
-                        <h3
-                          className={`${ct.guestName} font-semibold leading-tight mb-0.5`}
-                          style={{ ...bodyFont, color: palette.heading }}
-                        >
-                          {guest.name}
-                        </h3>
-                        {guest.role && (
-                          <p
-                            className={`${cinzel.className} ${ct.meta} font-medium uppercase tracking-wide`}
-                            style={{ color: palette.label }}
+                    <div className="flex-1 min-w-0 pt-0.5">
+                      <div className="flex items-start justify-between gap-2 mb-2 sm:mb-2.5">
+                        <div className="min-w-0">
+                          <h3
+                            className={`${ct.guestName} font-semibold leading-tight truncate`}
+                            style={{ ...bodyFont, color: palette.heading }}
+                            title={guest.name}
                           >
-                            {guest.role}
-                          </p>
+                            {guest.name}
+                          </h3>
+                          {guest.role && (
+                            <p
+                              className={`${cinzel.className} ${ct.meta} font-medium uppercase tracking-wide mt-0.5`}
+                              style={{ color: palette.label }}
+                            >
+                              {guest.role}
+                            </p>
+                          )}
+                        </div>
+                        {guest.isVip && (
+                          <span
+                            className={`${cinzel.className} shrink-0 ${ct.meta} px-2 py-0.5 rounded-full font-semibold uppercase tracking-[0.12em] text-white border border-white/80`}
+                            style={{ backgroundColor: coastalPalette.dustyRose }}
+                          >
+                            VIP
+                          </span>
                         )}
                       </div>
 
                       <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-                        <div
-                          className="flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-motif-deep/20"
-                          style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 8%, transparent)" }}
+                        <span
+                          className={`${cinzel.className} ${ct.meta} px-2.5 py-1 rounded-full border font-semibold uppercase tracking-[0.1em]`}
+                          style={{
+                            color: coastalPalette.deep,
+                            borderColor: `color-mix(in srgb, ${coastalPalette.teal} 28%, white)`,
+                            backgroundColor: `color-mix(in srgb, ${coastalPalette.teal} 10%, transparent)`,
+                          }}
                         >
-                          <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" style={{ color: palette.accent }} />
-                          <span className={`${ct.meta} font-medium`} style={{ ...bodyFont, color: palette.body }}>
-                            {guest.allowedGuests} {guest.allowedGuests === 1 ? "Guest" : "Guests"}
-                          </span>
-                        </div>
-                        <div
-                          className="flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-motif-deep/20"
-                          style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-medium) 8%, transparent)" }}
+                          {guest.allowedGuests} {guest.allowedGuests === 1 ? "Guest" : "Guests"}
+                        </span>
+                        <span
+                          className={`${cinzel.className} ${ct.meta} px-2.5 py-1 rounded-full border font-semibold uppercase tracking-[0.1em]`}
+                          style={{
+                            color: coastalPalette.deep,
+                            borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)`,
+                            backgroundColor: `color-mix(in srgb, ${coastalPalette.blueGray} 14%, transparent)`,
+                          }}
                         >
-                          <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 flex-shrink-0" style={{ color: palette.label }} />
-                          <span className={`${ct.meta} font-medium`} style={{ ...bodyFont, color: palette.body }}>
-                            {guest.tableNumber && guest.tableNumber.trim() !== "" ? (
-                              <>Table {guest.tableNumber}</>
-                            ) : (
-                              <span className="opacity-65">Not Assigned</span>
-                            )}
-                          </span>
-                        </div>
+                          {guest.tableNumber && guest.tableNumber.trim() !== "" ? (
+                            <>Table {guest.tableNumber}</>
+                          ) : (
+                            <span className="opacity-65">No Table Yet</span>
+                          )}
+                        </span>
                       </div>
 
                       {guest.companions && guest.companions.length > 0 && (
-                        <div className="pt-2 sm:pt-2.5 border-t border-motif-deep/15">
-                          <div className="flex items-center gap-1.5 mb-1.5 sm:mb-2">
-                            <Users className="h-3 w-3 sm:h-3.5 sm:w-3.5" style={{ color: palette.accent }} />
-                            <span className={`${cinzel.className} ${ct.meta} font-semibold uppercase tracking-wide`} style={{ color: palette.label }}>
-                              Companions
-                            </span>
-                          </div>
+                        <div
+                          className="pt-2.5 sm:pt-3 border-t"
+                          style={{ borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 28%, white)` }}
+                        >
+                          <span
+                            className={`${cinzel.className} ${ct.meta} font-semibold uppercase tracking-[0.14em] mb-2 block`}
+                            style={{ color: palette.label }}
+                          >
+                            With Them
+                          </span>
                           <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {guest.companions.map((companion, idx) => (
                               <div
                                 key={idx}
-                                className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border border-motif-deep/20 transition-colors hover:border-motif-deep/35"
-                                style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 85%, white)" }}
+                                className="inline-flex items-center gap-1.5 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg border transition-colors"
+                                style={{
+                                  borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 30%, white)`,
+                                  backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 55%, white)`,
+                                }}
                               >
                                 <span className={`${ct.meta} font-medium whitespace-nowrap`} style={{ ...bodyFont, color: palette.body }}>
                                   {companion.name}
                                 </span>
                                 {companion.relationship && companion.relationship.trim() !== "" && (
                                   <span
-                                    className={`${cinzel.className} text-[9px] sm:text-[10px] font-medium px-1.5 sm:px-2 py-0.5 rounded-full border border-motif-deep/15 whitespace-nowrap`}
-                                    style={{ color: palette.label, backgroundColor: "color-mix(in srgb, var(--color-motif-medium) 10%, transparent)" }}
+                                    className={`${cinzel.className} text-[9px] sm:text-[10px] font-medium px-1.5 sm:px-2 py-0.5 rounded-full border whitespace-nowrap`}
+                                    style={{
+                                      color: palette.label,
+                                      borderColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 25%, white)`,
+                                      backgroundColor: `color-mix(in srgb, ${coastalPalette.dustyRose} 10%, transparent)`,
+                                    }}
                                   >
                                     {companion.relationship}
                                   </span>
@@ -451,8 +538,10 @@ export function BookOfGuests() {
                         </div>
                       )}
 
-                      <div className="flex items-center gap-1.5 pt-2 sm:pt-2.5 mt-2 border-t border-motif-deep/12">
-                        <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5 opacity-75" style={{ color: palette.label }} />
+                      <div
+                        className="pt-2.5 sm:pt-3 mt-2.5 border-t flex items-center justify-between gap-2"
+                        style={{ borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 25%, white)` }}
+                      >
                         <span className={ct.meta} style={{ ...bodyFont, color: palette.body, opacity: 0.85 }}>
                           Confirmed {formatDate(guest.updatedAt)}
                         </span>
@@ -463,36 +552,56 @@ export function BookOfGuests() {
               ))}
               </div>
 
-              {/* Carousel indicators — warm brown */}
+              {/* Carousel indicators */}
               {confirmedGuests.length > CARDS_PER_VIEW && (
-                <div className="flex items-center justify-center gap-2 mt-4 sm:mt-6">
-                  {Array.from({ length: Math.ceil(confirmedGuests.length / CARDS_PER_VIEW) }).map((_, idx) => {
-                    const pageIndex = Math.floor(currentIndex / CARDS_PER_VIEW)
-                    const isActive = pageIndex === idx
-                    return (
-                      <button
-                        key={idx}
-                        type="button"
-                        onClick={() => {
-                          setIsTransitioning(true)
-                          setTimeout(() => {
-                            setCurrentIndex(idx * CARDS_PER_VIEW)
-                            setIsTransitioning(false)
-                            setJustEntered(true)
-                            setTimeout(() => setJustEntered(false), 1100)
-                          }, 600)
-                        }}
-                        className="h-2 rounded-full transition-all duration-300 hover:opacity-90"
-                        style={{
-                          width: isActive ? "1.75rem" : "0.5rem",
-                          backgroundColor: isActive ? palette.accent : "color-mix(in srgb, var(--color-motif-deep) 31%, transparent)",
-                        }}
-                        aria-label={`Go to page ${idx + 1}`}
-                      />
-                    )
-                  })}
+                <div className="flex flex-col items-center gap-2 mt-5 sm:mt-7">
+                  <div className="flex items-center justify-center gap-2">
+                    {Array.from({ length: Math.ceil(confirmedGuests.length / CARDS_PER_VIEW) }).map((_, idx) => {
+                      const pageIndex = Math.floor(currentIndex / CARDS_PER_VIEW)
+                      const isActive = pageIndex === idx
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => {
+                            setIsTransitioning(true)
+                            setTimeout(() => {
+                              setCurrentIndex(idx * CARDS_PER_VIEW)
+                              setIsTransitioning(false)
+                              setJustEntered(true)
+                              setTimeout(() => setJustEntered(false), 1100)
+                            }, 600)
+                          }}
+                          className="h-2 rounded-full transition-all duration-300 hover:opacity-90"
+                          style={{
+                            width: isActive ? "1.75rem" : "0.5rem",
+                            backgroundColor: isActive
+                              ? palette.accent
+                              : `color-mix(in srgb, ${coastalPalette.blueGray} 45%, transparent)`,
+                          }}
+                          aria-label={`Go to page ${idx + 1}`}
+                        />
+                      )
+                    })}
+                  </div>
+                  <p className={`${cinzel.className} ${ct.meta} uppercase tracking-[0.14em] opacity-70`} style={{ color: palette.body }}>
+                    Page {Math.floor(currentIndex / CARDS_PER_VIEW) + 1} of {Math.ceil(confirmedGuests.length / CARDS_PER_VIEW)}
+                  </p>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {confirmedGuests.length === 0 && !isRefreshing && (
+          <div className="relative z-20 max-w-xl mx-auto text-center px-4">
+            <div className="rounded-xl sm:rounded-2xl border backdrop-blur-xl px-6 py-10 sm:py-12" style={glassCardStyle}>
+              <p className={`${cinzel.className} ${ct.bodyLg} font-semibold mb-2`} style={{ color: palette.heading }}>
+                Guest list updating
+              </p>
+              <p className={ct.body} style={{ ...bodyFont, color: palette.body }}>
+                Confirmed guests will appear here as RSVPs come in.
+              </p>
             </div>
           </div>
         )}

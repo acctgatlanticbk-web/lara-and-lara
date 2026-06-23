@@ -1,44 +1,18 @@
-import React, { useId } from 'react'
-
-// Palette lives in globals.css → @theme inline → --color-motif-*
-const THEME = {
-  cream: 'var(--color-motif-cream)',
-  yellow: 'var(--color-motif-yellow)',
-  soft: 'var(--color-motif-soft)',
-  accent: 'var(--color-motif-accent)',
-  deep: 'var(--color-motif-deep)',
-  medium: 'var(--color-motif-medium)',
-  silver: 'var(--color-motif-silver)',
-  white: '#FFFFFF',
-} as const
-
-const VARIANT_COLORS = {
-  light: THEME.white,
-  cream: THEME.cream,
-  soft: THEME.soft,
-  silver: THEME.silver,
-  accent: THEME.accent,
-  dark: THEME.medium,
-} as const
+import React from 'react'
+import { coastalLightBg } from '@/lib/coastal-palette'
 
 interface TornPaperEdgeProps {
   className?: string
   flipped?: boolean
-  /** Preset fill matching the invitation palette */
-  variant?: keyof typeof VARIANT_COLORS
-  /** Override fill color (takes precedence over variant) */
+  /** Solid fill — defaults to light section background */
   color?: string
 }
 
 export const TornPaperEdge: React.FC<TornPaperEdgeProps> = ({
   className = '',
   flipped = false,
-  variant = 'cream',
-  color,
+  color = coastalLightBg,
 }) => {
-  const fill = color ?? VARIANT_COLORS[variant]
-  const gradientId = useId()
-
   const path = `
     M0,0 
     L0,6
@@ -59,14 +33,7 @@ export const TornPaperEdge: React.FC<TornPaperEdgeProps> = ({
         className={`block h-3 w-full md:h-8 ${flipped ? 'rotate-180' : ''}`}
         aria-hidden
       >
-        <defs>
-          <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor={fill} stopOpacity="1" />
-            <stop offset="50%" stopColor={fill} stopOpacity="0.92" />
-            <stop offset="100%" stopColor={fill} stopOpacity="1" />
-          </linearGradient>
-        </defs>
-        <path d={path} fill={`url(#${gradientId})`} />
+        <path d={path} fill={color} />
       </svg>
     </div>
   )

@@ -2,24 +2,39 @@
 
 import { useState, useEffect, useMemo, type ReactNode } from "react"
 import { motion } from "motion/react"
-import { Instagram, Twitter, Facebook, MapPin, Calendar, Clock, Heart, Music2 } from "lucide-react"
+import { Instagram, Twitter, Facebook, Music2 } from "lucide-react"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { Cinzel } from "next/font/google"
 import Image from "next/image"
+import {
+  coastalLightBg,
+  coastalPalette,
+  displayScript,
+} from "@/lib/coastal-palette"
+
+const FOOTER_MONOGRAM_COLOR = "#94B8C8"
+
+const MONOGRAM_COLOR_FILTER =
+  `brightness(0) saturate(100%) invert(79%) sepia(11%) saturate(749%) hue-rotate(169deg) brightness(95%) contrast(89%) drop-shadow(0 4px 16px color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 50%, transparent)) drop-shadow(0 10px 28px color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 35%, transparent))`
 
 const cinzel = Cinzel({
   subsets: ["latin"],
   weight: ["400", "600"],
 })
 
+const CORNER_DECO_CLASS =
+  "block h-auto w-auto max-w-[120px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
+
+const BLUE_SHELL_FILTER =
+  `brightness(0) saturate(100%) invert(58%) sepia(18%) saturate(612%) hue-rotate(152deg) brightness(95%) contrast(88%) drop-shadow(0 4px 14px color-mix(in srgb, ${coastalPalette.blueGray} 55%, transparent))`
+
 const palette = {
-  body: "#2a2520",
-  heading: "#1a1a1a",
-  label: "var(--color-motif-medium)",
-  accent: "var(--color-motif-accent)",
-  deep: "var(--color-motif-deep)",
-  cream: "var(--color-motif-cream)",
-  silver: "var(--color-motif-silver)",
+  body: coastalPalette.body,
+  heading: coastalPalette.deep,
+  label: coastalPalette.dustyRose,
+  accent: coastalPalette.title,
+  deep: coastalPalette.deep,
+  cream: coastalPalette.cream,
 } as const
 
 const bodyFont: React.CSSProperties = {
@@ -47,9 +62,12 @@ const toTitleCase = (str: string) =>
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ")
 
-const cardStyle = {
-  backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 94%, white)",
-  boxShadow: "0 12px 30px color-mix(in srgb, var(--color-motif-deep) 10%, transparent)",
+const glassCardStyle = {
+  backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 38%, transparent)`,
+  borderWidth: "1px",
+  borderStyle: "solid",
+  borderColor: `color-mix(in srgb, white 72%, ${coastalPalette.blueGray})`,
+  boxShadow: `0 20px 48px color-mix(in srgb, ${coastalPalette.teal} 10%, transparent), 0 8px 24px color-mix(in srgb, ${coastalPalette.blueGray} 14%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.82)`,
 } as const
 
 function FooterCard({
@@ -61,11 +79,36 @@ function FooterCard({
 }) {
   return (
     <div
-      className={`relative w-full min-w-0 rounded-2xl border-2 border-motif-deep/25 p-4 sm:p-5 md:p-6 transition-all duration-300 hover:border-motif-deep/40 hover:shadow-lg ${className}`}
-      style={cardStyle}
+      className={`relative w-full min-w-0 rounded-xl sm:rounded-2xl backdrop-blur-xl sm:backdrop-blur-2xl p-4 sm:p-5 md:p-6 transition-all duration-300 hover:shadow-xl ${className}`}
+      style={glassCardStyle}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-motif-accent/[0.05] via-transparent to-transparent" aria-hidden />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/35 via-white/8 to-transparent"
+        aria-hidden
+      />
       <div className="relative z-[1] min-w-0">{children}</div>
+    </div>
+  )
+}
+
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string
+  value: string
+}) {
+  return (
+    <div className="space-y-0.5">
+      <p
+        className={`${cinzel.className} ${ct.label} uppercase tracking-[0.14em] font-semibold`}
+        style={{ color: palette.label }}
+      >
+        {label}
+      </p>
+      <p className={ct.body} style={{ ...bodyFont, color: palette.body }}>
+        {value}
+      </p>
     </div>
   )
 }
@@ -78,8 +121,8 @@ export function Footer() {
   const receptionTime = siteConfig.reception.time
   const ceremonyVenue = siteConfig.ceremony.location
   const receptionVenue = siteConfig.reception.location
-  const isSameVenue = ceremonyVenue === receptionVenue
-  const combinedVenue = isSameVenue ? ceremonyVenue : null
+  const ceremonyAddress = siteConfig.ceremony.venue
+  const receptionAddress = siteConfig.reception.venue
 
   const brideNickname = siteConfig.couple.brideNickname
   const groomNickname = siteConfig.couple.groomNickname
@@ -142,82 +185,99 @@ export function Footer() {
   )
 
   return (
-    <div className="relative w-full" style={{ backgroundColor: palette.cream }}>
-      {/* Full-bleed layered background — retained */}
-      <div className="absolute inset-0 pointer-events-none" aria-hidden>
-        <div
-          className="absolute inset-0 opacity-[0.25]"
-          style={{
-            background:
-              "linear-gradient(165deg, var(--color-motif-cream) 0%, color-mix(in srgb, var(--color-motif-silver) 13%, transparent) 35%, color-mix(in srgb, var(--color-motif-medium) 6%, transparent) 70%, color-mix(in srgb, var(--color-motif-deep) 3%, transparent) 100%)",
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.08]"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 50% at 50% 15%, var(--color-motif-silver) 0%, transparent 55%)",
-          }}
-        />
-      </div>
-
-      <footer className="relative z-10 mt-12 sm:mt-16">
-        {/* Corner decorations */}
-        <div className="absolute left-0 top-0 z-0 pointer-events-none opacity-25">
-          <Image src="/decoration/flower-decoration-left-bottom-corner2.png" alt="" width={300} height={300} className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] scale-y-[-1]" priority={false} />
+    <div className="relative w-full overflow-hidden" style={{ backgroundColor: coastalLightBg }}>
+      <footer className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14">
+        {/* Shell corner decorations */}
+        <div className="pointer-events-none absolute left-0 top-0 z-[1]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/decoration/top-left-shell-deco.png"
+            alt=""
+            className={CORNER_DECO_CLASS}
+            style={{ filter: BLUE_SHELL_FILTER }}
+          />
         </div>
-        <div className="absolute right-0 top-0 z-0 pointer-events-none opacity-25">
-          <Image src="/decoration/flower-decoration-left-bottom-corner2.png" alt="" width={300} height={300} className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] scale-x-[-1] scale-y-[-1]" priority={false} />
-        </div>
-        <div className="absolute left-0 bottom-0 z-0 pointer-events-none opacity-25">
-          <Image src="/decoration/flower-decoration-left-bottom-corner2.png" alt="" width={300} height={300} className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px]" priority={false} />
-        </div>
-        <div className="absolute right-0 bottom-0 z-0 pointer-events-none opacity-25">
-          <Image src="/decoration/flower-decoration-left-bottom-corner2.png" alt="" width={300} height={300} className="w-auto h-auto max-w-[140px] sm:max-w-[180px] md:max-w-[220px] scale-x-[-1]" priority={false} />
+        <div className="pointer-events-none absolute bottom-0 right-0 z-[1]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/decoration/right-bottom-shell-deco.png"
+            alt=""
+            className={CORNER_DECO_CLASS}
+            style={{ filter: BLUE_SHELL_FILTER }}
+          />
         </div>
 
-        {/* Monogram */}
-        <div className="relative z-10 flex flex-col items-center pt-6 sm:pt-8 md:pt-10 mb-6 sm:mb-8 px-3">
-          <motion.div initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease: "easeOut" }}>
+        {/* Monogram + couple header */}
+        <div className="relative z-10 flex flex-col items-center mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10">
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex flex-col items-center"
+          >
             <div className="relative w-44 h-44 sm:w-56 sm:h-56 md:w-64 md:h-64 lg:w-72 lg:h-72">
+              {/* Soft glow plate behind monogram */}
+              <div
+                className="pointer-events-none absolute inset-[-18%] rounded-full"
+                style={{
+                  background: `radial-gradient(circle at center, color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 32%, transparent) 0%, color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 14%, transparent) 48%, transparent 72%)`,
+                }}
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute inset-[-8%] rounded-full blur-2xl opacity-50"
+                style={{
+                  background: `radial-gradient(circle, color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 28%, transparent) 0%, transparent 70%)`,
+                }}
+                aria-hidden
+              />
               <Image
                 src={siteConfig.couple.monogram}
                 alt={`${coupleDisplayName} monogram`}
                 fill
                 className="object-contain"
+                style={{ filter: MONOGRAM_COLOR_FILTER }}
                 priority={false}
+                sizes="(max-width: 640px) 176px, (max-width: 1024px) 256px, 288px"
               />
             </div>
           </motion.div>
 
-          <div className="mt-3 sm:mt-4 text-center">
+          <div className="mt-4 sm:mt-5 md:mt-6 text-center max-w-md">
             <h2
-              className="leading-none mb-1.5 sm:mb-2"
+              className="mx-auto whitespace-nowrap leading-[1.1]"
               style={{
-                fontFamily: "'HelloParisSans', serif",
-                fontSize: "clamp(1.75rem, 7vw, 3.25rem)",
-                color: palette.medium,
-                letterSpacing: "0.01em",
+                ...displayScript,
+                fontSize: "clamp(2rem, 6.5vw, 3.5rem)",
+                color: FOOTER_MONOGRAM_COLOR,
+                letterSpacing: "0.03em",
+                textShadow: `0 2px 12px color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 45%, transparent)`,
               }}
             >
               {coupleDisplayName}
             </h2>
-            <p className={`${cinzel.className} ${ct.bodyLg} tracking-[0.12em] uppercase`} style={{ color: palette.label }}>
+            <p
+              className={`${ct.bodyLg} mt-2 sm:mt-3 italic`}
+              style={{
+                ...bodyFont,
+                color: FOOTER_MONOGRAM_COLOR,
+                letterSpacing: "0.04em",
+                textShadow: `0 1px 8px color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 35%, transparent)`,
+              }}
+            >
               {ceremonyDate}
-            </p>
-            <p className={`${ct.body} mt-1.5 sm:mt-2`} style={{ ...bodyFont, color: palette.body }}>
-              {combinedVenue ?? ceremonyVenue}
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-2 pt-3 sm:pt-4">
-            <span className="h-px w-10 sm:w-16 bg-motif-accent/35" />
-            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: palette.accent }} fill={palette.accent} />
-            <span className="h-px w-10 sm:w-16 bg-motif-accent/35" />
+          <div className="flex items-center justify-center pt-3 sm:pt-4">
+            <span
+              className="h-px w-16 sm:w-24 md:w-32"
+              style={{ backgroundColor: `color-mix(in srgb, ${FOOTER_MONOGRAM_COLOR} 65%, white)` }}
+            />
           </div>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-4 md:px-8 pb-8 sm:pb-10 min-w-0">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 pb-4 sm:pb-6 min-w-0">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8 mb-8 sm:mb-10 items-start"
             variants={staggerChildren}
@@ -227,132 +287,92 @@ export function Footer() {
             {/* Couple info + quote */}
             <motion.div className="lg:col-span-2 min-w-0" variants={fadeInUp}>
               <div className="mb-5 sm:mb-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
-                    style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 14%, transparent)" }}
-                  >
-                    <Heart className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: palette.accent }} fill={palette.accent} />
-                  </div>
-                  <h3 className={`${cinzel.className} ${ct.title} font-semibold leading-tight`} style={{ color: palette.heading }}>
-                    {coupleDisplayName}
-                  </h3>
-                </div>
-                <div className="space-y-2.5 sm:space-y-3">
-                  <div className="flex items-center gap-2.5 sm:gap-3">
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" style={{ color: palette.accent }} />
-                    <span className={ct.bodyLg} style={{ ...bodyFont, color: palette.body }}>{ceremonyDate}</span>
-                  </div>
-                  <div className="flex items-start gap-2.5 sm:gap-3">
-                    <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" style={{ color: palette.accent }} />
-                    <span className={`${ct.body} leading-relaxed`} style={{ ...bodyFont, color: palette.body }}>
-                      {toTitleCase(ceremonyVenue)}
-                    </span>
-                  </div>
+                <h3
+                  className={`${cinzel.className} ${ct.title} font-semibold leading-tight mb-4`}
+                  style={{ color: palette.heading }}
+                >
+                  {coupleDisplayName}
+                </h3>
+                <div className="space-y-3 sm:space-y-4">
+                  <DetailRow label="Wedding Date" value={ceremonyDate} />
+                  <DetailRow label="Venue" value={toTitleCase(ceremonyVenue)} />
                 </div>
               </div>
 
               <FooterCard>
-                <blockquote className={`${ct.bodyLg} italic leading-relaxed min-h-[4.5rem] sm:min-h-[5rem]`} style={{ ...bodyFont, color: palette.body }}>
+                <p
+                  className={`${cinzel.className} ${ct.label} uppercase tracking-[0.14em] font-semibold mb-3`}
+                  style={{ color: palette.label }}
+                >
+                  A Note From Us
+                </p>
+                <blockquote
+                  className={`${ct.bodyLg} italic leading-relaxed min-h-[4.5rem] sm:min-h-[5rem]`}
+                  style={{ ...bodyFont, color: palette.body }}
+                >
                   &ldquo;{displayedText}
-                  <span className="inline-block w-0.5 h-4 sm:h-5 ml-1 animate-pulse align-middle" style={{ backgroundColor: palette.accent }} />
+                  <span
+                    className="inline-block w-0.5 h-4 sm:h-5 ml-1 animate-pulse align-middle"
+                    style={{ backgroundColor: coastalPalette.teal }}
+                  />
                   &rdquo;
                 </blockquote>
                 <div className="flex items-center gap-1.5 mt-3 sm:mt-4">
-                  {[0, 1, 2].map((i) => (
+                  {FOOTER_QUOTES.map((_, i) => (
                     <div
                       key={i}
-                      className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full"
-                      style={{ backgroundColor: palette.accent, opacity: i === 1 ? 0.5 : 1 }}
+                      className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-opacity"
+                      style={{
+                        backgroundColor: palette.accent,
+                        opacity: i === currentQuoteIndex ? 1 : 0.35,
+                      }}
                     />
                   ))}
                 </div>
               </FooterCard>
             </motion.div>
 
-            {/* Event details */}
+            {/* Event details — ceremony and reception always separate */}
             <motion.div className="space-y-4 sm:space-y-5 min-w-0" variants={fadeInUp}>
-              {isSameVenue ? (
-                <FooterCard>
-                  <div className="flex items-center gap-2.5 sm:gap-3 mb-3 sm:mb-4">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: palette.deep }}>
-                      <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-motif-cream" />
-                    </div>
-                    <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold`} style={{ color: palette.heading }}>
-                      Ceremony &amp; Reception
-                    </h4>
-                  </div>
-                  <div className="space-y-2.5 sm:space-y-3">
-                    <div className="flex items-start gap-2.5">
-                      <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: palette.label }} />
-                      <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>
-                        {toTitleCase(combinedVenue ?? ceremonyVenue)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2.5">
-                      <Clock className="w-4 h-4 flex-shrink-0" style={{ color: palette.label }} />
-                      <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>
-                        Ceremony {ceremonyTime} · Reception {receptionTime}
-                      </span>
-                    </div>
-                  </div>
-                </FooterCard>
-              ) : (
-                <>
-                  <FooterCard>
-                    <div className="flex items-center gap-2.5 sm:gap-3 mb-3">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 14%, transparent)" }}>
-                        <Clock className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: palette.accent }} />
-                      </div>
-                      <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold`} style={{ color: palette.heading }}>Ceremony</h4>
-                    </div>
-                    <div className="space-y-2.5">
-                      <div className="flex items-start gap-2.5">
-                        <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: palette.label }} />
-                        <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>{toTitleCase(ceremonyVenue)}</span>
-                      </div>
-                      <div className="flex items-center gap-2.5">
-                        <Clock className="w-4 h-4 flex-shrink-0" style={{ color: palette.label }} />
-                        <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>{ceremonyTime}</span>
-                      </div>
-                    </div>
-                  </FooterCard>
-                  <FooterCard>
-                    <div className="flex items-center gap-2.5 sm:gap-3 mb-3">
-                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-accent) 14%, transparent)" }}>
-                        <Heart className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: palette.accent }} fill={palette.accent} />
-                      </div>
-                      <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold`} style={{ color: palette.heading }}>Reception</h4>
-                    </div>
-                    <div className="space-y-2.5">
-                      <div className="flex items-start gap-2.5">
-                        <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: palette.label }} />
-                        <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>{toTitleCase(receptionVenue)}</span>
-                      </div>
-                      <div className="flex items-center gap-2.5">
-                        <Clock className="w-4 h-4 flex-shrink-0" style={{ color: palette.label }} />
-                        <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>{receptionTime}</span>
-                      </div>
-                    </div>
-                  </FooterCard>
-                </>
-              )}
+              <FooterCard>
+                <h4
+                  className={`${cinzel.className} ${ct.cardTitle} font-semibold mb-3`}
+                  style={{ color: palette.heading }}
+                >
+                  Ceremony
+                </h4>
+                <div className="space-y-3">
+                  <DetailRow label="Venue" value={toTitleCase(ceremonyVenue)} />
+                  {ceremonyAddress && ceremonyAddress !== ceremonyVenue && (
+                    <DetailRow label="Address" value={toTitleCase(ceremonyAddress)} />
+                  )}
+                  <DetailRow label="Time" value={ceremonyTime} />
+                </div>
+              </FooterCard>
 
               <FooterCard>
-                <div className="flex items-center gap-2.5 sm:gap-3 mb-3">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0" style={{ backgroundColor: palette.deep }}>
-                    <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-motif-cream" />
-                  </div>
-                  <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold`} style={{ color: palette.heading }}>
-                    RSVP Deadline
-                  </h4>
+                <h4
+                  className={`${cinzel.className} ${ct.cardTitle} font-semibold mb-3`}
+                  style={{ color: palette.heading }}
+                >
+                  Reception
+                </h4>
+                <div className="space-y-3">
+                  <DetailRow label="Venue" value={toTitleCase(receptionVenue)} />
+                  {receptionAddress && receptionAddress !== receptionVenue && (
+                    <DetailRow label="Address" value={toTitleCase(receptionAddress)} />
+                  )}
+                  <DetailRow label="Time" value={receptionTime} />
                 </div>
+              </FooterCard>
+
+              <FooterCard>
+                <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold mb-3`} style={{ color: palette.heading }}>
+                  RSVP Deadline
+                </h4>
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2.5">
-                    <Clock className="w-4 h-4 flex-shrink-0" style={{ color: palette.label }} />
-                    <span className={ct.body} style={{ ...bodyFont, color: palette.body }}>{siteConfig.details.rsvp.deadline}</span>
-                  </div>
-                  <p className={`${ct.body} leading-relaxed pl-6 sm:pl-7`} style={{ ...bodyFont, color: palette.body, opacity: 0.9 }}>
+                  <DetailRow label="Please respond by" value={siteConfig.details.rsvp.deadline} />
+                  <p className={`${ct.body} leading-relaxed`} style={{ ...bodyFont, color: palette.body, opacity: 0.9 }}>
                     Please confirm your attendance by this date.
                   </p>
                 </div>
@@ -362,8 +382,14 @@ export function Footer() {
             {/* Social + links */}
             <motion.div className="space-y-5 sm:space-y-6 min-w-0" variants={fadeInUp}>
               <div>
-                <h4 className={`${cinzel.className} ${ct.cardTitle} font-semibold mb-3 sm:mb-4 flex items-center gap-2`} style={{ color: palette.heading }}>
-                  <span className="w-1.5 h-6 sm:h-7 rounded-full flex-shrink-0" style={{ backgroundColor: palette.accent }} />
+                <h4
+                  className={`${cinzel.className} ${ct.cardTitle} font-semibold mb-3 sm:mb-4 flex items-center gap-2`}
+                  style={{ color: palette.heading }}
+                >
+                  <span
+                    className="w-1.5 h-6 sm:h-7 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: coastalPalette.teal }}
+                  />
                   Follow Us
                 </h4>
                 <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
@@ -380,8 +406,15 @@ export function Footer() {
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full border border-motif-deep/15 transition-all duration-200 hover:scale-110 hover:border-motif-accent/40 hover:bg-motif-accent/10"
-                      style={{ backgroundColor: "color-mix(in srgb, var(--color-motif-cream) 90%, white)", color: palette.accent }}
+                      className="inline-flex items-center justify-center h-10 w-10 sm:h-11 sm:w-11 rounded-full transition-all duration-200 hover:scale-110"
+                      style={{
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: `color-mix(in srgb, white 65%, ${coastalPalette.blueGray})`,
+                        backgroundColor: `color-mix(in srgb, ${coastalPalette.cream} 45%, transparent)`,
+                        color: coastalPalette.teal,
+                        boxShadow: `0 4px 12px color-mix(in srgb, ${coastalPalette.blueGray} 12%, transparent)`,
+                      }}
                       aria-label={label}
                     >
                       <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -391,7 +424,10 @@ export function Footer() {
               </div>
 
               <div>
-                <h5 className={`${cinzel.className} ${ct.body} font-semibold mb-2.5 sm:mb-3 uppercase tracking-[0.1em]`} style={{ color: palette.label }}>
+                <h5
+                  className={`${cinzel.className} ${ct.body} font-semibold mb-2.5 sm:mb-3 uppercase tracking-[0.1em]`}
+                  style={{ color: palette.label }}
+                >
                   Quick Links
                 </h5>
                 <div className="space-y-1.5 sm:space-y-2">
@@ -411,7 +447,11 @@ export function Footer() {
           </motion.div>
 
           {/* Bottom bar */}
-          <motion.div className="pt-6 sm:pt-8 border-t border-motif-deep/15" variants={fadeInUp}>
+          <motion.div
+            className="pt-6 sm:pt-8 border-t"
+            style={{ borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)` }}
+            variants={fadeInUp}
+          >
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
               <div className="text-center md:text-left min-w-0">
                 <p className={`${ct.body} leading-relaxed`} style={{ ...bodyFont, color: palette.body }}>

@@ -1,80 +1,85 @@
 import { siteConfig } from "@/content/site"
-
-// Champagne Gold + Beige + Soft Brown
-// creates a luxury, elegant, and warm aesthetic
-const palette = {
-  deep: "var(--color-motif-deep)",            // deep brown
-  softBrown: "var(--color-motif-medium)",       // soft brown
-  background: "var(--color-motif-cream)",      // beige background
-  champagneGold: "var(--color-motif-silver)",   // champagne
-  champagneLight: "var(--color-motif-cream)",  // light champagne / paper
-} as const
+import {
+  coastalLightBg,
+  coastalPalette,
+  coastalTitleShadow,
+  displayScript,
+} from "@/lib/coastal-palette"
 
 export function Footer() {
   return (
     <footer
-      className="mt-20 border-t relative overflow-hidden"
+      className="relative overflow-hidden border-t pt-8 pb-8 sm:pt-10 sm:pb-10"
       style={{
-        backgroundColor: 'color-mix(in srgb, var(--color-motif-cream) 94%, transparent)',
-        borderColor: 'color-mix(in srgb, var(--color-motif-silver) 25%, transparent)',
+        backgroundColor: coastalLightBg,
+        borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)`,
       }}
     >
-      {/* Subtle champagne gradient + glow, echoing details/gallery */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div
-          className="absolute inset-0 opacity-[0.22]"
-          style={{
-            background: `linear-gradient(165deg, var(--color-motif-cream) 0%, color-mix(in srgb, var(--color-motif-silver) 13%, transparent) 35%, color-mix(in srgb, var(--color-motif-medium) 6%, transparent) 70%, color-mix(in srgb, var(--color-motif-deep) 3%, transparent) 100%)`,
-          }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.14]"
-          style={{
-            background: `radial-gradient(circle at 50% 0%, var(--color-motif-silver) 0%, transparent 55%)`,
-          }}
-        />
-      </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+        <div className="text-center mb-8 sm:mb-10">
+          <p
+            className="text-[11px] sm:text-xs uppercase tracking-[0.2em] mb-2 font-semibold"
+            style={{ color: coastalPalette.dustyRose }}
+          >
+            With Love
+          </p>
+          <h3
+            className="whitespace-nowrap leading-[1.08]"
+            style={{
+              ...displayScript,
+              fontSize: "clamp(1.5rem, 4vw + 0.5rem, 2.5rem)",
+              color: coastalPalette.title,
+              textShadow: coastalTitleShadow,
+            }}
+          >
+            {siteConfig.couple.bride} & {siteConfig.couple.groom}
+          </h3>
+          <p className="text-sm mt-2" style={{ color: coastalPalette.body }}>
+            {siteConfig.wedding.date}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3
-              className="font-serif font-bold text-lg mb-2 tracking-[0.12em] uppercase"
-              style={{ color: 'var(--color-motif-deep)' }}
-            >
-              {siteConfig.couple.bride} & {siteConfig.couple.groom}
-            </h3>
-            <p className="text-sm" style={{ color: 'var(--color-motif-medium)' }}>
-              {siteConfig.wedding.date}
-            </p>
-          </div>
           <div>
             <h4
               className="font-semibold mb-2 tracking-[0.16em] uppercase text-xs"
-              style={{ color: 'var(--color-motif-deep)' }}
+              style={{ color: coastalPalette.deep }}
             >
               Ceremony
             </h4>
-            <p className="text-sm" style={{ color: 'var(--color-motif-medium)' }}>
+            <p className="text-sm" style={{ color: coastalPalette.body }}>
               {siteConfig.ceremony.location}
             </p>
           </div>
           <div>
             <h4
               className="font-semibold mb-2 tracking-[0.16em] uppercase text-xs"
-              style={{ color: palette.deep }}
+              style={{ color: coastalPalette.deep }}
             >
               Reception
             </h4>
-            <p className="text-sm" style={{ color: 'var(--color-motif-medium)' }}>
+            <p className="text-sm" style={{ color: coastalPalette.body }}>
               {siteConfig.reception.location}
             </p>
           </div>
+          <div>
+            <h4
+              className="font-semibold mb-2 tracking-[0.16em] uppercase text-xs"
+              style={{ color: coastalPalette.deep }}
+            >
+              Celebrate With Us
+            </h4>
+            <p className="text-sm" style={{ color: coastalPalette.body }}>
+              {siteConfig.ceremony.venue}
+            </p>
+          </div>
         </div>
+
         <div
           className="mt-8 pt-8 text-center text-sm border-t"
           style={{
-            borderColor: 'color-mix(in srgb, var(--color-motif-silver) 25%, transparent)',
-            color: palette.softBrown,
+            borderColor: `color-mix(in srgb, ${coastalPalette.blueGray} 35%, white)`,
+            color: coastalPalette.dustyRose,
           }}
         >
           <p>With love and gratitude • {new Date().getFullYear()}</p>

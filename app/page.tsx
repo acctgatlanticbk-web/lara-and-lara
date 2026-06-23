@@ -9,6 +9,7 @@ import { WeddingTimeline } from "@/components/sections/wedding-timeline"
 import { Gallery } from "@/components/sections/gallery"
 import { Messages } from "@/components/sections/messages"
 import { Details } from "@/components/sections/details"
+import { Accommodation } from "@/components/sections/accommodation"
 import { Entourage } from "@/components/sections/entourage"
 import { PrincipalSponsors } from "@/components/sections/principal-sponsors"
 import { BookOfGuests } from "@/components/sections/book-of-guests"
@@ -78,7 +79,7 @@ export default function Home() {
             {enableDecor && (
               <div className="fixed inset-0 z-0 pointer-events-none">
                 <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-primary/10 to-secondary/5" />}>
-                  <Silk speed={5} scale={1.1} color="#F95483" noiseIntensity={0.8} rotation={0.3} />
+                  <Silk speed={5} scale={1.1} color="#94B8C8" noiseIntensity={0.8} rotation={0.3} />
                 </Suspense>
               </div>
             )}
@@ -96,6 +97,7 @@ export default function Home() {
               <VideoMessage />
               <Messages />
               <Details />
+              <Accommodation />
               {/* <GuestInformation /> */}
               <WeddingPlaylist />
               <Entourage />
@@ -104,7 +106,7 @@ export default function Home() {
               <WeddingTimeline />
               {/* <PrincipalSponsors /> */}
               <FAQ />
-              {/* <Registry /> */}
+              <Registry />
               <SnapShare />
 
               <Footer />

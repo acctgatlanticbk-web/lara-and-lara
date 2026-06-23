@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Cinzel } from "next/font/google";
-import { CloudinaryImage } from '@/components/ui/cloudinary-image';
+import Image from 'next/image';
+import {
+  coastalDarkBg,
+  coastalLightBg,
+  coastalPalette,
+} from '@/lib/coastal-palette';
 
 import { TornPaperEdge } from './TornPaperEdge';
 
@@ -10,7 +15,7 @@ const cinzel = Cinzel({
 })
 
 const bodyFont: React.CSSProperties = {
-  fontFamily: "'SortsMillGoudy', Georgia, serif",
+  fontFamily: "'SortsMillGoudy', Georgia, 'Times New Roman', serif",
 }
 
 interface StorySectionProps {
@@ -33,8 +38,6 @@ export const StorySection: React.FC<StorySectionProps> = ({
   isLast = false
 }) => {
   const isDark = theme === 'dark';
-  // Palette lives in globals.css → @theme inline → --color-motif-*
-  const bgColor = isDark ? 'bg-motif-deep' : 'bg-motif-cream relative z-10';
   
   // Animation Hook
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -53,43 +56,48 @@ export const StorySection: React.FC<StorySectionProps> = ({
     return () => observer.disconnect();
   }, []);
 
-  // Visual Styles
-  const imageFrameClass = isDark 
-    ? 'bg-motif-cream p-1.5 md:p-3 shadow-lg' 
-    : 'bg-motif-cream p-1.5 md:p-3 shadow-md';
+  const imageFrameStyle = isDark
+    ? {
+        background: `color-mix(in srgb, ${coastalPalette.lavenderBlue} 92%, white)`,
+        boxShadow: `0 10px 28px color-mix(in srgb, ${coastalPalette.deep} 22%, transparent)`,
+      }
+    : {
+        background: `color-mix(in srgb, ${coastalPalette.lavenderBlue} 95%, white)`,
+        border: `1px solid color-mix(in srgb, ${coastalPalette.blueGray} 45%, white)`,
+        boxShadow: `0 8px 24px color-mix(in srgb, ${coastalPalette.teal} 12%, transparent)`,
+      };
 
   // Rotation
   const rotation = layout === 'image-left' ? 'rotate-1 md:rotate-2' : '-rotate-1 md:-rotate-2';
 
-  // FORCED Side-by-Side Layout (Visual structure preserved on Mobile)
-  // Instead of switching to flex-col, we keep flex-row (or reverse)
   const flexDirection = layout === 'image-left' ? 'flex-row' : 'flex-row-reverse';
-  const textAlignment = layout === 'image-left' ? 'text-left' : 'text-left md:text-right'; // Keep text left aligned usually looks better in tight columns, or alternate
 
   return (
-    <div className={`${bgColor} relative`}>
+    <div
+      className="relative"
+      style={{
+        backgroundColor: isDark ? coastalDarkBg : coastalLightBg,
+      }}
+    >
       
-      {/* Torn Edges (Only on Light Section) */}
+      {/* Torn edges on light sections */}
       {!isDark && (
         <>
-          {/* Top Tear */}
-          <div className="absolute top-0 left-0 w-full -mt-[8px] md:-mt-[20px] z-20 text-motif-cream pointer-events-none">
-             <TornPaperEdge flipped={true} />
+          <div className="pointer-events-none absolute left-0 top-0 z-20 w-full -mt-[8px] md:-mt-[20px]">
+             <TornPaperEdge flipped={true} color={coastalLightBg} />
           </div>
-          {/* Bottom Tear */}
-          <div className="absolute bottom-0 left-0 w-full -mb-[8px] md:-mb-[20px] z-20 text-motif-cream pointer-events-none">
-             <TornPaperEdge flipped={false} />
+          <div className="pointer-events-none absolute bottom-0 left-0 z-20 w-full -mb-[8px] md:-mb-[20px]">
+             <TornPaperEdge flipped={false} color={coastalLightBg} />
           </div>
         </>
       )}
       <div 
         ref={sectionRef}
-        className={`container mx-auto px-2 md:px-12 py-12 md:py-32 relative z-10 transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'}`}
+        className={`container mx-auto px-2 md:px-12 py-12 md:py-32 relative z-10 transition-all duration-1000 ease-out transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-16'} ${isFirst ? 'pt-16 md:pt-36' : ''} ${isLast ? 'pb-16 md:pb-36' : ''}`}
       >
-        {/* Gap is very small on mobile (gap-2) to fit content side-by-side */}
         <div className={`flex ${flexDirection} items-center justify-between gap-3 md:gap-16`}>
           
-          {/* Image Column - Approx 45% width on mobile */}
+          {/* Image Column */}
           <div className="w-[45%] md:w-5/12 flex justify-center shrink-0">
             <div className={`
               relative w-full md:max-w-md 
@@ -97,9 +105,9 @@ export const StorySection: React.FC<StorySectionProps> = ({
               ${rotation}
               ${isVisible ? 'scale-100 opacity-100' : 'scale-90 opacity-0'}
             `}>
-               <div className={`${imageFrameClass} w-full`}>
+               <div className="w-full p-1.5 md:p-3" style={imageFrameStyle}>
                  <div className="aspect-[3/4] w-full overflow-hidden relative group">
-                   <CloudinaryImage
+                   <Image
                      src={imageSrc} 
                      alt="Story Moment" 
                      fill
@@ -113,13 +121,19 @@ export const StorySection: React.FC<StorySectionProps> = ({
                </div>
             </div>
           </div>
-          {/* Text Column - Approx 55% width on mobile */}
-          <div className={`w-[55%] md:w-5/12 ${isDark ? 'text-motif-cream' : 'text-black'}`}>
+          {/* Text Column */}
+          <div
+            className="w-[55%] md:w-5/12"
+            style={{ color: isDark ? coastalPalette.cream : coastalPalette.body }}
+          >
             {title && (
-              <h2 className={`${cinzel.className} text-lg sm:text-2xl md:text-5xl lg:text-6xl mb-3 md:mb-6 tracking-wide leading-tight
+              <h2
+                className={`${cinzel.className} text-lg sm:text-2xl md:text-5xl lg:text-6xl mb-3 md:mb-6 tracking-wide leading-tight
                 transition-all duration-1000 delay-500
                 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-              `}>
+              `}
+                style={{ color: isDark ? coastalPalette.cream : coastalPalette.deep }}
+              >
                 {title}
               </h2>
             )}

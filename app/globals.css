@@ -22,6 +22,13 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'Brightwall';
+  src: url('/fonts/Brightwall%20Dafont.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -110,15 +117,15 @@
   --font-serif: "Great Vibes", "Great Vibes Fallback";
 
   /* ─── Motif palette — edit here, affects every component ─── */
-  --color-motif-cream:   #F8ECDA;
-  --color-motif-yellow:  #FDD461;
+  --color-motif-cream:   #FFF6E9; /* Soft Blush Peach */
+  --color-motif-yellow:  #DFCFD0; /* Dusty Rose Gray */
 
-  --color-motif-soft:    #FBAFB5;
-  --color-motif-accent:  #F95483;
+  --color-motif-soft:    #DDE1ED; /* Misty Blue */
+  --color-motif-accent:  #94B8C8; /* Powder Blue */
 
-  --color-motif-deep:    #F95483;
-  --color-motif-medium:  #909E79;
-  --color-motif-silver:  #F4DCBB;
+  --color-motif-deep:    #94B8C8; /* Primary Accent */
+  --color-motif-medium:  #C0D0DD; /* Soft Sky Blue */
+  --color-motif-silver:  #DFCFD0; /* Elegant Neutral */
   /* ─────────────────────────────────────────────────────────── */
   --font-imperial-script: "Imperial Script", cursive;
   --color-background: var(--background);
