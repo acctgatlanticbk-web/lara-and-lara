@@ -257,6 +257,9 @@ function normalizeRoleCategory(category: string): string {
   }
   const alias = honorAliases[normalized.toLowerCase()]
   if (alias) return alias
+  if (normalized.toLowerCase() === "peer sponsors") {
+    return "Peer Sponsors"
+  }
   return normalized
 }
 
@@ -616,6 +619,7 @@ export function Entourage() {
                 
                 if (members.length === 0) return null
                 if (HIDDEN_ROLE_CATEGORIES.has(category)) return null
+                if (category === "Peer Sponsors") return null
 
                 // Render OFFICIATING MINISTER directly above Principal Sponsors (in Parents block)
                 if (category === "OFFICIATING MINISTER" && hasParents) return null
@@ -761,6 +765,73 @@ export function Entourage() {
                             </TwoColumnLayout>
                           </div>
                         )}
+
+                        {/* Peer Sponsors section - displayed after Principal Sponsors */}
+                        {(() => {
+                          const peerSponsors = grouped["Peer Sponsors"] || []
+                          if (peerSponsors.length === 0) return null
+                          return (
+                            <div key="PeerSponsorsAfterPrincipal">
+                              <div className="flex justify-center py-1.5 sm:py-2 md:py-2.5 mb-2 sm:mb-2.5 md:mb-3" />
+                              <TwoColumnLayout singleTitle="Peer Sponsors" centerContent={true}>
+                                {peerSponsors.length === 2 ? (
+                                  <>
+                                    <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
+                                      <NameItem member={peerSponsors[0]} align="right" showRole={false} />
+                                    </div>
+                                    <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
+                                      <NameItem member={peerSponsors[1]} align="left" showRole={false} />
+                                    </div>
+                                  </>
+                                ) : peerSponsors.length <= 2 ? (
+                                  <div className="col-span-full">
+                                    <div className="max-w-sm mx-auto flex flex-col items-center gap-0.5 sm:gap-1 md:gap-1">
+                                      {peerSponsors.map((member, idx) => (
+                                        <NameItem
+                                          key={`peer-sponsor-${idx}-${member.name}`}
+                                          member={member}
+                                          align="center"
+                                          showRole={false}
+                                        />
+                                      ))}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  (() => {
+                                    const half = Math.ceil(peerSponsors.length / 2)
+                                    const left = peerSponsors.slice(0, half)
+                                    const right = peerSponsors.slice(half)
+                                    const maxLen = Math.max(left.length, right.length)
+                                    const rows = []
+                                    for (let i = 0; i < maxLen; i++) {
+                                      const l = left[i]
+                                      const r = right[i]
+                                      rows.push(
+                                        <React.Fragment key={`peer-sponsor-row-${i}`}>
+                                          <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
+                                            {l ? (
+                                              <NameItem member={l} align="right" showRole={false} />
+                                            ) : (
+                                              <div className="py-0.5 sm:py-1 md:py-1.5" />
+                                            )}
+                                          </div>
+                                          <div className="px-0.5 sm:px-1 md:px-1.5 min-w-0 overflow-hidden">
+                                            {r ? (
+                                              <NameItem member={r} align="left" showRole={false} />
+                                            ) : (
+                                              <div className="py-0.5 sm:py-1 md:py-1.5" />
+                                            )}
+                                          </div>
+                                        </React.Fragment>
+                                      )
+                                    }
+                                    return rows
+                                  })()
+                                )}
+                              </TwoColumnLayout>
+                            </div>
+                          )
+                        })()}
                       </div>
                     )
                   }
@@ -1114,7 +1185,7 @@ export function Entourage() {
               })}
               
               {/* Display any other categories not in the ordered list */}
-              {Object.keys(grouped).filter(cat => !ROLE_CATEGORY_ORDER.includes(cat) && cat !== "Other").map((category) => {
+              {Object.keys(grouped).filter(cat => !ROLE_CATEGORY_ORDER.includes(cat) && cat !== "Other" && cat !== "Peer Sponsors").map((category) => {
                 const members = grouped[category]
                 return (
                   <div key={category}>
