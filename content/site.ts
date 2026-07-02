@@ -10,7 +10,7 @@ export const siteConfig = {
     groom: "Jopert Rey Cabote De La Cruz", //Ltryl B. Benitez
     groomNickname: "Jopert",
     monogram:"/monogram/mono-colored.png" ,//Ltryl
-    backgroundMusic:"/background_music/Taylor Swift - Labyrinth (Official HD Audio) (mp3cut.net).mp3"
+    backgroundMusic:"/background_music/Enchanted - Orchestral Cover by Joseph William Morgan (Official Video).mp3"
   },
   googleAPI:{
     messageForm: "https://docs.google.com/forms/d/e/1FAIpQLSeZyqdEWHbpTcUO_ZxuZ9NyhJRgWxVAm2ex97M24LAS7lNmRQ/formResponse",   //done
