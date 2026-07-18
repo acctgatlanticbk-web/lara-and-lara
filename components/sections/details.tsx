@@ -176,22 +176,22 @@ const attireGuide = {
   },
   
   guests: {
-    image: "/Details/guest.png",
+    image: "/Details/guest-new.png",
     imageAspect: "677/369",
     ladies: {
-      colors: ["#F0A98E", "#F2C3B9", "#E8A5A8", "#D9B08E"] as const,
-      description: "Semi-formal dresses in Peach, Blush, Champagne, or Dusty Rose",
+      colors: ["#BB9F89", "#CFAEA7", "#E9CFC2", "#E5D7CE"] as const,
+      description: "Semi-formal dresses",
     },
     gentlemen: {
-      colors: ["#EFE6D6", "#D2B48C", "#C89A74", "#8B6B55"] as const,
-      description: "Semi-formal attire in neutral earth tones such as Cream, Beige, Camel, or Light Brown",
+      colors: ["#FFFFFF", "#000000"] as const,
+      description: "Semi-formal attire coat or long sleeves black pants",
     },
   },
   guests2: {
     image: "/Details/guest (5).png",
     imageAspect: "677/369",
     ladies: {
-      colors: ["#C3878C", "#ECB4BC", "#EBA7B3", "#E8B3A7"] as const,
+      colors: ["#BB9F89", "#CFAEA7", "#E9CFC2", "#E5D7CE"] as const,
       description: "Burgundy, Maroon, Dark Brown",
     },
     gentlemen: {
@@ -996,10 +996,17 @@ export function Details() {
                 <ReminderCard title="Unplugged Ceremony">
                   <p>
                     We&apos;re having a mostly unplugged ceremony. Guests may take photos, but we kindly
-                    ask that it be kept minimal. Please avoid blocking or crowding our official
-                    photographers so they can capture the special moments. We&apos;d love for everyone
-                    to stay present and share the moment with us. Don&apos;t worry—professional photos
-                    will be shared with you after the event. Thank you for your understanding.
+                    ask that it be kept minimal,{" "}
+                    <span
+                      className="font-semibold not-italic"
+                      style={{ color: detailText.heading }}
+                    >
+                      especially for the bride&apos;s entrance
+                    </span>
+                    . Please avoid blocking or crowding our official photographers so they can capture
+                    the special moments. We&apos;d love for everyone to stay present and share the moment
+                    with us. Don&apos;t worry—professional photos will be shared with you after the event.
+                    Thank you for your understanding.
                   </p>
                 </ReminderCard>
 
