@@ -350,7 +350,7 @@ export function SnapShare() {
               </div>
               <div className="relative col-span-2 aspect-[3/2] overflow-hidden rounded-xl border border-motif-deep/15 shadow-sm">
                 <Image
-                  src="/desktop-background/couples-new (4).webp"
+                  src="/desktop-background/couples (4).webp"
                   alt="Wedding moment 3"
                   fill
                   className="object-cover"

@@ -213,7 +213,7 @@ function getFaqItems(siteConfig: SiteConfig): FAQItem[] {
     {
       question: "When is the appropriate time to leave?",
       answer:
-        "It took us some time to plan for a heartfelt wedding that everyone would hopefully enjoy. We humbly request that you celebrate with us until the program ends. Please don't eat and run! Let's laugh, take pictures, sing, and have fun!",
+        "It took us some time to plan for a heartfelt wedding that everyone would hopefully enjoy. We humbly request that you celebrate with us until the program ends. Let's laugh, take pictures, sing, and have fun!",
     },
     {
       question: "What if I have dietary restrictions or allergies?",

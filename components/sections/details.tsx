@@ -663,7 +663,7 @@ export function Details() {
 
   const ceremonyImages = siteConfig.ceremony.image
   const receptionImages = siteConfig.reception.image
-  const dressCodeColors = ["#FA9A84", "#EFCFBA", "#DCBD9E"]
+  const dressCodeColors = ["#FA9A84","#FF7782", "#EFCFBA", "#DCBD9E"]
 
   useEffect(() => {
     if (ceremonyImages.length <= 1) return

@@ -211,7 +211,7 @@ export function Registry() {
           >
             With love,
             <br />
-            {brideNickname} and {groomNickname}
+            {groomNickname} and {brideNickname}
           </p>
         </div>
       </div>

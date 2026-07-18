@@ -122,21 +122,21 @@ function buildTimelineEvents(siteConfig: SiteConfig): TimelineEvent[] {
     //   imageSrc: "/weddingtimeline/assemble.png",
     // },
     {
-      time: "2:30 PM",
+      time: "3:30 PM",
       title: "Arrival",
       location: siteConfig.ceremony.location,
       icon: GuestsIcon,
       imageSrc: "/weddingtimeline/arrivalimage.png",
     },
     {
-      time: "3:30 PM",
+      time: "4:00 PM",
       title: "Wedding Ceremony",
       location: siteConfig.ceremony.location,
       icon: RingsIcon,
       imageSrc: "/weddingtimeline/WeddingCeremony.png",
     }, 
     {
-      time: "4:30 PM",
+      time: "5:00 PM",
       title: "Photos",
       location: siteConfig.ceremony.location,
       icon: RingsIcon,
@@ -167,18 +167,18 @@ function buildTimelineEvents(siteConfig: SiteConfig): TimelineEvent[] {
     },
     {
       time: "7:30 PM",
-      title: "Meal time",
+      title: "Dinner",
       location: siteConfig.ceremony.location,
       icon: DinnerIcon,
       imageSrc: "/weddingtimeline/DinnerService.png",
     },
-    {
-      time: "10:00 PM",
-      title: "End of Program",
-      location: siteConfig.ceremony.location,
-      icon: DanceIcon,
-      imageSrc: "/weddingtimeline/SendOff.png",
-    },
+    // {
+    //   time: "10:00 PM",
+    //   title: "End of Program",
+    //   location: siteConfig.ceremony.location,
+    //   icon: DanceIcon,
+    //   imageSrc: "/weddingtimeline/SendOff.png",
+    // },
   ]
 }
 

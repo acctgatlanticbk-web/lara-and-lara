@@ -18,8 +18,8 @@ export const siteConfig = {
     guestList: "https://script.google.com/macros/s/AKfycbyd7HEt8Y8mKb1wat2FEJO4iRvKGYum7Y-tw6IwV_ZjB8JV9NQAX73LCFhOnoDlLLO94w/exec",  //done
     guestRequest: "https://script.google.com/macros/s/AKfycbx00EXh0FjJ3tLdVIMoexvqD_sA1Ya0dVzFQ0ddCY9jXsoW_8Xm1ix4ZEvSTlJmx0reYQ/exec",   //done
     entourage: "https://script.google.com/macros/s/AKfycbwhkaucMi7NvUzTZ6e9AReD95b-rs3GO09kjqN6FmRhbGeys26GtM--5pMl53yL0MMFoA/exec",  //done
-    sponsors: "https://script.google.com/macros/s/AKfycbwIUDKMoMIHVwbmr6KbgmBtlGRpMGj1Z9maeHSEwsFaXNi0dAH8WYhqbtiAfg_p5D4lgw/exec",  //done 
-    proposalResponses: "https://script.google.com/macros/s/AKfycbxdQ8F-1IF5ElMcYYEJ78TWFLvf2qlmGcuCLZgmEG7iz1o66j8atEMQOgbucRQpdEloNg/exec", // uses entourage script with action: proposal
+    sponsors: "https://script.google.com/macros/s/AKfycbzu69SGFaQ1d8JU8xO8o3pJpxtIuyxBI4_2R4UflLmlWPEhSIFkfNc5ofnzxW7fdrdO/exec",  //done 
+    proposalResponses: "https://script.google.com/macros/s/AKfycbwIUDKMoMIHVwbmr6KbgmBtlGRpMGj1Z9maeHSEwsFaXNi0dAH8WYhqbtiAfg_p5D4lgw/exec", // uses entourage script with action: proposal
     weddingDetails: "https://script.google.com/macros/s/AKfycbwlxVhR5Hq-vPm6yEanBSSd45AAhP2opA1yjTZwdyx0D7wPTjaKwJuri-_uc_jHT5V7hA/exec",   //done
 ////google share 
     googleShare: "https://docs.google.com/spreadsheets/d/1PxlVp4NBRGyAv68p_YZ0dd-s23tjfzW5Vhv403EZvDU/edit?usp=sharing", 
@@ -55,7 +55,7 @@ export const siteConfig = {
     id: "Gcash",
     src: "/QR/Gcash.png",
     label: "Gcash",
-    accountNumber: "May Manalo",
+    accountNumber: "M** M : 0945****039",
     },
     // QR_2:{
     // id: "GOtyme Bank",
