@@ -1,316 +1,704 @@
-'use client';
+"use client"
 
-import React, { useEffect, useState, useMemo } from 'react';
-import { useSiteConfig } from '@/hooks/use-site-config';
-import Image from 'next/image';
+import React, { useEffect, useState, useRef } from "react"
+import { siteConfig } from "@/content/site"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
+import localFont from "next/font/local"
+import { Cinzel } from "next/font/google"
+import Image from "next/image"
 
+const brittany = localFont({
+  src: "../../Font/brittany-signature-script/BrittanySignatureScript.ttf",
+  display: "swap",
+})
+
+const cinzel = Cinzel({
+  subsets: ["latin"],
+  weight: ["400", "600", "700"],
+})
+
+const theSeasons = localFont({
+  src: "../../Font/Fontspring-DEMO-theseasons-reg.otf",
+  display: "swap",
+})
 
 interface LoadingScreenProps {
-  onComplete: () => void;
+  onComplete: () => void
 }
 
-// Countdown boxes with color photos - numbers show days, hours, minutes
-const COUNTDOWN_BOXES = [
-  { src: '/gallery-design/box (1).jpg' },
-  { src: '/gallery-design/box (2).jpg' },
-  { src: '/gallery-design/box (4).jpg' }
-];
+/** Splits a date string like "May 8, 2026" into ["05", "08", "26"] */
+function getDateSegments(dateStr: string): string[] {
+  const d = new Date(dateStr)
+  return [
+    String(d.getMonth() + 1).padStart(2, "0"),
+    String(d.getDate()).padStart(2, "0"),
+    String(d.getFullYear()).slice(-2),
+  ]
+}
 
-const MAIN_BW_IMAGE = '/mobile-background/couples (13).png';
-const DESKTOP_BW_IMAGE = '/desktop-background/couples (10).webp';
-const STAGGER_DELAY_MS = 4000; // Each image appears every 4 seconds
-const BOX_TRANSITION_MS = 1200; // Slow, smooth transition
-const TOTAL_DURATION_MS = COUNTDOWN_BOXES.length * STAGGER_DELAY_MS + 3000;
+/** Returns calendar days remaining until the wedding date (0 if already past) */
+function getDaysUntil(dateStr: string): number {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const target = new Date(dateStr)
+  target.setHours(0, 0, 0, 0)
+  return Math.max(0, Math.round((target.getTime() - today.getTime()) / 86_400_000))
+}
 
-export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
-  const siteConfig = useSiteConfig();
-  const [fadeOut, setFadeOut] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [visibleBoxes, setVisibleBoxes] = useState<number[]>([]);
-  const [now, setNow] = useState(() => new Date());
+const GHOST_NUMBERS = getDateSegments(siteConfig.wedding.date)
+const DAYS_REMAINING = getDaysUntil(siteConfig.wedding.date)
 
-    // Live countdown: days, hours, minutes until wedding
-  const countdown = useMemo(() => {
-    const weddingDate = new Date(siteConfig.wedding.date);
-    const diff = weddingDate.getTime() - now.getTime();
-    if (diff <= 0) return { days: 0, hours: 0, minutes: 0 };
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return { days, hours, minutes };
-  }, [now]);
+/** Recumbent figure-eight infinity (jump-loader path) */
+const INFINITY_PATH =
+  "M93.9,46.4c9.3,9.5,13.8,17.9,23.5,17.9s17.5-7.8,17.5-17.5s-7.8-17.6-17.5-17.5c-9.7,0.1-13.3,7.2-22.1,17.1c-8.9,8.8-15.7,17.9-25.4,17.9s-17.5-7.8-17.5-17.5s7.8-17.5,17.5-17.5S86.2,38.6,93.9,46.4z"
 
-  // Wedding date derived from siteConfig.wedding.date
-  const debutDateObj = new Date(siteConfig.wedding.date);
-  const debutMonthName = debutDateObj
-    .toLocaleString('default', { month: 'short' })
-    .toUpperCase(); // e.g. "MAY"
-  const debutDay = String(debutDateObj.getDate()).padStart(2, '0'); // e.g. "09"
-  const debutYear = String(debutDateObj.getFullYear()); // e.g. "2026"
+/** Path length for stroke-dash animation (matches jump-loader CodePen) */
+const INFINITY_PATH_LEN = 242.776657104492
 
-  const countdownNumbers = [debutMonthName, debutDay, debutYear]; // e.g. May, 09, 2026
-  const countdownLabels = ['Month', 'Day', 'Year']; // should return Month, Day, Year
-
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 60000); // update every minute
-    return () => clearInterval(t);
-  }, []);
-
-  useEffect(() => {
-    const t = setInterval(() => setNow(new Date()), 60000); // update every minute
-    return () => clearInterval(t);
-  }, []);
-
-  useEffect(() => {
-    const timers: NodeJS.Timeout[] = [];
-    COUNTDOWN_BOXES.forEach((_, i) => {
-      timers.push(
-        setTimeout(() => setVisibleBoxes((prev) => [...prev, i]), i * STAGGER_DELAY_MS)
-      );
-    });
-    return () => timers.forEach(clearTimeout);
-  }, []);
-
-  useEffect(() => {
-    const startTime = Date.now();
-    const progressInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const pct = Math.min(100, (elapsed / TOTAL_DURATION_MS) * 100);
-      setProgress(pct);
-    }, 50);
-
-    const timer = setTimeout(() => {
-      setProgress(100);
-      setFadeOut(true);
-      setTimeout(onComplete, 500);
-    }, TOTAL_DURATION_MS);
-
-    return () => {
-      clearTimeout(timer);
-      clearInterval(progressInterval);
-    };
-  }, [onComplete]);
-
-  const coupleNames = `${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname}`;
-  const productionCredit = '';
-
-
-//   Background	#F5EFE6
-// --color-motif-deep:    #9C5A63; /* deeper rose */
-// --color-motif-medium:  #D88C9A; /* muted pink */
-// --color-motif-accent:  #F2B5B5; /* pastel pink */
-// --color-motif-cream:   #FFF8F5; /* creamy white */
-// --color-motif-soft:    #F9E4E4; /* soft background */
-// --color-motif-silver:  #CFC7C7; /* refined gray */
-  const palette = {
-    deep: '--color-motif-deep',
-    medium: '--color-motif-medium',
-    accent: '--color-motif-accent',
-    cream: '--color-motif-cream',
-    soft: '--color-motif-soft',
-    silver: '--color-motif-silver',
-  };
-
+function InfinityLoader({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`fixed inset-0 z-50 flex flex-col overflow-hidden transition-opacity duration-500 ${
-        fadeOut ? 'opacity-0 pointer-events-none' : 'opacity-100'
-      }`}
+      className={`relative flex h-10 w-[4.75rem] items-center justify-center sm:h-12 sm:w-[5.75rem] ${
+        visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
+      } transition-all duration-700 ease-out`}
+      aria-hidden
     >
-      {/* Background image with overlay */}
-      <div className="absolute inset-0">
-        {/* Mobile background */}
-        <Image
-          src={MAIN_BW_IMAGE}
-          alt=""
-          fill
-          className="object-cover object-center md:hidden"
-          sizes="100vw"
-          priority
+      <svg
+        viewBox="0 0 187.3 93.7"
+        preserveAspectRatio="xMidYMid meet"
+        className="relative h-full w-full overflow-visible"
+        aria-hidden
+      >
+        <path
+          className="loader-infinity-track"
+          d={INFINITY_PATH}
+          fill="none"
+          stroke="color-mix(in srgb, var(--color-motif-deep) 14%, transparent)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit={10}
         />
-        {/* Desktop background (md and above) */}
-        <Image
-          src={DESKTOP_BW_IMAGE}
-          alt=""
-          fill
-          className="object-cover object-center hidden md:block"
-          sizes="100vw"
-          priority
+        <path
+          className="loader-infinity-outline"
+          d={INFINITY_PATH}
+          fill="none"
+          stroke="var(--color-welcome-navy)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeMiterlimit={10}
         />
-        {/* Gradient overlay — darkens top & bottom so text is legible */}
+      </svg>
+    </div>
+  )
+}
+
+function OrnamentalDivider({ compact = false }: { compact?: boolean }) {
+  return (
+    <div className={`flex items-center justify-center ${compact ? "gap-1.5" : "gap-2"}`}>
+      <span
+        className={`h-px ${compact ? "w-6 sm:w-10" : "w-8 sm:w-12"}`}
+        style={{
+          background:
+            "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent))",
+        }}
+      />
+      <span className="h-0.5 w-0.5 rounded-full bg-motif-deep/45 sm:h-1 sm:w-1" aria-hidden />
+      <span
+        className={`h-px ${compact ? "w-6 sm:w-10" : "w-8 sm:w-12"}`}
+        style={{
+          background:
+            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent))",
+        }}
+      />
+    </div>
+  )
+}
+
+type ParticleKind = "orb" | "sparkle"
+
+interface Particle {
+  kind: ParticleKind
+  x: number
+  y: number
+  vx: number
+  vy: number
+  radius: number
+  opacity: number
+  twinklePhase: number
+  twinkleSpeed: number
+  colorIdx: number
+  rotation: number
+  spin: number
+}
+
+const PARTICLE_COLORS = [
+  "175, 145, 108",
+  "188, 155, 165",
+  "142, 142, 142",
+  "210, 205, 198",
+  "165, 155, 148",
+]
+
+function createParticles(width: number, height: number): Particle[] {
+  const area = width * height
+  const orbCount = Math.min(64, Math.max(32, Math.floor(area / 11000)))
+  const sparkleCount = Math.min(36, Math.max(16, Math.floor(area / 22000)))
+
+  const orbs: Particle[] = Array.from({ length: orbCount }, () => ({
+    kind: "orb",
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 0.24,
+    vy: -(Math.random() * 0.16 + 0.04),
+    radius: Math.random() * 2.4 + 0.5,
+    opacity: Math.random() * 0.16 + 0.05,
+    twinklePhase: Math.random() * Math.PI * 2,
+    twinkleSpeed: Math.random() * 0.012 + 0.003,
+    colorIdx: Math.floor(Math.random() * PARTICLE_COLORS.length),
+    rotation: 0,
+    spin: 0,
+  }))
+
+  const sparkles: Particle[] = Array.from({ length: sparkleCount }, () => ({
+    kind: "sparkle",
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 0.12,
+    vy: -(Math.random() * 0.22 + 0.08),
+    radius: Math.random() * 1.4 + 0.35,
+    opacity: Math.random() * 0.28 + 0.08,
+    twinklePhase: Math.random() * Math.PI * 2,
+    twinkleSpeed: Math.random() * 0.022 + 0.008,
+    colorIdx: Math.floor(Math.random() * PARTICLE_COLORS.length),
+    rotation: Math.random() * Math.PI * 2,
+    spin: (Math.random() - 0.5) * 0.018,
+  }))
+
+  return [...orbs, ...sparkles]
+}
+
+function drawSparkle(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number,
+  alpha: number,
+  rotation: number,
+  color: string
+) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.rotate(rotation)
+  ctx.strokeStyle = `rgba(${color}, ${alpha})`
+  ctx.lineWidth = 0.6
+  ctx.lineCap = "round"
+
+  ctx.beginPath()
+  ctx.moveTo(0, -size * 2.2)
+  ctx.lineTo(0, size * 2.2)
+  ctx.moveTo(-size * 2.2, 0)
+  ctx.lineTo(size * 2.2, 0)
+  ctx.stroke()
+
+  ctx.beginPath()
+  ctx.moveTo(-size, -size)
+  ctx.lineTo(size, size)
+  ctx.moveTo(size, -size)
+  ctx.lineTo(-size, size)
+  ctx.stroke()
+  ctx.restore()
+}
+
+/** Paints an organic handmade-paper texture once into the given canvas. */
+function paintPaperTexture(canvas: HTMLCanvasElement) {
+  const ctx = canvas.getContext("2d")
+  if (!ctx) return
+
+  const W = canvas.width
+  const H = canvas.height
+
+  ctx.fillStyle = "#FFFFFF"
+  ctx.fillRect(0, 0, W, H)
+
+  const patches = 14
+  for (let i = 0; i < patches; i++) {
+    const cx = Math.random() * W
+    const cy = Math.random() * H
+    const r = Math.random() * W * 0.5 + W * 0.1
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, r)
+    const warm = Math.random() > 0.4
+    g.addColorStop(
+      0,
+      warm
+        ? `rgba(230, 218, 198, ${Math.random() * 0.018 + 0.004})`
+        : `rgba(210, 206, 200, ${Math.random() * 0.012 + 0.003})`
+    )
+    g.addColorStop(1, "rgba(255, 255, 255, 0)")
+    ctx.fillStyle = g
+    ctx.fillRect(0, 0, W, H)
+  }
+
+  const imageData = ctx.getImageData(0, 0, W, H)
+  const px = imageData.data
+  for (let i = 0; i < px.length; i += 4) {
+    const grain = (Math.random() - 0.5) * 14
+    const speck = Math.random() < 0.008 ? (Math.random() - 0.5) * 10 : 0
+    const total = grain + speck
+    px[i] = Math.max(0, Math.min(255, px[i] + total))
+    px[i + 1] = Math.max(0, Math.min(255, px[i + 1] + total * 0.93))
+    px[i + 2] = Math.max(0, Math.min(255, px[i + 2] + total * 0.8))
+  }
+  ctx.putImageData(imageData, 0, 0)
+
+  const fiberCount = Math.min(2400, Math.floor((W * H) / 1800))
+  for (let i = 0; i < fiberCount; i++) {
+    const x = Math.random() * W
+    const y = Math.random() * H
+    const angle = Math.random() * Math.PI
+    const len = Math.random() * 80 + 10
+    const alpha = Math.random() * 0.038 + 0.007
+    const lw = Math.random() * 0.6 + 0.12
+    const rr = Math.floor(Math.random() * 50 + 100)
+    const gg = Math.floor(Math.random() * 32 + 65)
+    const bb = Math.floor(Math.random() * 20 + 40)
+
+    ctx.save()
+    ctx.translate(x, y)
+    ctx.rotate(angle)
+    ctx.beginPath()
+    ctx.moveTo(0, 0)
+    ctx.bezierCurveTo(
+      len * 0.25,
+      (Math.random() - 0.5) * 3.0,
+      len * 0.7,
+      (Math.random() - 0.5) * 3.0,
+      len,
+      (Math.random() - 0.5) * 2.0
+    )
+    ctx.strokeStyle = `rgba(${rr}, ${gg}, ${bb}, ${alpha})`
+    ctx.lineWidth = lw
+    ctx.stroke()
+    ctx.restore()
+  }
+
+  const speckCount = Math.floor((W * H) / 9000)
+  for (let i = 0; i < speckCount; i++) {
+    const x = Math.random() * W
+    const y = Math.random() * H
+    const r = Math.random() * 0.9 + 0.2
+    const alpha = Math.random() * 0.07 + 0.02
+    ctx.beginPath()
+    ctx.arc(x, y, r, 0, Math.PI * 2)
+    ctx.fillStyle = `rgba(90, 62, 38, ${alpha})`
+    ctx.fill()
+  }
+}
+
+// ── Component ───────────────────────────────────────────────────────────────
+
+export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
+  const [fadeOut, setFadeOut] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const [phase, setPhase] = useState(0)
+
+  const paperCanvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const animFrameRef = useRef<number>(0)
+  const particlesRef = useRef<Particle[]>([])
+
+  const TOTAL_LOAD_MS = 12000
+  const FADE_MS = 700
+
+  useEffect(() => {
+    const canvas = paperCanvasRef.current
+    if (!canvas) return
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+    paintPaperTexture(canvas)
+  }, [])
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+      particlesRef.current = createParticles(canvas.width, canvas.height)
+    }
+    resize()
+    window.addEventListener("resize", resize)
+
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    let running = true
+
+    const draw = () => {
+      if (!running) return
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      particlesRef.current.forEach((p) => {
+        p.twinklePhase += p.twinkleSpeed
+        const twinkle = (Math.sin(p.twinklePhase) + 1) * 0.5
+        const alpha = p.opacity * (0.3 + twinkle * 0.7)
+        const color = PARTICLE_COLORS[p.colorIdx]
+
+        if (p.kind === "sparkle") {
+          p.rotation += p.spin
+          drawSparkle(ctx, p.x, p.y, p.radius, alpha, p.rotation, color)
+        } else {
+          const blurR = p.radius * 4.8
+          const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, blurR)
+          g.addColorStop(0, `rgba(${color}, ${alpha})`)
+          g.addColorStop(0.4, `rgba(${color}, ${alpha * 0.4})`)
+          g.addColorStop(1, "rgba(255, 255, 255, 0)")
+
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, blurR, 0, Math.PI * 2)
+          ctx.fillStyle = g
+          ctx.fill()
+        }
+
+        p.x += p.vx
+        p.y += p.vy
+
+        const { width, height } = canvas
+        if (p.y < -30) {
+          p.y = height + 16
+          p.x = Math.random() * width
+        }
+        if (p.x < -30) p.x = width + 30
+        if (p.x > width + 30) p.x = -30
+      })
+
+      animFrameRef.current = requestAnimationFrame(draw)
+    }
+
+    draw()
+
+    return () => {
+      running = false
+      cancelAnimationFrame(animFrameRef.current)
+      window.removeEventListener("resize", resize)
+    }
+  }, [])
+
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setPhase(1), 150),
+      setTimeout(() => setPhase(2), 460),
+      setTimeout(() => setPhase(3), 760),
+      setTimeout(() => setPhase(4), 990),
+      setTimeout(() => setPhase(5), 1220),
+    ]
+    return () => timers.forEach(clearTimeout)
+  }, [])
+
+  useEffect(() => {
+    let rafId = 0
+    const start = performance.now()
+    const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3)
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / TOTAL_LOAD_MS)
+      const next = Math.round(easeOutCubic(t) * 100)
+      setProgress((prev) => (next > prev ? next : prev))
+      if (t < 1) rafId = requestAnimationFrame(tick)
+    }
+    rafId = requestAnimationFrame(tick)
+
+    const fadeTimer = setTimeout(() => setFadeOut(true), TOTAL_LOAD_MS - FADE_MS)
+    const doneTimer = setTimeout(() => {
+      setProgress(100)
+      onComplete()
+    }, TOTAL_LOAD_MS)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      clearTimeout(fadeTimer)
+      clearTimeout(doneTimer)
+    }
+  }, [onComplete])
+
+  const vis = (minPhase: number) =>
+    phase >= minPhase
+      ? "opacity-100 translate-y-0 transition-all duration-700 ease-out"
+      : "opacity-0 translate-y-5 transition-all duration-700 ease-out"
+
+  return (
+    <>
+      <style jsx global>{`
+        .loader-infinity-track {
+          opacity: 0.22;
+        }
+
+        .loader-infinity-outline {
+          stroke-dasharray: ${INFINITY_PATH_LEN * 0.01} ${INFINITY_PATH_LEN};
+          stroke-dashoffset: 0;
+          animation: loader-infinity-jump 1.6s linear infinite;
+        }
+
+        @keyframes loader-infinity-jump {
+          12.5% {
+            stroke-dasharray: ${INFINITY_PATH_LEN * 0.14} ${INFINITY_PATH_LEN};
+            stroke-dashoffset: ${INFINITY_PATH_LEN * -0.11};
+          }
+          43.75% {
+            stroke-dasharray: ${INFINITY_PATH_LEN * 0.35} ${INFINITY_PATH_LEN};
+            stroke-dashoffset: ${INFINITY_PATH_LEN * -0.35};
+          }
+          100% {
+            stroke-dasharray: ${INFINITY_PATH_LEN * 0.01} ${INFINITY_PATH_LEN};
+            stroke-dashoffset: ${INFINITY_PATH_LEN * -0.99};
+          }
+        }
+      `}</style>
+
+      <div
+        className={`fixed inset-0 z-50 flex flex-col overflow-hidden transition-opacity duration-700 ease-out ${
+          fadeOut ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
+        style={{ background: "var(--color-welcome-bg)" }}
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Loading invitation"
+      >
+        <canvas ref={paperCanvasRef} className="absolute inset-0 pointer-events-none" aria-hidden />
+
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: `linear-gradient(
-              to bottom,
-              rgba(78, 59, 49, 0.75) 0%,
-              rgba(78, 59, 49, 0.35) 18%,
-              transparent 35%,
-              transparent 62%,
-              rgba(78, 59, 49, 0.45) 80%,
-              rgba(78, 59, 49, 0.80) 100%
-            )`,
+            background: [
+              "radial-gradient(ellipse 85% 72% at 50% 42%, rgba(255, 255, 255, 0.92) 0%, rgba(252, 252, 251, 0.55) 45%, transparent 72%)",
+              "linear-gradient(90deg, rgba(245, 243, 240, 0.35) 0%, transparent 22%, transparent 78%, rgba(245, 243, 240, 0.35) 100%)",
+            ].join(", "),
           }}
         />
-      </div>
 
-      <div className="relative flex flex-col flex-1 min-h-0">
-        {/* Top: headline + hashtag + countdown (readable over photo, no container) */}
-        <div className="flex flex-col items-center justify-center w-full pt-12 sm:pt-16 md:pt-24 px-4 sm:px-6 flex-shrink-0">
-          <div className="w-full max-w-lg mx-auto">
-            <div className="flex flex-col items-center mb-4 sm:mb-5">
-              <span
-                style={{
-                  fontFamily: 'var(--font-brittany)',
-                  color: 'var(--color-motif-cream)',
-                  fontSize: 'clamp(2.8rem, 10vw, 5.5rem)',
-                  lineHeight: 1.1,
-                  textShadow: '0 2px 18px rgba(0,0,0,0.55), 0 0 32px var(--color-motif-accent)',
-                }}
-              >
-                Save the Date
-              </span>
-              <span
-                className="text-center whitespace-nowrap mt-3"
-                style={{
-                  fontFamily: '"Cinzel", serif',
-                  color: 'var(--color-motif-cream)',
-                  fontSize: 'clamp(1.1rem, 5vw, 1.75rem)',
-                  letterSpacing: '0.18em',
-                  textTransform: 'uppercase',
-                  textShadow: '0 2px 10px rgba(0,0,0,0.6)',
-                  opacity: 0.92,
-                  fontWeight: 700,
-                }}
-              >
-                {countdown.days} more days to go
-              </span>
-            </div>
+        <canvas
+          ref={canvasRef}
+          className="absolute inset-0 pointer-events-none opacity-80"
+          style={{ mixBlendMode: "multiply" }}
+          aria-hidden
+        />
 
-          </div>
-        </div>
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: [
+              "radial-gradient(ellipse 92% 88% at 50% 50%, transparent 48%, rgba(120, 118, 116, 0.045) 100%)",
+              "linear-gradient(180deg, rgba(230, 228, 226, 0.06) 0%, transparent 18%, transparent 82%, rgba(230, 228, 226, 0.07) 100%)",
+            ].join(", "),
+          }}
+        />
 
-        {/* Spacer - lets B&W image dominate (upper 2/3) */}
-        <div className="flex-1 min-h-[12vh]" />
+        <SectionCornerDecorations
+          size="section"
+          zIndex={{ frame: 8, flowers: 12 }}
+          flowerClassName="max-w-[170px] opacity-90 sm:max-w-[220px] md:max-w-[290px] lg:max-w-[340px]"
+        />
 
-        {/* Middle: Three color countdown boxes - staggered reveal */}
-        <div className="flex items-stretch justify-center gap-3 sm:gap-4 md:gap-6 px-3 sm:px-4 py-4 flex-shrink-0">
-          {COUNTDOWN_BOXES.map((item, i) => {
-            const isVisible = visibleBoxes.includes(i);
-            return (
-              <div
-                key={i}
-                className="relative flex-1 max-w-[28vw] sm:max-w-[140px] md:max-w-[160px] aspect-[3/4] overflow-hidden rounded-3xl border border-white/40 bg-white/10 backdrop-blur-md shadow-[0_18px_45px_rgba(0,0,0,0.35)]"
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible
-                    ? 'translateY(0) scale(1)'
-                    : 'translateY(28px) scale(0.94)',
-                  transition: `opacity ${BOX_TRANSITION_MS}ms cubic-bezier(0.4, 0, 0.2, 1), transform ${BOX_TRANSITION_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`,
-                }}
-              >
-                <Image
-                  src={item.src}
-                  alt={coupleNames}
-                  fill
-                  className="object-cover scale-105"
-                  sizes="(max-width: 640px) 28vw, 160px"
-                />
-                {/* Soft gradient overlay for readable number */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `linear-gradient(145deg, ${palette.deep}66 0%, transparent 40%, ${palette.accent}aa 100%)`,
-                  }}
-                />
-
-                {/* Bold debut date number + label - centered at bottom */}
-                <div className="absolute bottom-2 inset-x-0 sm:bottom-3 flex flex-col items-center">
-                  <span
-                    className="text-3xl sm:text-2xl md:text-4xl lg:text-7xl font-black select-none leading-none drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)] text-center"
-                    style={{
-                      fontFamily: 'var(--font-granika), sans-serif',
-                      color: 'var(--color-motif-cream)',
-                    }}
-                  >
-                    {countdownNumbers[i]}
-                  </span>
-                  <span className="text-[8px] sm:text-[9px] tracking-widest uppercase mt-0.5 text-[rgba(255,246,248,0.85)]">
-                    {countdownLabels[i]}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Bottom: Names + production credit + progress bar */}
-        <div className="flex flex-col items-center w-full pt-3 pb-6 sm:pb-8 px-6 flex-shrink-0 gap-1">
-          <p
-            className="text-[10px] sm:text-xs tracking-[0.3em] uppercase"
-            style={{
-              fontFamily: '"Cinzel", serif',
-              color: 'var(--color-motif-cream)',
-              opacity: 0.7,
-            }}
-          >
-            Almost ready for
-          </p>
-          <div
-            className="text-4xl sm:text-5xl md:text-6xl"
-            style={{
-              fontFamily: 'var(--font-playlist-script)',
-              color: 'var(--color-motif-cream)',
-              textShadow: '0 2px 12px rgba(0,0,0,0.4)',
-              fontWeight: 400,
-            }}
-          >
-            {coupleNames}
-          </div>
-          {productionCredit && (
-            <p
-              className="text-[10px] font-sans tracking-wider"
-              style={{ color: 'var(--color-motif-cream)', 
-                // opacity: 0.7 
+        <div
+          className="absolute inset-0 pointer-events-none flex flex-col items-end justify-center pr-4 sm:pr-10 md:pr-16 select-none"
+          aria-hidden
+        >
+          {GHOST_NUMBERS.map((num, i) => (
+            <span
+              key={`ghost-${num}-${i}`}
+              className="font-bold leading-[0.82]"
+              style={{
+                fontFamily: "var(--font-cinzel), Cinzel, serif",
+                fontSize: "clamp(5rem, 14vw, 12rem)",
+                color: "color-mix(in srgb, var(--color-motif-deep) 4%, transparent)",
+                letterSpacing: "-0.04em",
+                opacity: phase >= 2 ? 1 : 0,
+                transition: `opacity 1.6s ease-out ${i * 150}ms`,
               }}
             >
-              {productionCredit}
-            </p>
-          )}
+              {num}
+            </span>
+          ))}
+        </div>
 
-          {/* Divider */}
+        <div className="relative z-20 flex flex-col items-center pt-[8vh] sm:pt-[10vh] md:pt-[11vh]">
           <div
-            className="w-16 h-px my-2"
-            style={{ backgroundColor: 'var(--color-motif-cream)', opacity: 0.3 }}
-          />
+            className={`mt-2 sm:mt-3 ${
+              phase >= 1
+                ? "scale-100 opacity-100 transition-all duration-700 ease-out"
+                : "scale-95 opacity-0 transition-all duration-700 ease-out"
+            }`}
+          >
+            <Image
+              src={siteConfig.couple.monogram}
+              alt="Monogram"
+              width={240}
+              height={240}
+              className="h-16 w-16 object-contain object-center sm:h-[4.5rem] sm:w-[4.5rem]"
+              style={{
+                filter:
+                  "brightness(0) sepia(1) saturate(0.15) hue-rotate(10deg) opacity(0.72)",
+              }}
+              priority
+            />
+          </div>
 
-          {/* Preparing message + progress bar */}
           <p
-            className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase mb-2"
+            className={`${brittany.className} ${vis(1)}`}
             style={{
-              fontFamily: '"Cinzel", serif',
-              color: 'var(--color-motif-cream)',
-              // opacity: 0.65,
+              fontSize: "clamp(1.85rem, 4.5vw, 2.75rem)",
+              color: "var(--color-welcome-navy)",
+              lineHeight: 0.95,
+              marginTop: "clamp(1rem, 2.8vh, 1.5rem)",
+              marginBottom: "clamp(0.85rem, 2.2vh, 1.35rem)",
+              letterSpacing: "0.02em",
             }}
           >
-            Crafting your invitation experience
+            Save the Date
           </p>
-          <div className="w-full max-w-[200px] sm:max-w-xs mx-auto">
-            <div
-              className="h-[3px] rounded-full overflow-hidden"
-              style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}
+
+          <p
+            className={`${cinzel.className} ${vis(1)} font-semibold uppercase`}
+            style={{
+              fontSize: "clamp(0.62rem, 1.6vw, 0.78rem)",
+              letterSpacing: "0.32em",
+              color: "var(--color-welcome-green)",
+              marginTop: 0,
+            }}
+          >
+            {DAYS_REMAINING} more days to go
+          </p>
+
+          <div className={`mt-3 ${vis(1)}`}>
+            <OrnamentalDivider compact />
+          </div>
+        </div>
+
+        <div className="relative z-20 flex flex-1 flex-col items-center justify-center px-6">
+          <h1
+            className={`mx-auto w-full max-w-[min(92vw,36rem)] text-center ${vis(2)}`}
+            style={{ transitionDelay: "50ms" }}
+          >
+            <span
+              className={`${theSeasons.className} block uppercase`}
+              style={{
+                fontSize: "clamp(3.2rem, 10.5vw, 6rem)",
+                color: "var(--color-welcome-navy)",
+                lineHeight: 1.12,
+                letterSpacing: "0.06em",
+                textShadow:
+                  "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 8px 28px color-mix(in srgb, var(--color-motif-deep) 6%, transparent)",
+              }}
             >
-              <div
-                className="h-full rounded-full transition-all duration-300 ease-out shadow-[0_0_8px_rgba(255,255,255,0.6)]"
-                style={{
-                  width: `${progress}%`,
-                  backgroundColor: 'var(--color-motif-accent)',
-                }}
-              />
-            </div>
+              {siteConfig.couple.brideNickname.trim()}
+            </span>
+
+            <span
+              className={`${brittany.className} block`}
+              style={{
+                fontSize: "clamp(1.35rem, 3.5vw, 2.1rem)",
+                color: "var(--color-welcome-green)",
+                lineHeight: 1.1,
+                marginTop: "clamp(0.45rem, 2vw, 0.95rem)",
+                marginBottom: "clamp(0.45rem, 2vw, 0.95rem)",
+              }}
+            >
+              and
+            </span>
+
+            <span
+              className={`${theSeasons.className} block uppercase`}
+              style={{
+                fontSize: "clamp(3.2rem, 10.5vw, 6rem)",
+                color: "var(--color-welcome-navy)",
+                lineHeight: 1.12,
+                letterSpacing: "0.06em",
+                textShadow:
+                  "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 8px 28px color-mix(in srgb, var(--color-motif-deep) 6%, transparent)",
+              }}
+            >
+              {siteConfig.couple.groomNickname.trim()}
+            </span>
+          </h1>
+        </div>
+
+        <div className="relative z-20 flex flex-col items-center px-6 pb-[8vh] text-center sm:pb-[10vh]">
+          <div className={vis(3)}>
+            <OrnamentalDivider compact />
+          </div>
+
+          <p
+            className={`${cinzel.className} mt-4 font-semibold uppercase ${vis(3)}`}
+            style={{
+              fontSize: "clamp(0.62rem, 1.5vw, 0.74rem)",
+              letterSpacing: "0.28em",
+              color: "color-mix(in srgb, var(--color-welcome-text) 72%, transparent)",
+              transitionDelay: "80ms",
+            }}
+          >
+            Together with their families
+          </p>
+
+          <p
+            className={`${cinzel.className} mt-4 font-semibold uppercase leading-none ${vis(4)}`}
+            style={{
+              fontSize: "clamp(0.64rem, 1.6vw, 0.78rem)",
+              letterSpacing: "0.24em",
+              color: "color-mix(in srgb, var(--color-welcome-navy) 78%, transparent)",
+            }}
+            aria-label={`${siteConfig.ceremony.day}, ${siteConfig.wedding.date} · ${siteConfig.ceremony.time}`}
+          >
+            <span>{siteConfig.ceremony.day}</span>
+            <span
+              className="mx-2"
+              style={{ color: "color-mix(in srgb, var(--color-motif-deep) 22%, transparent)" }}
+              aria-hidden
+            >
+              ·
+            </span>
+            <span className="tabular-nums">{siteConfig.wedding.date}</span>
+            <span
+              className="mx-2"
+              style={{ color: "color-mix(in srgb, var(--color-motif-deep) 22%, transparent)" }}
+              aria-hidden
+            >
+              ·
+            </span>
+            <span className="tabular-nums">{siteConfig.ceremony.time}</span>
+          </p>
+
+          <div className={`mt-8 flex flex-col items-center ${vis(5)}`}>
+            <InfinityLoader visible={phase >= 5} />
+
+            <p
+              className={`${cinzel.className} mt-5 font-semibold uppercase`}
+              style={{
+                fontSize: "clamp(0.58rem, 1.4vw, 0.68rem)",
+                letterSpacing: "0.26em",
+                color: "color-mix(in srgb, var(--color-welcome-text) 58%, transparent)",
+              }}
+            >
+              Preparing your invitation
+            </p>
+
+            <p
+              className={`${cinzel.className} mt-3 tabular-nums font-semibold uppercase`}
+              style={{
+                fontSize: "clamp(0.54rem, 1.2vw, 0.62rem)",
+                letterSpacing: "0.28em",
+                color: "color-mix(in srgb, var(--color-welcome-text) 42%, transparent)",
+              }}
+              aria-live="polite"
+            >
+              {progress}%
+            </p>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    </>
+  )
+}

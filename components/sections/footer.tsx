@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import localFont from "next/font/local"
 import { Instagram, Twitter, Facebook, Music2 } from "lucide-react"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { sectionType } from "@/lib/section-typography"
 import { Cinzel } from "next/font/google"
 import Image from "next/image"
@@ -25,9 +26,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[180px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px]"
 
 const palette = {
   body: "var(--color-welcome-text)",
@@ -223,42 +221,10 @@ export function Footer() {
       style={{ background: "var(--color-welcome-bg)" }}
     >
       <footer className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14">
-        {/* Corner decorations */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
-        <div className="pointer-events-none absolute right-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-right-corner.png"
-            alt=""
-            className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-          />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {/* <img
-            src="/decoration/decorations/botto-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          /> */}
-        </div>
-        <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {/* <img
-            src="/decoration/decorations/botto-right-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          /> */}
-        </div>
+        <SectionCornerDecorations corners={{ bottomLeft: false, bottomRight: false }} />
 
         {/* Monogram + couple header */}
-        <div className="relative z-10 flex flex-col items-center mb-6 sm:mb-8 md:mb-10 px-6 sm:px-10">
+        <div className="relative z-10 flex flex-col items-center mb-6 px-8 pt-10 sm:mb-8 sm:px-12 sm:pt-12 md:mb-10 md:px-16 md:pt-14 lg:px-20 lg:pt-16">
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -292,7 +258,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-4 @container/footer sm:px-6 md:px-8 pb-4 sm:pb-6 min-w-0">
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center px-8 @container/footer sm:px-12 md:px-16 lg:px-20 pb-4 sm:pb-6 min-w-0">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-4 gap-5 sm:gap-6 md:gap-8 mb-8 sm:mb-10 items-start"
             variants={staggerChildren}
@@ -462,8 +428,8 @@ export function Footer() {
             }}
             variants={fadeInUp}
           >
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6">
-              <div className="text-center md:text-left min-w-0">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-6 md:px-2 lg:px-4">
+              <div className="text-center md:text-left min-w-0 md:pl-2 lg:pl-3">
                 <p className={`font-goudy-italic ${ct.body}`} style={{ color: palette.body }}>
                   © {year} {coupleDisplayName} — crafted with love, prayers, and gratitude.
                 </p>
@@ -474,7 +440,7 @@ export function Footer() {
                   This celebration site was designed to share our story and joy with you.
                 </p>
               </div>
-              <div className="min-w-0 space-y-1 text-center md:text-right">
+              <div className="min-w-0 space-y-1 text-center md:text-right md:pr-2 lg:pr-3">
                 <p className={`font-goudy-italic ${ct.body} opacity-90`} style={{ color: palette.body }}>
                   Developed by{" "}
                   <a

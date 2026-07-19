@@ -6,9 +6,9 @@ import {
 export const siteConfig = {
   couple: {
     bride: "May Manalo", //Noenyl Bryle M. Gonzaga
-    brideNickname: "May", //Ltryl
+    brideNickname: "Lara", //Ltryl
     groom: "Toto Irinco", //Ltryl B. Benitez
-    groomNickname: "Toto",
+    groomNickname: "Lara",
     monogram:"/monogram/monogram.png" ,//Ltryl
     backgroundMusic:"/background_music/Keenan Te - Rest of My Life (Wedding Version).mp3"
   },
@@ -25,9 +25,9 @@ export const siteConfig = {
     googleShare: "https://docs.google.com/spreadsheets/d/1PxlVp4NBRGyAv68p_YZ0dd-s23tjfzW5Vhv403EZvDU/edit?usp=sharing", 
   },
   wedding: {
-    date: "August 31,2026",
-    time: "4:00 PM",
-    venue: "Don Jose Heights Atrium and Clubhouse",
+    date: "August 20,2026",
+    time: "1:00 PM",
+    venue: "To Be Announced",
     tagline: "are getting married!!!!!",
     theme: "Our wedding palette is inspired by timeless elegance and warmth.Motif Colors: Champagne Gold, Soft Beige, Warm Soft Brown",
     motif: "#BBCED5, #B9C3A8, #F3D8C5, #D1C4D4, #ECD8BA, #F4E8D8, #E1DCCF",
@@ -40,15 +40,19 @@ export const siteConfig = {
   },
   details: {
     rsvp: {
-      deadline: "August 20, 2026",
-      coordinator: "Micah Estanislao",
-      phone: "0935 861 6096	",
+      deadline: "August 10, 2026",
+      coordinator: "To Be Announced",
+      phone: "To Be Announced",
     },
   },
+  celebration: {
+    /** Set to true once date, time, and venue are ready to publish */
+    detailsAnnounced: false,
+  },
   contact: {
-    bridePhone: "+63 945 580 1039",
-    groomPhone: "+63 945 580 1039",
-    email: "maymanalo009@gmail.com",
+    bridePhone: "To Be Announced",
+    groomPhone: "To Be Announced",
+    email: "To Be Announced",
   },
   giftRegistry: {
     QR_1:{
@@ -65,23 +69,23 @@ export const siteConfig = {
     // }
   },
   ceremony: {
-    location: "Don Jose Heights Atrium and Clubhouse",
-    venue: "Doña Carmen Ave. Don Jose Heights Subd. Brgy. Commonwealth, Quezon City, Philippines",
+    location: "To Be Announced",
+    venue: "To Be Announced",
     map: "https://maps.app.goo.gl/6Uo3aPZHLPf4DmNAA",
-    date: "August 31, 2026",
-    day: "Saturday",
-    time: "4:00 PM",
-    entourageTime: "3:00 PM",
-    guestsTime: "3:30 PM",
+    date: "August 20, 2026",
+    day: "Thursday",
+    time: "1:00 PM",
+    entourageTime: "12:00 PM",
+    guestsTime: "12:30 PM",
     image: ["/Details/ceremony.webp", "/Details/ceremony2.webp", "/Details/ceremony3.webp"],
   },
   reception: {
-    location: "Primus Hotel and Resort - Peñafrancia Hall",
-    venue: "Caceres Heights Subdivision, KM 9, Pacol Road, Brgy. Pacol, Naga City, Camarines Sur",
-    map: "https://maps.app.goo.gl/rmudeAwUsF5hmCq78",
-    date: "December 12, 2026",
-    day: "Saturday",
-    time: "6:00 PM",
+    location: "To Be Announced",
+    venue: "To Be Announced",
+    map: "https://maps.app.goo.gl/6Uo3aPZHLPf4DmNAA",
+    date: "August 20, 2026",
+    day: "Thursday",
+    time: "5:00 PM",
     image: ["/Details/reception1.webp", "/Details/reception2.webp","/Details/reception3.webp"],
   },
   dressCode: {
@@ -134,17 +138,17 @@ Now, as they prepare to say yes before God and the people they love most, Cather
   playlist: {
     title: "A Playlist from our hearts",
     subtitle: "Songs that have been part of our journey together",
-    playlistName: "Toto & May Wedding",
+    playlistName: "Lara & Lara Wedding",
     embedUrl:
-    //https://open.spotify.com/embed/playlist/3L2IhO6I104rZIYVCEyncJ?utm_source=generator&theme=0&si=8b59b4d481114785
-      "https://open.spotify.com/embed/playlist/3L2IhO6I104rZIYVCEyncJ?utm_source=generator&theme=0&si=8b59b4d481114785",
-    spotifyUrl: "https://open.spotify.com/playlist/3L2IhO6I104rZIYVCEyncJ",
+    //https://open.spotify.com/embed/playlist/1fpzT23f6G5bu6QBcI1tO8?utm_source=generator&si=c509d78be8954066
+      "https://open.spotify.com/embed/playlist/1fpzT23f6G5bu6QBcI1tO8?utm_source=generator&theme=0&si=c509d78be8954066",
+    spotifyUrl: "https://open.spotify.com/playlist/1fpzT23f6G5bu6QBcI1tO8",
   },
   snapShare: {
     googleDriveLink:
       "https://drive.google.com/drive/folders/1aVvQuyGBtEX9rLoh7FxM2sJt9i8v-QCL?usp=sharing",
     albumQR: "/QR/AlbumQR.png",
-    hashtag: ["#TOTOallyMAYdForEachOther",],
+    hashtag: ["#TheLarasSilverCelebration",],
     instructions: "Please scan this QR Code and upload the photos and videos you have taken during our wedding reception. We are delighted to see your snaps too!",
   },
   accommodation: {

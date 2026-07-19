@@ -92,16 +92,16 @@ export function Navbar() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out ${
         isScrolled
-          ? "bg-motif-deep backdrop-blur-xl shadow-[0_10px_40px_rgba(91,102,85,0.35)] border-b border-motif-medium/70"
-          : "bg-motif-deep/92 backdrop-blur-lg border-b border-motif-medium/60"
+          ? "bg-motif-deep/35 backdrop-blur-xl shadow-[0_4px_24px_rgba(47,47,47,0.12)] border-b border-motif-cream/15"
+          : "bg-motif-deep/10 backdrop-blur-md border-b border-white/10"
       }`}
     >
-      {/* Elegant glow effect when scrolled */}
+      {/* Glass highlight when scrolled */}
       {isScrolled && (
-        <div className="absolute inset-0 bg-gradient-to-r from-motif-cream/8 via-motif-cream/4 to-motif-cream/8 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-motif-cream/6 via-motif-cream/3 to-motif-cream/6 pointer-events-none" />
       )}
-      {/* Subtle texture overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-motif-cream/5 via-transparent to-motif-cream/8 pointer-events-none" />
+      {/* Subtle glass sheen */}
+      <div className="absolute inset-0 bg-gradient-to-b from-white/8 via-transparent to-transparent pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 relative">
         <div className="flex justify-between items-center h-12 sm:h-14 md:h-16">
@@ -161,15 +161,15 @@ export function Navbar() {
               socialItems={[]}
               displaySocials={false}
               menuButtonColor="var(--color-motif-cream)"
-              openMenuButtonColor="var(--color-motif-cream)"
-              changeMenuColorOnOpen={false}
+              openMenuButtonColor="var(--color-motif-deep)"
+              changeMenuColorOnOpen={true}
               colors={[
-                "var(--color-motif-deep)",
-                "var(--color-motif-deep)",
-                "var(--color-motif-deep)",
-                "var(--color-motif-deep)",
+                "color-mix(in srgb, var(--color-motif-cream) 92%, transparent)",
+                "color-mix(in srgb, var(--color-motif-cream) 86%, transparent)",
+                "color-mix(in srgb, var(--color-motif-cream) 80%, transparent)",
+                "color-mix(in srgb, var(--color-motif-cream) 74%, transparent)",
               ]}
-              accentColor="var(--color-motif-soft)"
+              accentColor="var(--color-motif-deep)"
               isFixed={true}
               onMenuOpen={() => {}}
               onMenuClose={() => {}}

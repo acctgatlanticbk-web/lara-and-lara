@@ -3,6 +3,7 @@
 import React from "react"
 import localFont from "next/font/local"
 import { StorySection } from "@/components/StorySection"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 
 const theSeasons = localFont({
@@ -16,9 +17,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
 
 function OrnamentalDivider() {
   return (
@@ -45,7 +43,7 @@ function OrnamentalDivider() {
 function LoveStoryTitle() {
   return (
     <h1
-      className="welcome-title-lockup relative mx-auto w-full max-w-full text-center"
+      className="welcome-title-lockup relative mx-auto w-full max-w-full pb-0 pt-14 text-center sm:pt-16 md:pt-20 lg:pt-24"
       style={
         {
           "--title-size": layeredSectionTitleSize.main,
@@ -61,7 +59,7 @@ function LoveStoryTitle() {
           color: "var(--color-welcome-navy)",
         }}
       >
-       Our Love Story
+       A Silver Journey
       </span>
       <span
         aria-hidden
@@ -74,9 +72,9 @@ function LoveStoryTitle() {
             "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
         }}
       >
-        Our Journey to Forever
+       25 Years of Beautiful Memories
       </span>
-      <span className="sr-only">Our Journey to Forever</span>
+      <span className="sr-only">25 Years of Beautiful Memories</span>
     </h1>
   )
 }
@@ -85,30 +83,16 @@ export function LoveStory() {
   return (
     <div className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative min-h-screen overflow-x-hidden`}>
       <div
-        className="relative px-4 pb-2 pt-8 text-center sm:pt-10 md:pt-12"
+        className="relative px-4 pb-0 pt-8 text-center sm:pt-10 md:pt-12"
         style={{ background: "var(--color-welcome-bg)" }}
       >
-        <div className="pointer-events-none  absolute right-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-right-corner.png"
-            alt=""
-            className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-          />
-        </div>
-        <div className="pointer-events-none absolute left-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
+        <SectionCornerDecorations showFrame={false} corners={{ bottomLeft: false, bottomRight: false }} />
+
         <div className="relative z-20 mx-auto max-w-5xl @container/love-story">
           <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
             <OrnamentalDivider />
           </div>
-          <div className="mx-auto mt-2 sm:mt-3 md:mt-4">
+          <div className="mx-auto mt-8 sm:mt-10 md:mt-12">
             <LoveStoryTitle />
           </div>
         </div>
@@ -125,12 +109,12 @@ export function LoveStory() {
   theme="light"
   layout="image-left"
   isFirst={true}
-  title="First Friendly Date"
-  imageSrc="/LoveStory/story one.webp"
+  title="A Journey That Began with Love"
+  imageSrc="/mobile-background/image.png"
   text={
     <>
       <p className="mb-4">
-      Ours is not an ordinary love story but just like many others, it started with a simple message "Hi" and so they say, the rest is history. 
+        Twenty-five years ago, we began a journey together with hopeful hearts, shared dreams, and a promise to stand by one another through every season of life. What started as a simple "I do" has become a lifetime of cherished memories and unwavering commitment.
       </p>
     </>
   }
@@ -139,12 +123,12 @@ export function LoveStory() {
 <StorySection
   theme="dark"
   layout="image-right"
-  imageSrc="/LoveStory/story two.webp"
-  title="When Two Paths Crossed"
+  imageSrc="/mobile-background/image.png"
+  title="Growing Through Every Season"
   text={
     <>
       <p className="mb-4">
-      Three years ago, destiny brought us together in the same workplace. The first time we saw each other, never did we imagined that we just found our future. 
+        Over the years, we have experienced countless joys, faced challenges together, celebrated milestones, and learned valuable lessons along the way. Every season has strengthened our bond and reminded us of the beauty of growing together.
       </p>
     </>
   }
@@ -153,12 +137,12 @@ export function LoveStory() {
 <StorySection
   theme="light"
   layout="image-left"
-  imageSrc="/LoveStory/story three.webp"
-  title="An Unexpected Beginning"
+  imageSrc="/mobile-background/image.png"
+  title="A Home Filled with Blessings"
   text={
     <>
       <p>
-      A man who was broken and in pain at that time unexpectedly cross paths with a woman who was contented and has entrusted her single life to God. A gap of 15 years in age, he is a widow and she is  young. Both did not expect what's coming but God has a beautiful plan for them.
+        Our marriage has been blessed with precious moments shared with family, dear friends, and loved ones. Through laughter, celebrations, and everyday life, we have found that life's greatest treasures are the people who walk beside us.
       </p>
     </>
   }
@@ -167,12 +151,12 @@ export function LoveStory() {
 <StorySection
   theme="dark"
   layout="image-right"
-  imageSrc="/LoveStory/story four.webp"
-  title="From Conversations to Connection"
+  imageSrc="/mobile-background/image.png"
+  title="Faith as Our Foundation"
   text={
     <>
       <p>
-      One short message and one warm reply is all that it takes. Small talks turned to hours of conversations, they got deeper and more personal as the days past and days turned into weeks and months without ceasing. He was healing and found a reason to be happy again while she has found peace and sincere connection with her newfound friend. 
+        Through every triumph and every trial, God's grace has been our constant guide. His love has strengthened our marriage, renewed our hope, and reminded us that every blessing we enjoy today comes from His faithful hand.
       </p>
     </>
   }
@@ -182,12 +166,12 @@ export function LoveStory() {
   theme="light"
   layout="image-left"
   isLast={true}
-  imageSrc="/LoveStory/story five.webp"
-  title="When Friendship Became Love"
+  imageSrc="/mobile-background/image.png"
+  title="Twenty-Five Years of Memories"
   text={
     <>
       <p className="mb-4">
-      The friendship quickly blossomed to something more. Both were caught off guard and before they realize it, they were already deeply in love. It was not easy and quite complicated as they live in different worlds with different priorities and different realities in life. 
+        Looking back, we are filled with gratitude for every smile, every challenge overcome, every lesson learned, and every memory created together. Each chapter has shaped the story we proudly celebrate today.
       </p>
     </>
   }
@@ -196,12 +180,12 @@ export function LoveStory() {
 <StorySection
   theme="dark"
   layout="image-right"
-  imageSrc="/LoveStory/story six.webp"
-  title="Love That Chose to Stay"
+  imageSrc="/mobile-background/image.png"
+  title="Grateful for Every Person Along the Way"
   text={
     <>
       <p className="mb-4">
-      They were not supposed to be a couple so their relationship was put to the tests but real love is strong and prevailing. She never judged him from the start and just accepted him as he is. He never doubted her feeling and tendencies, he just loved her for who she is. She made him happy and restored his purpose in life. 
+        Our journey has been enriched by the love, encouragement, and prayers of our family and friends. Your kindness and support have become a meaningful part of our story, and we are truly thankful to celebrate this milestone with you.
       </p>
     </>
   }
@@ -211,12 +195,12 @@ export function LoveStory() {
   theme="light"
   layout="image-left"
   isLast={true}
-  imageSrc="/LoveStory/story seven.webp"
-  title="Written by Gods Perfect Timing"
+  imageSrc="/mobile-background/image.png"
+  title="Looking Forward with Hope"
   text={
     <>
       <p className="mb-4">
-      With faith in God and complete trust in His plan, they realized that they are totally made for each other and that His timing couldn't be more perfect. A match that was destined before they even met and is destined for the love of a lifetime together as husband and wife. 
+        As we celebrate our Silver Wedding Anniversary, we thank God for the gift of twenty-five wonderful years together. With hearts full of gratitude, we look forward to the future with renewed faith, enduring love, and the hope of many more beautiful years to come.
       </p>
     </>
   }
@@ -225,22 +209,8 @@ export function LoveStory() {
         className="relative px-4 pb-16 pt-8 text-center sm:pb-20 sm:pt-10 md:pb-24 md:pt-12"
         style={{ background: "var(--color-welcome-bg)" }}
       >
-        <div className="pointer-events-none absolute bottom-0 left-0 z-20">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/botto-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 right-0 z-20">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/botto-right-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
+        <SectionCornerDecorations showFrame={false} corners={{ topLeft: false, topRight: false }} />
+
         <div className="relative z-20">
           <div className="mx-auto mb-5 sm:mb-6">
             <OrnamentalDivider />

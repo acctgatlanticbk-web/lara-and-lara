@@ -50,6 +50,27 @@
   font-style: normal;
   font-display: swap;
 }
+@font-face {
+  font-family: 'BrittanySignature';
+  src: url('../Font/brittany-signature-script/BrittanySignatureScript.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'AgrandirWideBold';
+  src: url('/fonts/hello-paris-sans-regular/hello-paris-sans-regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'LeJourSerif';
+  src: url('/fonts/sorts-mill-goudy-master/OFLGoudyStMTT.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @custom-variant dark (&:is(.dark *));
 
@@ -139,31 +160,31 @@
   
   /* ─── Motif palette — edit here, affects every component ─── */
   /* Background */
-  --color-motif-cream:   #FFF8F5; /* text couple and the background section */
+  --color-motif-cream:   #FFFFFF; /* text couple and the background section */
   
   /* Primary Highlight */
-  --color-motif-yellow:  #EFCFBA; /* nothing changes see */
+  --color-motif-yellow:  #E8E8E8; /* nothing changes see */
   /* FA9A84 */
   /* Secondary */
-  --color-motif-soft:    #F5E6DA; /* nothing changes see*/
-  --color-motif-accent:  #FA9A84; /* nothing changes see */
+  --color-motif-soft:    #F7F7F7; /* nothing changes see*/
+  --color-motif-accent:  #B8B8B8; /* nothing changes see */
   
   /* Primary Brand */
-  --color-motif-deep:    #9A5C49; /* Navbar background. */
-  --color-motif-medium:  #E7C9B5; /* just a line below the navbar border  */
+  --color-motif-deep:    #2F2F2F; /* Navbar background. */
+  --color-motif-medium:  #D8D8D8; /* just a line below the navbar border  */
   
   /* Neutral */
-  --color-motif-silver:  #FCFAF8; /* nothing changes see  */
+  --color-motif-silver:  #FAFAFA; /* nothing changes see  */
   
   /* Welcome section */
-  --color-welcome-bg:        color-mix(in srgb, var(--color-motif-cream) 38%, white); /* background color */
-  --color-welcome-bg-soft:   color-mix(in srgb, var(--color-motif-cream) 22%, white); /* background color */
-  --color-welcome-text:      #55443E; /* color to change paragraph text  */
-  --color-welcome-text-soft: #8A756D;  /* nothing changes see */
-  --color-welcome-heading:   #9A5C49; /* color to change heading text but the smaller one. */
-  --color-welcome-script:    #C8826A; /* nothing changes see */
-  --color-welcome-navy:      #7C4536; /* color to change BIG HEADER  */
-  --color-welcome-green:     #FA9A84; /* avatar, button and below header */
+  --color-welcome-bg:        color-mix(in srgb, var(--color-motif-cream) 94%, #F5F5F5); /* background color */
+  --color-welcome-bg-soft:   color-mix(in srgb, var(--color-motif-cream) 88%, #F7F7F7); /* background color */
+  --color-welcome-text:      #555555; /* color to change paragraph text  */
+  --color-welcome-text-soft: #8C8C8C;  /* nothing changes see */
+  --color-welcome-heading:   #444444; /* color to change heading text but the smaller one. */
+  --color-welcome-script:    #7A7A7A; /* nothing changes see */
+  --color-welcome-navy:      #222222; /* color to change BIG HEADER  */
+  --color-welcome-green:     #6E6E6E; /* avatar, button and below header */
   /* ─────────────────────────────────────────────────────────── */
   --font-imperial-script: "Imperial Script", cursive;
   --font-beautiful-malera: "Beautiful Malera", cursive;

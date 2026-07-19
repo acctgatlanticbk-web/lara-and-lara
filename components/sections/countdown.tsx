@@ -1,7 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { Section } from "@/components/section"
+import { useEffect, useState, type CSSProperties } from "react"
 import { motion } from "motion/react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
@@ -9,6 +8,7 @@ import { useSiteConfig } from "@/hooks/use-site-config"
 import Counter from "@/components/Counter"
 import { CloudinaryImage } from "@/components/ui/cloudinary-image"
 import { parseWeddingDate } from "@/lib/wedding-date"
+import { layeredSectionTitleSize } from "@/lib/section-typography"
 
 interface TimeLeft {
   days: number
@@ -39,30 +39,60 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-const OUTSIDE_TITLE_SHADOW =
-  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
-const READABLE_SHADOW = "0 1px 3px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.35)"
-
-const outsideDividerLineStyle = {
-  background:
-    "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent)",
+const palette = {
+  heading: "var(--color-welcome-navy)",
+  accent: "var(--color-welcome-green)",
+  counter: "var(--color-welcome-text)",
 } as const
 
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[150px] md:max-w-[190px] lg:max-w-[220px] opacity-80"
+const dividerLineStyle = {
+  background:
+    "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
+} as const
+
+const glassPanelStyle = {
+  background: "rgba(255, 255, 255, 0.24)",
+  borderWidth: "1px",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.38)",
+  boxShadow:
+    "0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.55)",
+} as const
+
+const innerSurfaceStyle = {
+  background: "rgba(255, 255, 255, 0.14)",
+  borderColor: "rgba(255, 255, 255, 0.32)",
+} as const
+
+function GlassSurfaceLayers() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/30 via-white/12 to-white/4"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/28"
+        aria-hidden
+      />
+    </>
+  )
+}
 
 function OutsideDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={outsideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-white/50 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+      <span
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
+      />
       <span
         className="h-px w-6 sm:w-10"
         style={{
           background:
-            "linear-gradient(to left, transparent, rgba(255, 255, 255, 0.55), transparent)",
+            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
         }}
       />
     </div>
@@ -72,21 +102,20 @@ function OutsideDivider() {
 function CountdownTitle() {
   return (
     <h2
-      className="relative mx-auto w-full max-w-full text-center"
+      className="welcome-title-lockup relative mx-auto w-full max-w-full text-center"
       style={
         {
-          "--title-size": "clamp(2.15rem, 11vw, 4.5rem)",
-          "--script-size": "clamp(1.1rem, 4.5vw, 2.25rem)",
-          "--script-overlap": "clamp(-0.65rem, -2.8vw, -1.5rem)",
-        } as React.CSSProperties
+          "--title-size": layeredSectionTitleSize.main,
+          "--script-size": layeredSectionTitleSize.script,
+          "--script-overlap": layeredSectionTitleSize.overlap,
+        } as CSSProperties
       }
     >
       <span
-        className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.15em] md:tracking-[0.18em]`}
+        className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
         style={{
           fontSize: "var(--title-size)",
-          color: OUTSIDE_TEXT,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.heading,
         }}
       >
         Counting Down
@@ -97,13 +126,14 @@ function CountdownTitle() {
         style={{
           marginTop: "var(--script-overlap)",
           fontSize: "var(--script-size)",
-          color: OUTSIDE_TEXT_MUTED,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.accent,
+          textShadow:
+            "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
         }}
       >
-        To our forever
+        Still shining in silver
       </span>
-      <span className="sr-only">To our forever</span>
+      <span className="sr-only">Still shining in silver</span>
     </h2>
   )
 }
@@ -119,7 +149,13 @@ function CountdownUnit({ value, label }: CountdownUnitProps) {
       {/* Card container */}
       <div className="relative w-full max-w-[88px] sm:max-w-[96px] md:max-w-[110px] lg:max-w-[120px]">
         {/* Main card */}
-        <div className="relative rounded-xl border border-white/40 bg-white/10 px-2.5 py-2.5 sm:rounded-2xl sm:px-3.5 sm:py-3.5 md:px-4 md:py-4">
+        <div
+          className="relative overflow-hidden rounded-xl border backdrop-blur-md px-2.5 py-2.5 sm:rounded-2xl sm:px-3.5 sm:py-3.5 md:px-4 md:py-4"
+          style={{
+            ...innerSurfaceStyle,
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.42)",
+          }}
+        >
           <div className="relative z-10 flex items-center justify-center">
             <Counter
               value={value}
@@ -127,7 +163,7 @@ function CountdownUnit({ value, label }: CountdownUnitProps) {
               fontSize={26}
               padding={4}
               gap={2}
-              textColor={OUTSIDE_TEXT}
+              textColor={palette.counter}
               fontWeight={800}
               borderRadius={6}
               horizontalPadding={3}
@@ -140,8 +176,7 @@ function CountdownUnit({ value, label }: CountdownUnitProps) {
               digitStyle={{
                 minWidth: "1.15ch",
                 fontFamily: "Arial, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                color: OUTSIDE_TEXT,
-                textShadow: READABLE_SHADOW,
+                color: palette.counter,
               }}
             />
           </div>
@@ -150,7 +185,7 @@ function CountdownUnit({ value, label }: CountdownUnitProps) {
 
       <span
         className="text-[10px] font-inter font-semibold uppercase tracking-[0.16em] sm:text-xs md:text-sm"
-        style={{ color: OUTSIDE_TEXT, textShadow: READABLE_SHADOW }}
+        style={{ color: palette.counter }}
       >
         {label}
       </span>
@@ -248,86 +283,57 @@ export function Countdown() {
   }, [targetTimestamp])
 
   return (
-    <Section
+    <section
       id="countdown"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative overflow-hidden py-10 sm:py-12 md:py-16 lg:py-20`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 overflow-visible bg-transparent py-6 sm:py-10 md:py-12 lg:py-16`}
     >
-      {/* Corner florals — matches hero / loading screen */}
-      {/* <div className="pointer-events-none absolute left-0 top-0 z-0">
-        <img
-          src="/decoration/decoration/left-top-decoration.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div> */}
-      {/* <div className="pointer-events-none absolute right-0 top-0 z-0">
-        <img
-          src="/decoration/decoration/right-top-decoration.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div> */}
-      {/* <div className="pointer-events-none absolute bottom-0 left-0 z-0">
-
-        <img
-          src="/decoration/decoration/left-bottom-decoration.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 right-0 z-0">
-
-        <img
-          src="/decoration/decoration/right-bottom-decoration.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div> */}
-      
-      {/* Monogram - centered at top */}
-      <div className="relative flex justify-center pt-8 sm:pt-10 md:pt-12 mb-6 sm:mb-8 md:mb-10 z-10">
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="relative"
+      <div className="relative z-10 mx-auto max-w-3xl px-2 @container/countdown sm:px-3 md:px-4 lg:px-6">
+        <div
+          className="relative overflow-visible rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl"
+          style={glassPanelStyle}
         >
-          <div className="relative w-72 h-72 sm:w-96 sm:h-96 md:w-[28rem] md:h-[28rem] lg:w-[36rem] lg:h-[36rem] xl:w-[40rem] xl:h-[40rem] opacity-90">
-            <CloudinaryImage
-              src={siteConfig.couple.monogram}
-              alt={`${groomNickname} & ${brideNickname} Monogram`}
-              fill
-              className="object-contain"
-              style={{
-                filter: "brightness(0) invert(1)",
-              }}
-              priority={false}
-            />
-          </div>
-        </motion.div>
-      </div>
+          <GlassSurfaceLayers />
 
-      {/* Header */}
-      <div className="relative z-10 mb-6 px-3 text-center sm:mb-8 sm:px-4 md:mb-10">
-        <div className="mx-auto mb-4 sm:mb-5">
-          <OutsideDivider />
-        </div>
-        <CountdownTitle />
-        <div className="mt-3 flex items-center justify-center sm:mt-4">
-          <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
-        </div>
-      </div>
+          <div className="relative z-10 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+            {/* Monogram */}
+            <div className="relative mb-6 flex justify-center sm:mb-8 md:mb-10">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="relative"
+              >
+                <div className="relative h-48 w-48 opacity-90 sm:h-56 sm:w-56 md:h-64 md:w-64 lg:h-72 lg:w-72">
+                  <CloudinaryImage
+                    src={siteConfig.couple.monogram}
+                    alt={`${groomNickname} & ${brideNickname} Monogram`}
+                    fill
+                    className="object-contain"
+                    style={{
+                      filter:
+                        "brightness(0) sepia(1) saturate(0.15) hue-rotate(10deg) opacity(0.72)",
+                    }}
+                    priority={false}
+                  />
+                </div>
+              </motion.div>
+            </div>
 
-      {/* Save The Date Card */}
-      <div className="relative z-10">
-        <div className="flex justify-center px-3 sm:px-4">
-          <div className="max-w-2xl w-full">
+            {/* Header */}
+            <div className="relative mb-6 text-center sm:mb-8 md:mb-10">
+              <div className="mx-auto mb-4 sm:mb-5">
+                <OutsideDivider />
+              </div>
+              <CountdownTitle />
+              <div className="mt-3 flex items-center justify-center sm:mt-4">
+                <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+              </div>
+            </div>
 
-            {/* Numeric countdown: Days / Hours / Minutes / Seconds */}
-            <div className="mt-2 sm:mt-4 md:mt-6 font-inter">
+            {/* Numeric countdown */}
+            <div className="font-inter">
               <div className="flex flex-col items-center gap-3 sm:gap-4 md:gap-6">
-                {/* 2x2 on mobile, 4 in a row from md+ */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 w-full max-w-sm sm:max-w-md md:max-w-xl">
+                <div className="grid w-full max-w-sm grid-cols-2 gap-3 sm:max-w-md sm:gap-4 md:max-w-xl md:grid-cols-4 md:gap-6">
                   <CountdownUnit value={timeLeft.days} label="Days" />
                   <CountdownUnit value={timeLeft.hours} label="Hours" />
                   <CountdownUnit value={timeLeft.minutes} label="Minutes" />
@@ -335,60 +341,78 @@ export function Countdown() {
                 </div>
               </div>
             </div>
-          </div>
-          
-        </div>
-        
-            {/* Date Section - Layout matched with hero date block */}
-            <div className="relative sm:rounded-3xl p-6 sm:p-8 md:p-10 mb-6 sm:mb-8">
-              <div className="w-full max-w-2xl mx-auto">
+
+            {/* Date block */}
+            <div className="relative mt-6 p-4 sm:mt-8 sm:rounded-3xl sm:p-6 md:p-8">
+              <div className="mx-auto w-full max-w-2xl">
                 <div
                   className={`${cinzel.className} flex flex-col items-center gap-1.5 font-bold sm:gap-2.5 md:gap-3`}
-                  style={{ color: OUTSIDE_TEXT, textShadow: READABLE_SHADOW }}
+                  style={{ color: palette.heading }}
                 >
-                  {/* Month */}
                   <span className="text-[0.65rem] uppercase tracking-[0.4em] sm:text-xs sm:tracking-[0.5em] md:text-sm">
                     {ceremonyMonth}
                   </span>
 
-                  {/* Day and time row */}
                   <div className="flex w-full items-center gap-2 sm:gap-4 md:gap-5">
-                    {/* Day of week & divider */}
                     <div className="flex flex-1 items-center justify-end gap-1.5 sm:gap-2.5">
-                      <span className="h-[0.5px] flex-1 bg-white/45" />
+                      <span
+                        className="h-[0.5px] flex-1"
+                        style={{
+                          background:
+                            "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 28%, transparent))",
+                        }}
+                      />
                       <span className="text-[0.6rem] uppercase tracking-[0.3em] sm:text-[0.7rem] sm:tracking-[0.4em] md:text-xs">
                         {ceremonyDayShort}
                       </span>
-                      <span className="h-[0.5px] w-6 bg-white/45 sm:w-8 md:w-10" />
+                      <span
+                        className="h-[0.5px] w-6 sm:w-8 md:w-10"
+                        style={{
+                          background:
+                            "color-mix(in srgb, var(--color-motif-deep) 28%, transparent)",
+                        }}
+                      />
                     </div>
 
-                    {/* Day number */}
                     <div className="relative flex items-center justify-center px-3 sm:px-4 md:px-5">
                       <span
                         className={`${cinzel.className} relative text-[3rem] font-bold leading-none tracking-wider sm:text-[4.5rem] md:text-[5.5rem] lg:text-[6rem]`}
+                        style={{ color: palette.counter }}
                       >
                         {ceremonyDayNumber}
                       </span>
                     </div>
 
-                    {/* Time */}
                     <div className="flex flex-1 items-center gap-1.5 sm:gap-2.5">
-                      <span className="h-[0.5px] w-6 bg-white/45 sm:w-8 md:w-10" />
+                      <span
+                        className="h-[0.5px] w-6 sm:w-8 md:w-10"
+                        style={{
+                          background:
+                            "color-mix(in srgb, var(--color-motif-deep) 28%, transparent)",
+                        }}
+                      />
                       <span className="text-[0.6rem] uppercase tracking-[0.3em] sm:text-[0.7rem] sm:tracking-[0.4em] md:text-xs">
                         {ceremonyTimeDisplay.split(",")[0]}
                       </span>
-                      <span className="h-[0.5px] flex-1 bg-white/45" />
+                      <span
+                        className="h-[0.5px] flex-1"
+                        style={{
+                          background:
+                            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 28%, transparent))",
+                        }}
+                      />
                     </div>
                   </div>
 
-                  {/* Year */}
                   <span className="text-[0.65rem] uppercase tracking-[0.4em] sm:text-xs sm:tracking-[0.5em] md:text-sm">
                     {ceremonyYear}
                   </span>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
       </div>
-    </Section>
+    </section>
   )
 }

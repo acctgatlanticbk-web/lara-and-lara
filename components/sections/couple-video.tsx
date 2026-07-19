@@ -8,6 +8,7 @@ import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 import localFont from "next/font/local"
 import Image from "next/image"
 import React from "react"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 
 const theSeasons = localFont({
   src: "../../Font/Fontspring-DEMO-theseasons-reg.otf",
@@ -20,9 +21,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
 
 const palette = {
   body: "var(--color-welcome-text)",
@@ -210,41 +208,13 @@ export function CoupleVideo() {
 
       <section
         id="couple-video"
-        className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative overflow-hidden px-4 pb-10 pt-8 sm:pb-12 sm:pt-10 md:pb-16 md:pt-12`}
-        style={{ background: "var(--color-welcome-bg)" }}
+        className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative overflow-hidden bg-transparent px-4 pb-10 pt-8 sm:pb-12 sm:pt-10 md:pb-16 md:pt-12`}
       >
-        <div className="pointer-events-none absolute left-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
-        <div className="pointer-events-none absolute right-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-right-corner.png"
-            alt=""
-            className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-          />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {/* <img
-            src="/decoration/decorations/botto-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          /> */}
-        </div>
-        <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {/* <img
-            src="/decoration/decorations/botto-right-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          /> */}
-        </div>
+        <div
+          className="pointer-events-none absolute inset-0 bg-white/10"
+          aria-hidden
+        />
+        <SectionCornerDecorations />
 
         <div className="relative z-20 mx-auto max-w-5xl @container/couple-video">
           {/* Header */}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, type CSSProperties } from "react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { Instagram, Facebook, Twitter, Share2, Copy, Download, Check } from "lucide-react"
@@ -26,12 +26,6 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-const OUTSIDE_TITLE_SHADOW =
-  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
-const READABLE_SHADOW = "0 1px 3px rgba(0,0,0,0.55), 0 2px 10px rgba(0,0,0,0.35)"
-
 const palette = {
   body: "var(--color-welcome-text)",
   heading: "var(--color-welcome-navy)",
@@ -39,15 +33,39 @@ const palette = {
   accent: "var(--color-welcome-green)",
 } as const
 
-const outsideDividerLineStyle = {
-  background:
-    "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent)",
-} as const
-
-const insideDividerLineStyle = {
+const dividerLineStyle = {
   background:
     "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
 } as const
+
+const glassPanelStyle = {
+  background: "rgba(255, 255, 255, 0.52)",
+  borderWidth: "1px",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.72)",
+  boxShadow:
+    "0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.92)",
+} as const
+
+const innerSurfaceStyle = {
+  background: "rgba(255, 255, 255, 0.36)",
+  borderColor: "rgba(255, 255, 255, 0.58)",
+} as const
+
+function GlassSurfaceLayers() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/65 via-white/28 to-white/10"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/55"
+        aria-hidden
+      />
+    </>
+  )
+}
 
 const ct = {
   body: sectionType.text,
@@ -57,29 +75,18 @@ const ct = {
   btn: sectionType.label,
 } as const
 
-const cardStyle = {
-  background: "var(--color-welcome-bg)",
-  borderWidth: "1px",
-  borderStyle: "solid",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
-  boxShadow:
-    "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
-} as const
-
 const QR_FG = "#1a1a1a"
 
-function OutsideDivider() {
+function SectionDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={outsideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-white/50 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
       <span
-        className="h-px w-6 sm:w-10"
-        style={{
-          background:
-            "linear-gradient(to left, transparent, rgba(255, 255, 255, 0.55), transparent)",
-        }}
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
       />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
     </div>
   )
 }
@@ -87,38 +94,32 @@ function OutsideDivider() {
 function InsideDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={insideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-motif-deep/45 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
       <span
-        className="h-px w-6 sm:w-10"
-        style={{
-          background:
-            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
-        }}
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
       />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
     </div>
   )
 }
 
 function SnapShareTitle() {
   return (
-    <h2
-      className="welcome-title-lockup relative mx-auto w-full max-w-full text-center"
+    <div
+      className="welcome-title-lockup relative mx-auto mt-2 w-full max-w-full text-center sm:mt-3 md:mt-4"
       style={
         {
           "--title-size": layeredSectionTitleSize.main,
           "--script-size": layeredSectionTitleSize.script,
           "--script-overlap": layeredSectionTitleSize.overlap,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <span
         className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
-        style={{
-          fontSize: "var(--title-size)",
-          color: OUTSIDE_TEXT,
-          textShadow: OUTSIDE_TITLE_SHADOW,
-        }}
+        style={{ fontSize: "var(--title-size)", color: palette.heading }}
       >
         Snap and Share
       </span>
@@ -128,14 +129,13 @@ function SnapShareTitle() {
         style={{
           marginTop: "var(--script-overlap)",
           fontSize: "var(--script-size)",
-          color: OUTSIDE_TEXT_MUTED,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.accent,
         }}
       >
         Share your memories
       </span>
       <span className="sr-only">Share your memories</span>
-    </h2>
+    </div>
   )
 }
 
@@ -148,14 +148,13 @@ function ContentCard({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl ${className}`}
-      style={cardStyle}
+      className={`relative overflow-visible rounded-lg border backdrop-blur-md sm:rounded-xl md:rounded-2xl ${className}`}
+      style={{
+        ...innerSurfaceStyle,
+        boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.78)",
+      }}
     >
-      <div
-        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/35 via-white/8 to-transparent"
-        aria-hidden
-      />
-      <div className="relative z-20 flex flex-col gap-3 px-4 py-5 sm:gap-4 sm:px-5 sm:py-6 md:px-6 md:py-7">
+      <div className="relative z-10 flex flex-col gap-3 px-4 py-5 sm:gap-4 sm:px-5 sm:py-6 md:px-6 md:py-7">
         {children}
       </div>
     </div>
@@ -300,30 +299,39 @@ export function SnapShare() {
   return (
     <section
       id="snap-share"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 overflow-visible bg-transparent py-6 sm:py-10 md:py-12 lg:py-16`}
     >
-      <div className="relative z-20 mx-auto max-w-6xl px-4 @container/snap-share sm:px-6 md:px-8">
-        <div className="relative z-20 px-6 text-center sm:px-10 md:px-12">
-          <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
-            <OutsideDivider />
-          </div>
-          <div className="mx-auto mt-2 sm:mt-3 md:mt-4">
-            <SnapShareTitle />
-          </div>
-          <p
-            className={`font-goudy-italic mx-auto mt-4 max-w-2xl px-2 sm:mt-5 md:mt-6 ${ct.bodyLg}`}
-            style={{ color: OUTSIDE_TEXT_MUTED, textShadow: READABLE_SHADOW }}
-          >
-            Help us remember the little moments of {coupleDisplayName}&apos;s day — every smile,
-            embrace, and candid laugh. Your photos and clips complete our love story.
-          </p>
-          <div className="flex items-center justify-center pt-3 sm:pt-4">
-            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
-          </div>
-        </div>
+      <div className="relative z-10 mx-auto max-w-6xl px-2 @container/snap-share sm:px-3 md:px-4 lg:px-6">
+        <div
+          className="relative overflow-visible rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl"
+          style={glassPanelStyle}
+        >
+          <GlassSurfaceLayers />
 
-        <div className="mt-6 grid grid-cols-1 items-start gap-5 sm:mt-8 sm:gap-6 lg:grid-cols-2 lg:gap-8 md:mt-10">
-          <ContentCard className="lg:order-1">
+          <div className="relative z-10 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+            {/* Header */}
+            <div className="relative mx-auto mb-4 max-w-2xl text-center sm:mb-6 md:mb-8">
+              <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
+                <SectionDivider />
+              </div>
+
+              <SnapShareTitle />
+
+              <p
+                className={`font-goudy-italic mx-auto mt-5 max-w-2xl px-2 sm:mt-6 ${ct.bodyLg}`}
+                style={{ color: palette.body }}
+              >
+                Help us remember the little moments of {coupleDisplayName}&apos;s day — every smile,
+                embrace, and candid laugh. Your photos and clips complete our love story.
+              </p>
+
+              <div className="mt-4 flex items-center justify-center sm:mt-5">
+                <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 items-start gap-5 sm:gap-6 lg:grid-cols-2 lg:gap-8">
+          {/* <ContentCard className="lg:order-1">
             <h4
               className={`${cinzel.className} ${ct.cardTitle} text-center font-semibold uppercase tracking-[0.08em]`}
               style={{ color: palette.heading }}
@@ -364,7 +372,7 @@ export function SnapShare() {
             >
               Share your snapshots to be featured in our keepsake gallery.
             </p>
-          </ContentCard>
+          </ContentCard> */}
 
           <div className="w-full min-w-0 space-y-5 sm:space-y-6 lg:order-2">
             <ContentCard>
@@ -586,22 +594,21 @@ export function SnapShare() {
               </ContentCard>
             )}
           </div>
-        </div>
+            </div>
 
-        <div className="mt-6 space-y-2 text-center sm:mt-8 md:mt-10">
-          <p
-            className={`font-goudy-italic ${ct.bodyLg}`}
-            style={{ color: OUTSIDE_TEXT_MUTED, textShadow: READABLE_SHADOW }}
-          >
-            Thank you for helping make {coupleDisplayName}&apos;s wedding celebration memorable.
-            Your photos and messages create beautiful memories we will treasure for a lifetime.
-          </p>
-          <p
-            className={`${cinzel.className} ${ct.label} uppercase tracking-[0.18em] sm:tracking-[0.2em]`}
-            style={{ color: OUTSIDE_TEXT, textShadow: READABLE_SHADOW }}
-          >
-            Thank you for sharing the joy
-          </p>
+            <div className="mt-6 space-y-2 text-center sm:mt-8 md:mt-10">
+              <p className={`font-goudy-italic ${ct.bodyLg}`} style={{ color: palette.body }}>
+                Thank you for helping make {coupleDisplayName}&apos;s wedding celebration memorable.
+                Your photos and messages create beautiful memories we will treasure for a lifetime.
+              </p>
+              <p
+                className={`${cinzel.className} ${ct.label} uppercase tracking-[0.18em] sm:tracking-[0.2em]`}
+                style={{ color: palette.heading }}
+              >
+                Thank you for sharing the joy
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

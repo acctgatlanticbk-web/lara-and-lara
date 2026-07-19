@@ -87,7 +87,7 @@ export const StorySection: React.FC<StorySectionProps> = ({
       )}
       <div
         ref={sectionRef}
-        className={`container relative z-10 mx-auto px-2 py-12 transition-all duration-1000 ease-out md:px-12 md:py-32 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"} ${isFirst ? "pt-16 md:pt-36" : ""} ${isLast ? "pb-16 md:pb-36" : ""}`}
+        className={`container relative z-10 mx-auto px-2 py-12 transition-all duration-1000 ease-out md:px-12 md:py-32 ${isVisible ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"} ${isFirst ? "pt-8 md:pt-16" : ""} ${isLast ? "pb-16 md:pb-36" : ""}`}
       >
         <div className={`flex ${flexDirection} items-center justify-between gap-3 md:gap-16`}>
           <div className="flex w-[45%] shrink-0 justify-center md:w-5/12">

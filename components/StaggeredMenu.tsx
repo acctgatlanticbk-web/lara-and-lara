@@ -28,8 +28,8 @@ export interface StaggeredMenuProps {
 
 // Colors sourced from globals.css @theme inline — edit there to update everywhere
 const HERO_ACCENT = 'var(--color-motif-accent)'; // toggle + accent (closed state)
-const MENU_PANEL_BG = 'var(--color-motif-deep)'; // panel + prelayer wash
-const MENU_TEXT = 'var(--color-motif-cream)'; // menu text / links
+const MENU_PANEL_BG = 'color-mix(in srgb, var(--color-motif-cream) 78%, transparent)'; // white glass panel + prelayer wash
+const MENU_TEXT = 'var(--color-motif-deep)'; // menu text / links
 
 export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   position = 'right',
@@ -293,8 +293,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         const targetId = link.slice(1);
         const el = typeof document !== 'undefined' ? document.getElementById(targetId) : null;
         if (el) {
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          // Optionally update the URL hash without jumping
+          const navOffset = window.innerWidth >= 768 ? 64 : window.innerWidth >= 640 ? 56 : 48;
+          const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+          window.scrollTo({ top, behavior: 'smooth' });
           if (typeof history !== 'undefined') {
             history.replaceState(null, '', link);
           }
@@ -336,12 +337,12 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   return (
     <>
       {isFixed ? (
-        <div className={(className ? className + ' ' : '') + 'sm-toggle-host relative z-[60] flex items-center justify-center'}>
+        <div className={(className ? className + ' ' : '') + `sm-toggle-host relative flex items-center justify-center ${open ? 'z-[110]' : 'z-[60]'}`}>
           {toggleButton}
         </div>
       ) : null}
       <div
-        className={`sm-scope z-40 ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden pointer-events-none' : 'w-full h-full'} ${open ? 'pointer-events-auto' : ''}`}
+        className={`sm-scope ${open ? 'z-[100] pointer-events-auto' : 'z-40 pointer-events-none'} ${isFixed ? 'fixed top-0 left-0 w-screen h-screen overflow-hidden' : 'w-full h-full'}`}
         data-open={open || undefined}
       >
       <div
@@ -394,7 +395,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           id="staggered-menu-panel"
           ref={panelRef}
           className="staggered-menu-panel absolute top-0 right-0 h-full flex flex-col p-[6em_2em_2em_2em] overflow-y-auto z-10"
-          style={{ background: MENU_PANEL_BG, WebkitBackdropFilter: 'blur(12px)' }}
+          style={{ background: MENU_PANEL_BG, backdropFilter: 'blur(24px) saturate(180%)', WebkitBackdropFilter: 'blur(24px) saturate(180%)' }}
           aria-hidden={!open}
         >
           <div className="sm-panel-inner flex-1 flex flex-col gap-6">
@@ -406,7 +407,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                 items.map((it, idx) => (
                   <li className="sm-panel-itemWrap relative overflow-hidden leading-none" key={it.label + idx}>
                     <a
-                      className="sm-panel-item relative font-semibold cursor-pointer leading-none tracking-[-2px] uppercase transition-[color] duration-150 ease-linear inline-block no-underline pr-[1.4em]"
+                      className="sm-panel-item relative z-[1] font-semibold cursor-pointer leading-none tracking-[-2px] uppercase transition-[color] duration-150 ease-linear inline-block no-underline pr-[1.4em] pointer-events-auto touch-manipulation"
                       style={{ color: MENU_TEXT }}
                       href={it.link}
                       onClick={(e) => handleItemClick(e, it.link)}
@@ -464,6 +465,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope:not([data-open]) { z-index: 0; }
 .sm-scope:not([data-open]) .staggered-menu-panel { pointer-events: none; visibility: hidden; }
 .sm-scope:not([data-open]) .sm-prelayers { pointer-events: none; visibility: hidden; }
+.sm-scope[data-open] .staggered-menu-panel { pointer-events: auto; visibility: visible; }
+.sm-scope[data-open] .sm-panel-item { pointer-events: auto; touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 .sm-toggle-host { display: flex; align-items: center; justify-content: center; }
 .sm-scope .staggered-menu-header { position: absolute; top: 0; left: 0; width: 100%; display: flex; align-items: center; justify-content: flex-end; padding: 2em; background: transparent; pointer-events: none; z-index: 20; }
 .sm-scope .staggered-menu-header > * { pointer-events: auto; }
@@ -474,39 +477,39 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 .sm-scope .sm-icon { position: relative; width: 22px; height: 16px; flex: 0 0 22px; display: inline-flex; align-items: center; justify-content: center; will-change: transform; }
 .sm-scope .sm-panel-itemWrap { position: relative; overflow: hidden; line-height: 1; }
 .sm-scope .sm-icon-line { position: absolute; left: 50%; top: 50%; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transform: translate(-50%, -50%); will-change: transform, opacity; }
-.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: var(--color-motif-deep); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); display: flex; flex-direction: column; padding: 6.5em 2.25em 2.25em 2.25em; overflow-y: auto; z-index: 10; }
+.sm-scope .staggered-menu-panel { position: absolute; top: 0; right: 0; width: clamp(260px, 38vw, 420px); height: 100%; background: color-mix(in srgb, var(--color-motif-cream) 78%, transparent); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-left: 1px solid color-mix(in srgb, var(--color-motif-deep) 10%, transparent); box-shadow: 0 8px 32px color-mix(in srgb, var(--color-motif-deep) 8%, transparent); display: flex; flex-direction: column; padding: 6.5em 2.25em 2.25em 2.25em; overflow-y: auto; z-index: 10; }
+.sm-scope [data-position='left'] .staggered-menu-panel { border-left: none; border-right: 1px solid color-mix(in srgb, var(--color-motif-deep) 10%, transparent); }
 .sm-scope [data-position='left'] .staggered-menu-panel { right: auto; left: 0; }
 .sm-scope .sm-prelayers { position: absolute; top: 0; right: 0; bottom: 0; width: clamp(260px, 38vw, 420px); pointer-events: none; z-index: 5; }
 .sm-scope [data-position='left'] .sm-prelayers { right: auto; left: 0; }
 .sm-scope .sm-prelayer { position: absolute; top: 0; right: 0; height: 100%; width: 100%; transform: translateX(0); }
 .sm-scope .sm-panel-inner { flex: 1; display: flex; flex-direction: column; gap: 1.25rem; }
 .sm-scope .sm-socials { margin-top: auto; padding-top: 2rem; display: flex; flex-direction: column; gap: 1rem; }
-.sm-scope .sm-socials-title { margin: 0; font-size: 1.05rem; font-weight: 500; color: var(--sm-accent, var(--color-motif-cream)); }
+.sm-scope .sm-socials-title { margin: 0; font-size: 1.05rem; font-weight: 500; color: var(--sm-accent, var(--color-motif-deep)); }
 .sm-scope .sm-socials-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
 .sm-scope .sm-socials-list .sm-socials-link { opacity: 1; transition: opacity 0.3s ease; }
 .sm-scope .sm-socials-list:hover .sm-socials-link:not(:hover) { opacity: 0.35; }
 .sm-scope .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) { opacity: 0.35; }
 .sm-scope .sm-socials-list .sm-socials-link:hover,
 .sm-scope .sm-socials-list .sm-socials-link:focus-visible { opacity: 1; }
-.sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, var(--color-motif-cream)); outline-offset: 3px; }
-.sm-scope .sm-socials-link { font-size: 1rem; font-weight: 500; color: var(--color-motif-cream); text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
+.sm-scope .sm-socials-link:focus-visible { outline: 2px solid var(--sm-accent, var(--color-motif-deep)); outline-offset: 3px; }
+.sm-scope .sm-socials-link { font-size: 1rem; font-weight: 500; color: var(--color-motif-deep); text-decoration: none; position: relative; padding: 2px 0; display: inline-block; transition: color 0.3s ease, opacity 0.3s ease; }
 @media (min-width: 640px) { .sm-scope .sm-socials-link { font-size: 1.05rem; } }
 @media (min-width: 768px) { .sm-scope .sm-socials-link { font-size: 1.1rem; } }
 @media (min-width: 1024px) { .sm-scope .sm-socials-link { font-size: 1.25rem; } }
-.sm-scope .sm-socials-link:hover { color: var(--sm-accent, var(--color-motif-cream)); }
-.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: var(--color-motif-cream); text-transform: uppercase; }
+.sm-scope .sm-socials-link:hover { color: var(--sm-accent, var(--color-motif-deep)); }
+.sm-scope .sm-panel-title { margin: 0; font-size: 1rem; font-weight: 600; color: var(--color-motif-deep); text-transform: uppercase; }
 .sm-scope .sm-panel-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
-.sm-scope .sm-panel-item { position: relative; color: var(--color-motif-cream); font-weight: 600; font-size: 2.1rem; cursor: pointer; line-height: 1.1; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
+.sm-scope .sm-panel-item { position: relative; color: var(--color-motif-deep); font-weight: 600; font-size: 2.1rem; cursor: pointer; line-height: 1.1; letter-spacing: -1px; text-transform: uppercase; transition: background 0.25s, color 0.25s; display: inline-block; text-decoration: none; padding-right: 1.4em; }
 @media (min-width: 640px) { .sm-scope .sm-panel-item { font-size: 2.6rem; letter-spacing: -1.2px; } }
 @media (min-width: 768px) { .sm-scope .sm-panel-item { font-size: 3.1rem; letter-spacing: -1.5px; } }
 @media (min-width: 1024px) { .sm-scope .sm-panel-item { font-size: 4.1rem; letter-spacing: -2px; } }
 .sm-scope .sm-panel-itemLabel { display: inline-block; will-change: transform; transform-origin: 50% 100%; }
-.sm-scope .sm-panel-item:hover { color: var(--sm-accent, var(--color-motif-cream)); }
-@media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img { filter: invert(100%); } }
+.sm-scope .sm-panel-item:hover { color: var(--sm-accent, var(--color-motif-deep)); opacity: 0.75; }
+@media (max-width: 1024px) { .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; } }
 @media (max-width: 640px) {
   .sm-scope .staggered-menu-header { padding: 1rem; }
   .sm-scope .staggered-menu-panel { width: 100%; left: 0; right: 0; padding: 4.5em 1.5em 1.75em 1.5em; }
-  .sm-scope .staggered-menu-wrapper[data-open] .sm-logo-img { filter: invert(100%); }
 }
       `}</style>
       </div>

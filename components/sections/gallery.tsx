@@ -7,6 +7,7 @@ import localFont from "next/font/local"
 import { X, ChevronLeft, ChevronRight, Camera } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import { Section } from "@/components/section"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { sectionType, welcomeTitleSize } from "@/lib/section-typography"
 
@@ -27,9 +28,6 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[180px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px]"
-
 function GalleryCoupleLabel({ groom, bride }: { groom: string; bride: string }) {
   const lineStyle = {
     background:
@@ -37,7 +35,7 @@ function GalleryCoupleLabel({ groom, bride }: { groom: string; bride: string }) 
   }
 
   return (
-    <div className="flex items-center justify-center gap-2.5 sm:gap-3.5">
+    <div className="flex items-center justify-center gap-2.5 pt-4 sm:gap-3.5 sm:pt-5 md:pt-6">
       <span className="h-px w-5 sm:w-7 md:w-9" style={lineStyle} aria-hidden />
       <p
         className={`${cinzel.className} ${sectionType.label} shrink-0 py-0.5 font-semibold uppercase leading-normal tracking-[0.34em] min-[400px]:tracking-[0.38em] sm:tracking-[0.44em]`}
@@ -109,16 +107,10 @@ function GalleryTitle() {
 }
 
 const galleryItems = [
-  { image: "/mobile-background/couples (11).webp", text: " " },
-  { image: "/mobile-background/couples (4).webp", text: " " },
-  { image: "/mobile-background/couples (5).webp", text: " " },
-  { image: "/mobile-background/couples (6).webp", text: " " },
-  { image: "/mobile-background/couples (8).webp", text: " " },
-  { image: "/mobile-background/couples (1).webp", text: " " },
-  { image: "/mobile-background/couples (10).webp", text: " " },
-  { image: "/mobile-background/couples (9).webp", text: " " },
-  { image: "/mobile-background/couples( (14).png", text: " " },
-
+  { image: "/mobile-background/image.png", text: " " },
+  { image: "/mobile-background/image.png", text: " " },
+  { image: "/mobile-background/image.png", text: " " },
+  { image: "/mobile-background/image.png", text: " " },
 ]
 
 export function Gallery() {
@@ -208,39 +200,7 @@ export function Gallery() {
         id="gallery"
         className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14"
       >
-      {/* Corner decorations */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute right-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-right-corner.png"
-          alt=""
-          className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-right-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
+      <SectionCornerDecorations />
 
       {/* Header */}
       <div className="relative z-20 mx-auto mb-6 max-w-5xl px-6 text-center @container/gallery sm:mb-8 sm:px-10 md:mb-10 md:px-12">

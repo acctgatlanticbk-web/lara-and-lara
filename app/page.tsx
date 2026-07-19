@@ -8,6 +8,7 @@ import { Countdown } from "@/components/sections/countdown"
 import { WeddingTimeline } from "@/components/sections/wedding-timeline"
 import { Gallery } from "@/components/sections/gallery"
 import { Messages } from "@/components/sections/messages"
+import { OurCelebration } from "@/components/sections/our-celebration"
 import { Details } from "@/components/sections/details"
 import { Accommodation } from "@/components/sections/accommodation"
 import { Entourage } from "@/components/sections/entourage"
@@ -79,7 +80,7 @@ export default function Home() {
             {enableDecor && (
               <div className="fixed inset-0 z-0 pointer-events-none">
                 <Suspense fallback={<div className="w-full h-full bg-gradient-to-b from-primary/10 to-secondary/5" />}>
-                  <Silk speed={8} scale={0.9} color="#FA9A84" noiseIntensity={0} rotation={0.3} />
+                  <Silk speed={8} scale={0.9} color="#ffffff" noiseIntensity={0} rotation={0.3} />
                 </Suspense>
               </div>
             )}
@@ -90,13 +91,14 @@ export default function Home() {
               {appState === AppState.DETAILS && <div className="h-12 sm:h-14 md:h-16" aria-hidden />}
               <MainHero visible={appState === AppState.DETAILS} />
               <Welcome />
-               <CoupleVideo /> 
+               {/* <CoupleVideo />  */}
               <LoveStory />
               <Countdown />
               <Gallery />
               <VideoMessage />
               <Messages />
-              <Details />
+              <OurCelebration />
+              {/* <Details /> */}
               {/* <Accommodation /> */}
               {/* <GuestInformation /> */}
               <WeddingTimeline />

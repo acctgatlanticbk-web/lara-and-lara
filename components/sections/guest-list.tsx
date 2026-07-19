@@ -39,10 +39,6 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-const OUTSIDE_TITLE_SHADOW = "0 2px 6px rgba(0,0,0,0.28), 0 0 18px rgba(0,0,0,0.12)"
-
 const palette = {
   body: "var(--color-welcome-text)",
   heading: "var(--color-welcome-navy)",
@@ -51,24 +47,30 @@ const palette = {
 } as const
 
 const modalCardStyle = {
-  background: "var(--color-welcome-bg)",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
+  background: "rgba(255, 255, 255, 0.42)",
   borderWidth: "1px",
   borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.82)",
   boxShadow:
-    "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
+    "0 16px 48px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.96), inset 0 0 0 1px rgba(255, 255, 255, 0.35)",
 } as const
 
 const innerSurfaceStyle = {
-  background: "var(--color-welcome-bg-soft)",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 10%, transparent)",
+  background: "rgba(255, 255, 255, 0.36)",
+  borderColor: "rgba(255, 255, 255, 0.58)",
 } as const
 
-const modalInputClass = `w-full rounded-lg border bg-white px-2.5 py-1.5 font-goudy-italic ${sectionType.text} transition-all duration-300 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-welcome-green)_25%,transparent)] sm:px-3 sm:py-2`
+const modalInnerSurfaceStyle = {
+  background: "rgba(255, 255, 255, 0.28)",
+  borderColor: "rgba(255, 255, 255, 0.68)",
+} as const
+
+const modalInputClass = `guest-modal-input w-full rounded-lg border bg-white/70 backdrop-blur-sm px-2.5 py-1.5 font-goudy-italic ${sectionType.text} transition-all duration-300 focus:ring-2 focus:ring-[color-mix(in_srgb,var(--color-welcome-green)_20%,transparent)] sm:px-3 sm:py-2`
 
 const modalInputStyle = {
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
+  borderColor: "rgba(255, 255, 255, 0.75)",
   color: palette.heading,
+  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.85)",
 } as const
 
 const modalLabelClass = `font-goudy-italic mb-1.5 flex flex-wrap items-center gap-1.5 ${sectionType.text} font-semibold sm:mb-2 sm:gap-2`
@@ -77,6 +79,39 @@ const dividerLineStyle = {
   background:
     "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
 } as const
+
+const dropdownPanelClass =
+  "absolute top-full left-0 right-0 z-[200] mt-1 sm:mt-1.5 md:mt-2 w-full bg-white/95 backdrop-blur-lg border border-motif-deep/70 rounded-lg sm:rounded-xl shadow-2xl"
+
+const glassPanelStyle = {
+  background: "rgba(255, 255, 255, 0.52)",
+  borderWidth: "1px",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.72)",
+  boxShadow:
+    "0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.92)",
+} as const
+
+function GlassSurfaceLayers({ modal = false }: { modal?: boolean }) {
+  return (
+    <>
+      <div
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br ${
+          modal
+            ? "from-white/78 via-white/38 to-white/14"
+            : "from-white/65 via-white/28 to-white/10"
+        }`}
+        aria-hidden
+      />
+      <div
+        className={`pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ${
+          modal ? "ring-white/72" : "ring-white/55"
+        }`}
+        aria-hidden
+      />
+    </>
+  )
+}
 
 interface ApiGuest {
   id: string | number
@@ -147,6 +182,10 @@ export function GuestList() {
   })
 
   const searchRef = useRef<HTMLDivElement>(null)
+
+  const showGuestSuggestions = isSearching && filteredGuests.length > 0
+  const showRequestPrompt = Boolean(searchQuery.trim()) && filteredGuests.length === 0
+  const showSearchDropdown = showGuestSuggestions || showRequestPrompt
 
   // Update companions array based on allowedGuests when a guest is selected
   useEffect(() => {
@@ -449,80 +488,96 @@ export function GuestList() {
   return (
     <section
       id="guest-list"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-30 bg-transparent py-6 sm:py-10 md:py-12 lg:py-16`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-30 overflow-visible bg-transparent py-6 sm:py-10 md:py-12 lg:py-16 ${showSearchDropdown ? "z-40" : ""}`}
     >
-      {/* Header */}
-      <div className="relative z-10 mx-auto mb-4 max-w-5xl px-2 text-center @container/guest-list sm:mb-6 sm:px-3 md:mb-8 md:px-4 lg:mb-10">
-        {/* Ornamental divider */}
-        <div className="mx-auto mb-5 flex items-center justify-center gap-1.5 sm:mb-6 md:mb-7">
-          <span className="h-px w-6 sm:w-10" style={{ background: "linear-gradient(to right, transparent, rgba(255,255,255,0.55), transparent)" }} />
-          <span className="h-0.5 w-0.5 rounded-full bg-white/50 sm:h-1 sm:w-1" aria-hidden />
-          <span className="h-px w-6 sm:w-10" style={{ background: "linear-gradient(to left, transparent, rgba(255,255,255,0.55), transparent)" }} />
-        </div>
-
-        {/* Title block */}
+      <style>{`
+        .guest-modal-input::placeholder {
+          color: #9CA3AF;
+          opacity: 1;
+        }
+      `}</style>
+      <div className="relative z-10 mx-auto max-w-5xl px-2 sm:px-3 md:px-4 lg:px-6">
         <div
-          className="welcome-title-lockup relative mx-auto mt-2 w-full max-w-full text-center sm:mt-3 md:mt-4"
-          style={
-            {
-              "--title-size": welcomeTitleSize.main,
-              "--script-size": welcomeTitleSize.script,
-              "--script-overlap": welcomeTitleSize.overlap,
-            } as CSSProperties
-          }
+          className="relative overflow-visible rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl"
+          style={glassPanelStyle}
         >
-          <span
-            className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
-            style={{ fontSize: "var(--title-size)", color: OUTSIDE_TEXT, textShadow: OUTSIDE_TITLE_SHADOW }}
-          >
-            RSVP
-          </span>
-          <span
-            aria-hidden
-            className={`${aboveTheBeyond.className} relative z-10 mx-auto block w-fit max-w-full px-1 leading-[0.88] sm:leading-[0.9]`}
-            style={{
-              marginTop: "var(--script-overlap)",
-              fontSize: "var(--script-size)",
-              color: OUTSIDE_TEXT_MUTED,
-              textShadow: OUTSIDE_TITLE_SHADOW,
-            }}
-          >
-            Confirm your attendance
-          </span>
-        </div>
+          <GlassSurfaceLayers />
 
-        {/* Subtitle block */}
-        <div className="mx-auto mt-5 max-w-xl space-y-2 px-2 sm:mt-6 sm:space-y-3">
-          <p className={`font-goudy-italic ${sectionType.textRelaxed}`} style={{ color: OUTSIDE_TEXT_MUTED }}>
-            To help us plan a beautiful and intimate celebration, we kindly ask that you confirm your
-            attendance. Please search for your name below to confirm your presence at our special day.
-          </p>
-          <p className={`font-goudy-italic ${sectionType.textRelaxed}`} style={{ color: OUTSIDE_TEXT_MUTED }}>
-            If we do not receive your response by the deadline, we will assume you are unable to attend.
-          </p>
-          <p className={`${cinzel.className} ${sectionType.text} font-semibold tracking-wide`} style={{ color: OUTSIDE_TEXT }}>
-            RSVP Deadline: {siteConfig.details.rsvp.deadline}
-          </p>
-          <p className={`${cinzel.className} ${sectionType.text} font-semibold tracking-wide`} style={{ color: OUTSIDE_TEXT }}>
-            Coordinator: {siteConfig.details.rsvp.coordinator} · {siteConfig.details.rsvp.phone}
-          </p>
-        </div>
+          <div className="relative z-10 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+            {/* Header */}
+            <div className="relative mx-auto mb-4 max-w-3xl text-center @container/guest-list sm:mb-6 md:mb-8 lg:mb-10">
+              {/* Ornamental divider */}
+              <div className="mx-auto mb-5 flex items-center justify-center gap-1.5 sm:mb-6 md:mb-7">
+                <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+                <span
+                  className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+                  style={{ backgroundColor: palette.accent }}
+                  aria-hidden
+                />
+                <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+              </div>
 
-        {/* Divider below header */}
-        <div className="mt-4 flex items-center justify-center sm:mt-5">
-          <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
-        </div>
-      </div>
+              {/* Title block */}
+              <div
+                className="welcome-title-lockup relative mx-auto mt-2 w-full max-w-full text-center sm:mt-3 md:mt-4"
+                style={
+                  {
+                    "--title-size": welcomeTitleSize.main,
+                    "--script-size": welcomeTitleSize.script,
+                    "--script-overlap": welcomeTitleSize.overlap,
+                  } as CSSProperties
+                }
+              >
+                <span
+                  className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
+                  style={{ fontSize: "var(--title-size)", color: palette.heading }}
+                >
+                  RSVP
+                </span>
+                <span
+                  aria-hidden
+                  className={`${aboveTheBeyond.className} relative z-10 mx-auto block w-fit max-w-full px-1 leading-[0.88] sm:leading-[0.9]`}
+                  style={{
+                    marginTop: "var(--script-overlap)",
+                    fontSize: "var(--script-size)",
+                    color: palette.accent,
+                  }}
+                >
+                  Confirm your attendance
+                </span>
+              </div>
 
-      {/* Search Section */}
-      <div className="relative z-10 max-w-2xl mx-auto px-2 sm:px-4 md:px-6 overflow-visible">
+              {/* Subtitle block */}
+              <div className="mx-auto mt-5 max-w-xl space-y-2 px-2 sm:mt-6 sm:space-y-3">
+                <p className={`font-goudy-italic ${sectionType.textRelaxed}`} style={{ color: palette.body }}>
+                  To help us plan a beautiful and intimate celebration, we kindly ask that you confirm your
+                  attendance. Please search for your name below to confirm your presence at our special day.
+                </p>
+                <p className={`font-goudy-italic ${sectionType.textRelaxed}`} style={{ color: palette.body }}>
+                  If we do not receive your response by the deadline, we will assume you are unable to attend.
+                </p>
+                <p className={`${cinzel.className} ${sectionType.text} font-semibold tracking-wide`} style={{ color: palette.heading }}>
+                  RSVP Deadline: {siteConfig.details.rsvp.deadline}
+                </p>
+                <p className={`${cinzel.className} ${sectionType.text} font-semibold tracking-wide`} style={{ color: palette.heading }}>
+                  Coordinator: {siteConfig.details.rsvp.coordinator} · {siteConfig.details.rsvp.phone}
+                </p>
+              </div>
+
+              {/* Divider below header */}
+              <div className="mt-4 flex items-center justify-center sm:mt-5">
+                <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+              </div>
+            </div>
+
+            {/* Search Section */}
+            <div className={`relative mx-auto max-w-2xl overflow-visible ${showSearchDropdown ? "z-[120]" : ""}`}>
         {/* Card with elegant border */}
         <div
-          className="relative overflow-visible rounded-lg border backdrop-blur-xl sm:rounded-xl md:rounded-2xl"
+          className="relative overflow-visible rounded-lg border backdrop-blur-md sm:rounded-xl md:rounded-2xl"
           style={{
-            background: "var(--color-welcome-bg)",
-            borderColor: "color-mix(in srgb, var(--color-motif-deep) 18%, transparent)",
-            boxShadow: "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
+            ...innerSurfaceStyle,
+            boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.78)",
           }}
         >
           {/* Card content */}
@@ -552,17 +607,9 @@ export function GuestList() {
                     className="w-full pl-8 sm:pl-10 pr-2.5 sm:pr-3 py-2 sm:py-2.5 md:py-3 border-2 border-motif-deep/60 focus:border-motif-deep rounded-lg text-xs sm:text-sm font-sans text-motif-deep placeholder:text-motif-medium/70 transition-all duration-300 hover:border-motif-deep/70 focus:ring-2 focus:ring-motif-deep/20 bg-white shadow-sm focus:shadow-md"
                   />
                 </div>
-                {/* Autocomplete dropdown */}
-                {isSearching && filteredGuests.length > 0 && (
-                  <div 
-                    className="absolute z-[9999] w-full mt-1 sm:mt-1.5 md:mt-2 bg-white/95 backdrop-blur-lg border border-motif-deep/70 rounded-lg sm:rounded-xl shadow-xl overflow-hidden" 
-                    style={{ 
-                      position: 'absolute', 
-                      top: '100%',
-                      left: 0,
-                      right: 0
-                    }}
-                  >
+
+                {showGuestSuggestions && (
+                  <div className={dropdownPanelClass}>
                     {filteredGuests.map((guest, index) => (
                       <button
                         key={index}
@@ -593,16 +640,9 @@ export function GuestList() {
                     ))}
                   </div>
                 )}
-                {searchQuery && filteredGuests.length === 0 && (
-                  <div 
-                    className="absolute z-[9999] w-full mt-1.5 sm:mt-2 bg-white/95 backdrop-blur-lg border-2 border-motif-deep/80 rounded-lg shadow-xl overflow-hidden" 
-                    style={{ 
-                      position: 'absolute', 
-                      top: '100%',
-                      left: 0,
-                      right: 0
-                    }}
-                  >
+
+                {showRequestPrompt && (
+                  <div className={`${dropdownPanelClass} border-2 border-motif-deep/80`}>
                     <div className="p-2.5 sm:p-3 md:p-4">
                       <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
                         <div className="bg-motif-deep p-1.5 sm:p-2 rounded-lg flex-shrink-0 shadow-sm">
@@ -632,19 +672,23 @@ export function GuestList() {
             </div>
           </div>
         </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* RSVP Modal */}
       {showModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-1 backdrop-blur-sm animate-in fade-in sm:p-2 md:p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-1 backdrop-blur-md animate-in fade-in sm:p-2 md:p-4"
           onClick={handleCloseModal}
         >
           <div
-            className="relative mx-1 flex max-h-[95vh] w-full max-w-md flex-col overflow-hidden rounded-xl animate-in zoom-in-95 duration-300 @container/guest-modal sm:mx-2 sm:max-w-lg sm:rounded-2xl md:mx-4"
+            className="relative mx-1 flex max-h-[95vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-white/80 backdrop-blur-2xl animate-in zoom-in-95 duration-300 @container/guest-modal sm:mx-2 sm:max-w-lg sm:rounded-2xl md:mx-4"
             style={modalCardStyle}
             onClick={(e) => e.stopPropagation()}
           >
+            <GlassSurfaceLayers modal />
             <div
               aria-hidden
               className="pointer-events-none absolute inset-x-5 top-0 h-px sm:inset-x-8"
@@ -655,7 +699,7 @@ export function GuestList() {
             />
 
             {/* Modal Header */}
-            <div className="relative flex-shrink-0 px-4 pb-4 pt-5 text-center sm:px-6 sm:pb-5 sm:pt-6">
+            <div className="relative z-10 flex-shrink-0 px-4 pb-4 pt-5 text-center sm:px-6 sm:pb-5 sm:pt-6">
               {!hasResponded && (
                 <button
                   onClick={handleCloseModal}
@@ -724,7 +768,7 @@ export function GuestList() {
             </div>
 
             {/* Modal Content */}
-            <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-5 md:px-7 md:pb-6">
+            <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-5 md:px-7 md:pb-6">
                 {hasResponded ? (
                   <div className="py-3 text-center sm:py-4 md:py-6">
                     <div
@@ -747,7 +791,7 @@ export function GuestList() {
                     </p>
                     <div
                       className="space-y-2.5 rounded-lg border p-3 sm:space-y-3 sm:p-4"
-                      style={innerSurfaceStyle}
+                      style={modalInnerSurfaceStyle}
                     >
                       <div className="mb-1.5 flex items-center justify-center gap-2 sm:mb-2">
                         {selectedGuest?.RSVP === "Yes" && (
@@ -768,7 +812,7 @@ export function GuestList() {
                         )}
                       </div>
                       {selectedGuest?.RSVP === "Yes" && (
-                        <div className="rounded-lg border p-2.5 sm:p-3" style={innerSurfaceStyle}>
+                        <div className="rounded-lg border p-2.5 sm:p-3" style={modalInnerSurfaceStyle}>
                           <div className="text-center">
                             <p
                               className={`font-goudy-italic mb-1 ${sectionType.label} font-medium`}
@@ -786,7 +830,7 @@ export function GuestList() {
                         </div>
                       )}
                       {selectedGuest && selectedGuest.Message && selectedGuest.Message.trim() !== "" && (
-                        <div className="border-t pt-2" style={{ borderColor: innerSurfaceStyle.borderColor }}>
+                        <div className="border-t pt-2" style={{ borderColor: modalInnerSurfaceStyle.borderColor }}>
                           <p
                             className={`font-goudy-italic px-1 ${sectionType.label} italic`}
                             style={{ color: palette.body }}
@@ -840,7 +884,7 @@ export function GuestList() {
                                   backgroundColor:
                                     "color-mix(in srgb, var(--color-welcome-green) 10%, white)",
                                 }
-                              : { borderColor: innerSurfaceStyle.borderColor }
+                              : { borderColor: modalInnerSurfaceStyle.borderColor }
                           }
                         >
                           <div className="flex items-center justify-center gap-1.5 sm:gap-2">
@@ -907,7 +951,7 @@ export function GuestList() {
                           <div
                             key={index}
                             className="space-y-2 rounded-lg border p-2.5 sm:space-y-2.5 sm:p-3"
-                            style={innerSurfaceStyle}
+                            style={modalInnerSurfaceStyle}
                           >
                             <div className="mb-1 flex items-center gap-1.5 sm:mb-1.5">
                               <User className="h-3 w-3 sm:h-3.5 sm:w-3.5" style={{ color: palette.accent }} />
@@ -1070,9 +1114,13 @@ export function GuestList() {
 
         {/* RSVP Success — rendered outside RSVP modal to escape transform stacking context */}
         {success && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 p-5 backdrop-blur-md animate-in fade-in duration-200 sm:p-8">
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/35 p-5 backdrop-blur-md animate-in fade-in duration-200 sm:p-8">
             <div className="w-full max-w-sm animate-in zoom-in-95 duration-200">
-              <div className="overflow-hidden rounded-2xl" style={modalCardStyle}>
+              <div
+                className="relative overflow-hidden rounded-2xl border border-white/80 backdrop-blur-2xl sm:backdrop-blur-2xl"
+                style={modalCardStyle}
+              >
+                <GlassSurfaceLayers modal />
                 <div
                   aria-hidden
                   className="h-[3px] w-full"
@@ -1081,7 +1129,7 @@ export function GuestList() {
                       "linear-gradient(to right, transparent, var(--color-welcome-green), transparent)",
                   }}
                 />
-                <div className="px-6 pb-6 pt-6 text-center">
+                <div className="relative z-10 px-6 pb-6 pt-6 text-center">
                   <div className="relative mb-4 inline-flex items-center justify-center">
                     <div
                       className="absolute h-14 w-14 animate-ping rounded-full"
@@ -1176,14 +1224,15 @@ export function GuestList() {
         {/* Request to Join Modal */}
         {showRequestModal && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-1 backdrop-blur-sm animate-in fade-in sm:p-2 md:p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-1 backdrop-blur-md animate-in fade-in sm:p-2 md:p-4"
             onClick={handleCloseRequestModal}
           >
             <div
-              className="relative mx-1 flex max-h-[95vh] w-full max-w-md flex-col overflow-hidden rounded-xl animate-in zoom-in-95 duration-300 @container/guest-modal sm:mx-2 sm:max-w-lg sm:rounded-2xl md:mx-4"
+              className="relative mx-1 flex max-h-[95vh] w-full max-w-md flex-col overflow-hidden rounded-xl border border-white/80 backdrop-blur-2xl animate-in zoom-in-95 duration-300 @container/guest-modal sm:mx-2 sm:max-w-lg sm:rounded-2xl md:mx-4"
               style={modalCardStyle}
               onClick={(e) => e.stopPropagation()}
             >
+              <GlassSurfaceLayers modal />
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-5 top-0 h-px sm:inset-x-8"
@@ -1193,7 +1242,7 @@ export function GuestList() {
                 }}
               />
 
-              <div className="relative flex-shrink-0 px-4 pb-4 pt-5 text-center sm:px-6 sm:pb-5 sm:pt-6">
+              <div className="relative z-10 flex-shrink-0 px-4 pb-4 pt-5 text-center sm:px-6 sm:pb-5 sm:pt-6">
                 <button
                   onClick={handleCloseRequestModal}
                   className="absolute right-2 top-2 rounded-full p-1 transition-colors hover:bg-black/5 sm:right-3 sm:top-3 sm:p-1.5"
@@ -1255,7 +1304,7 @@ export function GuestList() {
                 </p>
               </div>
 
-              <div className="min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-5 md:px-7 md:pb-6">
+              <div className="relative z-10 min-h-0 flex-1 overflow-y-auto px-4 pb-4 sm:px-6 sm:pb-5 md:px-7 md:pb-6">
                 <form
                   onSubmit={(e) => {
                     e.preventDefault()
@@ -1384,7 +1433,7 @@ export function GuestList() {
 
               {/* Enhanced Success Overlay */}
               {requestSuccess && (
-                <div className="absolute inset-0 bg-motif-soft/98 backdrop-blur-md flex items-center justify-center z-50 animate-in fade-in duration-300 p-2 sm:p-3 md:p-4">
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/42 p-2 backdrop-blur-xl animate-in fade-in duration-300 sm:p-3 md:p-4">
                   <div className="text-center p-3 sm:p-4 md:p-5 lg:p-6 max-w-sm mx-auto">
                     {/* Enhanced Icon Circle */}
                     <div className="relative inline-flex items-center justify-center mb-3 sm:mb-4">

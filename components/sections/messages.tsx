@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useState, useCallback, useEffect } from "react"
+import { useRef, useState, useCallback, useEffect, type CSSProperties } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -29,11 +29,6 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-const OUTSIDE_TITLE_SHADOW =
-  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
-
 const palette = {
   body: "var(--color-welcome-text)",
   heading: "var(--color-welcome-navy)",
@@ -41,19 +36,39 @@ const palette = {
   accent: "var(--color-welcome-green)",
 } as const
 
-const outsideDividerLineStyle = {
+const dividerLineStyle = {
   background:
-    "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent)",
+    "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
 } as const
 
-const cardStyle = {
-  background: "var(--color-welcome-bg)",
+const glassPanelStyle = {
+  background: "rgba(255, 255, 255, 0.24)",
   borderWidth: "1px",
-  borderStyle: "solid",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.38)",
   boxShadow:
-    "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
+    "0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.55)",
 } as const
+
+const innerSurfaceStyle = {
+  background: "rgba(255, 255, 255, 0.14)",
+  borderColor: "rgba(255, 255, 255, 0.32)",
+} as const
+
+function GlassSurfaceLayers() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/30 via-white/12 to-white/4"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/28"
+        aria-hidden
+      />
+    </>
+  )
+}
 
 interface Message {
   timestamp: string
@@ -66,16 +81,20 @@ interface MessageFormProps {
   onMessageSent?: () => void
 }
 
-function OutsideDivider() {
+function SectionDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={outsideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-white/50 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+      <span
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
+      />
       <span
         className="h-px w-6 sm:w-10"
         style={{
           background:
-            "linear-gradient(to left, transparent, rgba(255, 255, 255, 0.55), transparent)",
+            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
         }}
       />
     </div>
@@ -91,15 +110,14 @@ function MessagesTitle() {
           "--title-size": layeredSectionTitleSize.main,
           "--script-size": layeredSectionTitleSize.script,
           "--script-overlap": layeredSectionTitleSize.overlap,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <span
         className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
         style={{
           fontSize: "var(--title-size)",
-          color: OUTSIDE_TEXT,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.heading,
         }}
       >
         Love Notes and Prayers
@@ -110,8 +128,9 @@ function MessagesTitle() {
         style={{
           marginTop: "var(--script-overlap)",
           fontSize: "var(--script-size)",
-          color: OUTSIDE_TEXT_MUTED,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.accent,
+          textShadow:
+            "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
         }}
       >
         Share your love with us
@@ -202,15 +221,14 @@ function MessageForm({ onSuccess, onMessageSent }: MessageFormProps) {
       `}</style>
 
       <Card
-        className={`relative w-full overflow-hidden rounded-xl border backdrop-blur-xl transition-all duration-500 sm:rounded-2xl sm:backdrop-blur-2xl ${
+        className={`relative w-full overflow-hidden rounded-xl border backdrop-blur-md transition-all duration-500 sm:rounded-2xl ${
           isFocused ? "scale-[1.01]" : ""
         } ${isSubmitted ? "animate-bounce" : ""}`}
-        style={cardStyle}
+        style={{
+          ...innerSurfaceStyle,
+          boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.42)",
+        }}
       >
-        <div
-          className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/35 via-white/8 to-transparent"
-          aria-hidden
-        />
 
         {isSubmitted && (
           <div
@@ -386,54 +404,58 @@ export function Messages() {
   return (
     <section
       id="messages"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 overflow-visible bg-transparent py-6 sm:py-10 md:py-12 lg:py-16`}
     >
-      <div className="relative z-10 mx-auto max-w-6xl px-3 @container/messages sm:px-4 md:px-6 lg:px-8">
-        {/* Header — outside container */}
-        <div className="mb-6 text-center sm:mb-8 md:mb-10">
-          <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
-            <OutsideDivider />
-          </div>
-          <div className="mx-auto mt-2 sm:mt-3 md:mt-4">
-            <MessagesTitle />
-          </div>
-          <p
-            className={`font-goudy-italic mx-auto mt-4 max-w-2xl px-2 sm:mt-5 md:mt-6 ${sectionType.textRelaxed}`}
-            style={{ color: OUTSIDE_TEXT_MUTED }}
-          >
-            Share a short note, wish, or prayer for {coupleDisplayName}. Every message becomes part
-            of their story.
-          </p>
-          <div className="flex items-center justify-center pt-3 sm:pt-4">
-            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
-          </div>
-        </div>
+      <div className="relative z-10 mx-auto max-w-4xl px-2 @container/messages sm:px-3 md:px-4 lg:px-6">
+        <div
+          className="relative overflow-visible rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl"
+          style={glassPanelStyle}
+        >
+          <GlassSurfaceLayers />
 
-        {/* Form container */}
-        <div className="mb-6 flex justify-center sm:mb-8 md:mb-10">
-          <div className="relative w-full max-w-xl">
-            <MessageForm onMessageSent={fetchMessages} />
-          </div>
-        </div>
+          <div className="relative z-10 px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-10">
+            <div className="relative mb-6 text-center sm:mb-8 md:mb-10">
+              <div className="mx-auto mb-4 sm:mb-5">
+                <SectionDivider />
+              </div>
+              <MessagesTitle />
+              <p
+                className={`font-goudy-italic mx-auto mt-4 max-w-2xl px-2 sm:mt-5 md:mt-6 ${sectionType.textRelaxed}`}
+                style={{ color: palette.body }}
+              >
+                Share a short note, wish, or prayer for {coupleDisplayName}. Every message becomes
+                part of their story.
+              </p>
+              <div className="mt-3 flex items-center justify-center sm:mt-4">
+                <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+              </div>
+            </div>
 
-        {/* Message wall */}
-        <div className="relative mx-auto max-w-4xl pb-2 sm:pb-3">
-          <div className="mb-4 text-center sm:mb-6 md:mb-8">
-            <h3
-              className={`${cinzel.className} mb-1.5 font-semibold sm:mb-2 ${sectionType.subheader}`}
-              style={{ color: OUTSIDE_TEXT }}
-            >
-              Messages from Loved Ones
-            </h3>
-            <p className={`font-goudy-italic ${sectionType.text}`} style={{ color: OUTSIDE_TEXT_MUTED }}>
-              Warm words from family and friends
-            </p>
-            <div className="flex items-center justify-center pt-3 sm:pt-4">
-              <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
+            <div className="mb-6 flex justify-center sm:mb-8 md:mb-10">
+              <div className="relative w-full max-w-xl">
+                <MessageForm onMessageSent={fetchMessages} />
+              </div>
+            </div>
+
+            <div className="relative mx-auto max-w-3xl pb-2 sm:pb-3">
+              <div className="mb-4 text-center sm:mb-6 md:mb-8">
+                <h3
+                  className={`${cinzel.className} mb-1.5 font-semibold sm:mb-2 ${sectionType.subheader}`}
+                  style={{ color: palette.heading }}
+                >
+                  Messages from Loved Ones
+                </h3>
+                <p className={`font-goudy-italic ${sectionType.text}`} style={{ color: palette.body }}>
+                  Warm words from family and friends
+                </p>
+                <div className="mt-3 flex items-center justify-center sm:mt-4">
+                  <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+                </div>
+              </div>
+
+              <MessageWallDisplay messages={messages} loading={loading} />
             </div>
           </div>
-
-          <MessageWallDisplay messages={messages} loading={loading} />
         </div>
       </div>
     </section>

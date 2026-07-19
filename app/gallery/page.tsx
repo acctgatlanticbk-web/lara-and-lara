@@ -1,4 +1,5 @@
 import MasonryGallery from "@/components/masonry-gallery"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { getSiteConfig } from "@/lib/site-config"
 import { fetchGalleryImages } from "@/lib/fetch-gallery-images"
 import localFont from "next/font/local"
@@ -21,9 +22,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[180px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px]"
 
 export const dynamic = "force-static"
 
@@ -125,38 +123,7 @@ export default async function GalleryPage() {
       className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative min-h-screen overflow-hidden`}
       style={{ background: "var(--color-welcome-bg)" }}
     >
-      <div className="pointer-events-none absolute left-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute right-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-right-corner.png"
-          alt=""
-          className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-right-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
+      <SectionCornerDecorations />
 
       <section className="relative z-20 mx-auto max-w-7xl px-3 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
         <div className="mb-6 px-3 text-center sm:mb-8 sm:px-4 md:mb-10">

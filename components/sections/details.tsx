@@ -1,6 +1,7 @@
 "use client"
 
 import { Section } from "@/components/section"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { useState, useEffect, type ReactNode } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -37,9 +38,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[180px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px]"
 
 const detailText = {
   body: "var(--color-welcome-text)",
@@ -745,39 +743,7 @@ export function Details() {
         id="details"
         className="relative z-10 pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14 overflow-hidden"
       >
-        {/* Corner decorations */}
-        <div className="pointer-events-none absolute left-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
-        <div className="pointer-events-none absolute right-0 top-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/top-right-corner.png"
-            alt=""
-            className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-          />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/botto-left-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
-        <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/decoration/decorations/botto-right-corner.png"
-            alt=""
-            className={CORNER_DECO_CLASS}
-          />
-        </div>
+        <SectionCornerDecorations />
 
         {/* Header */}
         <div className="relative z-20 mx-auto mb-6 max-w-5xl px-6 text-center @container/details sm:mb-8 sm:px-10 md:mb-10 md:px-12">

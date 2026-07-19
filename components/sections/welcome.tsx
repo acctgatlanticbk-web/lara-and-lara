@@ -5,6 +5,7 @@ import { motion } from "motion/react"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { sectionType, welcomeTitleSize } from "@/lib/section-typography"
 import { Cinzel } from "next/font/google"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -149,7 +150,7 @@ export function Welcome() {
               "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
           }}
         >
-          <div className="wedding-frame-inner hidden min-[400px]:block" aria-hidden />
+          <SectionCornerDecorations size="card" />
 
           <div
             aria-hidden
@@ -179,44 +180,47 @@ export function Welcome() {
                 borderColor: "color-mix(in srgb, var(--color-motif-deep) 10%, transparent)",
               }}
             >
-              <blockquote>
-                <p
-                  className={`font-goudy-italic ${sectionType.textSnug}`}
-                  style={{ color: "var(--color-welcome-text)" }}
-                >
-                  &ldquo;He has made everything beautiful in its time.&rdquo;
-                </p>
-                <figcaption className="mt-2 sm:mt-2.5">
-                  <cite
-                    className={`${cinzel.className} ${sectionType.label} not-italic uppercase tracking-[0.2em] sm:tracking-[0.24em]`}
-                    style={{ color: "var(--color-welcome-heading)" }}
-                  >
-                    Ecclesiastes 3:11
-                  </cite>
-                </figcaption>
-              </blockquote>
+            <blockquote>
+  <p
+    className={`font-goudy-italic ${sectionType.textSnug}`}
+    style={{ color: "var(--color-welcome-text)" }}
+  >
+    &ldquo;Let all that you do be done in love.&rdquo;
+  </p>
+  <figcaption className="mt-2 sm:mt-2.5">
+    <cite
+      className={`${cinzel.className} ${sectionType.label} not-italic uppercase tracking-[0.2em] sm:tracking-[0.24em]`}
+      style={{ color: "var(--color-welcome-heading)" }}
+    >
+      1 Corinthians 16:14
+    </cite>
+  </figcaption>
+</blockquote>
             </figure>
 
             {/* Body */}
             <div
-              className={`font-goudy-italic space-y-3 px-1 text-center sm:space-y-3.5 sm:px-2 md:space-y-4 ${sectionType.textRelaxed}`}
-              style={{ color: "var(--color-welcome-text)" }}
-            >
-              <p>
-                Dear family and friends, we are overjoyed to begin this new chapter together and
-                grateful to God for every step that led us here. What began as a simple story has
-                grown into a love we cherish deeply — and we cannot imagine celebrating without you.
-              </p>
-              <p>
-                This invitation holds everything you may need for our wedding day: the schedule,
-                venue details, and a few gentle reminders along the way. Whether near or far, your
-                presence, prayers, and warm wishes will mean more to us than words can say.
-              </p>
-              <p>
-                Thank you for being part of our journey. We look forward to sharing this beautiful
-                day with the people who have shaped our lives and our hearts.
-              </p>
-            </div>
+  className={`font-goudy-italic space-y-3 px-1 text-center sm:space-y-3.5 sm:px-2 md:space-y-4 ${sectionType.textRelaxed}`}
+  style={{ color: "var(--color-welcome-text)" }}
+>
+  <p>
+    Dear family and friends, with grateful hearts we celebrate twenty-five wonderful years of
+    marriage—a journey filled with love, faith, laughter, and countless blessings. By God's grace,
+    our bond has grown stronger through every season, and we are truly thankful for the memories we
+    have shared together.
+  </p>
+  <p>
+    This invitation contains everything you need for our Silver Wedding Anniversary celebration,
+    including the program, venue details, and other helpful information. Your presence will make
+    this milestone even more meaningful as we gather to give thanks for the past and look forward
+    to the years still to come.
+  </p>
+  <p>
+    Thank you for being a cherished part of our lives and for walking alongside us throughout the
+    years. We would be honored to celebrate this special occasion with you as we rejoice in twenty-
+    five years of love, commitment, and God's enduring faithfulness.
+  </p>
+</div>
 
             {/* Bottom */}
             <div className="space-y-5 pt-1 sm:space-y-6 sm:pt-2 md:space-y-7">

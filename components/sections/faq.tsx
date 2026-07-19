@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
+import { SectionCornerDecorations } from "@/components/section-corner-decorations"
 import { layeredSectionTitleSize, sectionType } from "@/lib/section-typography"
 
 const cinzel = Cinzel({
@@ -24,9 +25,6 @@ const aboveTheBeyond = localFont({
   display: "swap",
   variable: "--font-above-beyond",
 })
-
-const CORNER_DECO_CLASS =
-  "block h-auto w-auto max-w-[120px] sm:max-w-[180px] md:max-w-[260px] lg:max-w-[320px] xl:max-w-[380px]"
 
 const palette = {
   body: "var(--color-welcome-text)",
@@ -67,7 +65,7 @@ interface FAQItem {
 function OrnamentalDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+      {/* <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
       <span className="h-0.5 w-0.5 rounded-full bg-motif-deep/45 sm:h-1 sm:w-1" aria-hidden />
       <span
         className="h-px w-6 sm:w-10"
@@ -75,7 +73,7 @@ function OrnamentalDivider() {
           background:
             "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent))",
         }}
-      />
+      /> */}
     </div>
   )
 }
@@ -83,7 +81,7 @@ function OrnamentalDivider() {
 function FaqTitle() {
   return (
     <h2
-      className="welcome-title-lockup relative mx-auto w-full max-w-full text-center"
+      className="welcome-title-lockup relative mx-auto w-full max-w-full pt-2 text-center sm:pt-3 md:pt-4"
       style={
         {
           "--title-size": layeredSectionTitleSize.main,
@@ -265,43 +263,11 @@ export function FAQ() {
       className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 isolate overflow-hidden pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14`}
       style={{ background: "var(--color-welcome-bg)" }}
     >
-      {/* Corner decorations */}
-      <div className="pointer-events-none absolute left-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute right-0 top-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/top-right-corner.png"
-          alt=""
-          className="block h-auto w-auto max-w-[220px] sm:max-w-[160px] md:max-w-[220px] lg:max-w-[260px]"
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 left-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-left-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
-      <div className="pointer-events-none absolute bottom-0 right-0 z-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/decoration/decorations/botto-right-corner.png"
-          alt=""
-          className={CORNER_DECO_CLASS}
-        />
-      </div>
+      <SectionCornerDecorations />
 
       {/* Header */}
       <div className="relative z-20 mx-auto max-w-5xl px-6 text-center @container/faq sm:px-10 md:px-12">
-        <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
+        <div className="mx-auto mb-5 pt-10 sm:mb-6 sm:pt-12 md:mb-7 md:pt-14 lg:pt-16">
           <OrnamentalDivider />
         </div>
         <div className="mx-auto mt-2 sm:mt-3 md:mt-4">

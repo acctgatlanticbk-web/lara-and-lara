@@ -11,9 +11,6 @@ const cinzel = Cinzel({
   weight: ["400", "600", "700"],
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-
 const palette = {
   body: "var(--color-welcome-text)",
   heading: "var(--color-welcome-navy)",
@@ -21,14 +18,16 @@ const palette = {
   accent: "var(--color-welcome-green)",
 } as const
 
-const messageCardStyle = {
-  background: "var(--color-welcome-bg)",
+const innerSurfaceStyle = {
+  background: "rgba(255, 255, 255, 0.14)",
   borderWidth: "1px",
-  borderStyle: "solid",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
-  boxShadow:
-    "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.32)",
+  boxShadow: "inset 0 1px 0 rgba(255, 255, 255, 0.42)",
 } as const
+
+const innerSurfaceHoverShadow =
+  "0 8px 24px rgba(0, 0, 0, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.42)"
 
 const skeletonBg = "color-mix(in srgb, var(--color-motif-deep) 18%, white)"
 
@@ -63,7 +62,11 @@ export default function MessageWallDisplay({ messages, loading }: MessageWallDis
     return (
       <div className="space-y-2 sm:space-y-3 md:space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="rounded-xl border sm:rounded-2xl" style={messageCardStyle}>
+          <Card
+            key={i}
+            className="rounded-xl border backdrop-blur-md sm:rounded-2xl"
+            style={innerSurfaceStyle}
+          >
             <CardContent className="p-3 sm:p-4 md:p-5">
               <div className="mb-3 flex items-start justify-between">
                 <div className="flex items-center space-x-3">
@@ -87,23 +90,22 @@ export default function MessageWallDisplay({ messages, loading }: MessageWallDis
       <div className="px-4 py-8 text-center sm:py-12 md:py-16">
         <h3
           className={`${cinzel.className} mb-2 font-semibold sm:mb-3 ${sectionType.subheader}`}
-          style={{ color: OUTSIDE_TEXT }}
+          style={{ color: palette.heading }}
         >
           No messages yet
         </h3>
         <p
           className={`font-goudy-italic mx-auto mb-5 max-w-md sm:mb-6 ${sectionType.textRelaxed}`}
-          style={{ color: OUTSIDE_TEXT_MUTED }}
+          style={{ color: palette.body }}
         >
           Be the first to leave a note for the happy couple.
         </p>
         <div className="flex justify-center">
           <span
-            className={`font-goudy-italic ${sectionType.label} rounded-sm border px-4 py-2`}
+            className={`font-goudy-italic ${sectionType.label} rounded-xl border px-4 py-2 backdrop-blur-md`}
             style={{
               color: palette.heading,
-              backgroundColor: "var(--color-welcome-bg-soft)",
-              borderColor: "color-mix(in srgb, var(--color-motif-deep) 18%, transparent)",
+              ...innerSurfaceStyle,
             }}
           >
             Your message will appear here
@@ -118,24 +120,23 @@ export default function MessageWallDisplay({ messages, loading }: MessageWallDis
       {visibleMessages.map((msg, index) => (
         <Card
           key={index}
-          className={`group relative transform overflow-hidden rounded-xl border transition-all duration-500 hover:scale-[1.01] sm:rounded-2xl ${
+          className={`group relative transform overflow-hidden rounded-xl border backdrop-blur-md transition-all duration-500 hover:scale-[1.01] sm:rounded-2xl ${
             isAnimating ? "translate-y-4 opacity-0" : "translate-y-0 opacity-100"
           }`}
           style={{
-            ...messageCardStyle,
+            ...innerSurfaceStyle,
             transitionDelay: `${index * 100}ms`,
             animation: isAnimating ? "none" : "fadeInUp 0.6s ease-out forwards",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow =
-              "0 12px 32px color-mix(in srgb, var(--color-motif-deep) 12%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)"
+            e.currentTarget.style.boxShadow = innerSurfaceHoverShadow
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = messageCardStyle.boxShadow as string
+            e.currentTarget.style.boxShadow = innerSurfaceStyle.boxShadow as string
           }}
         >
           <div
-            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/35 via-white/8 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/30 via-white/12 to-white/4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             aria-hidden
           />
           <div
@@ -147,7 +148,7 @@ export default function MessageWallDisplay({ messages, loading }: MessageWallDis
             <div className="mb-2 flex items-start justify-between sm:mb-3">
               <div className="flex min-w-0 flex-1 items-center space-x-2 sm:space-x-3">
                 <div
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-md ring-2 ring-white transition-transform duration-300 group-hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10"
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-md ring-2 ring-white/50 transition-transform duration-300 group-hover:scale-110 sm:h-9 sm:w-9 md:h-10 md:w-10"
                   style={{ backgroundColor: palette.accent }}
                 >
                   <span className={`${cinzel.className} ${sectionType.label} font-semibold text-white`}>

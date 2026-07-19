@@ -1,5 +1,6 @@
 "use client"
 
+import { type CSSProperties } from "react"
 import { Cinzel } from "next/font/google"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -22,46 +23,55 @@ const aboveTheBeyond = localFont({
   variable: "--font-above-beyond",
 })
 
-const OUTSIDE_TEXT = "#FFFFFF"
-const OUTSIDE_TEXT_MUTED = "rgba(255, 255, 255, 0.88)"
-const OUTSIDE_TITLE_SHADOW =
-  "0 2px 6px rgba(0, 0, 0, 0.28), 0 0 18px rgba(0, 0, 0, 0.12)"
-
 const palette = {
   body: "var(--color-welcome-text)",
   heading: "var(--color-welcome-navy)",
   accent: "var(--color-welcome-green)",
 } as const
 
-const outsideDividerLineStyle = {
-  background:
-    "linear-gradient(to right, transparent, rgba(255, 255, 255, 0.55), transparent)",
-} as const
-
-const insideDividerLineStyle = {
+const dividerLineStyle = {
   background:
     "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
 } as const
 
-const cardStyle = {
-  background: "var(--color-welcome-bg)",
+const glassPanelStyle = {
+  background: "rgba(255, 255, 255, 0.24)",
   borderWidth: "1px",
-  borderStyle: "solid",
-  borderColor: "color-mix(in srgb, var(--color-motif-deep) 14%, transparent)",
+  borderStyle: "solid" as const,
+  borderColor: "rgba(255, 255, 255, 0.38)",
   boxShadow:
-    "0 8px 28px color-mix(in srgb, var(--color-motif-deep) 7%, transparent), inset 0 1px 0 color-mix(in srgb, white 70%, transparent)",
+    "0 8px 32px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.55)",
 } as const
 
-function OutsideDivider() {
+function GlassSurfaceLayers() {
+  return (
+    <>
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/30 via-white/12 to-white/4"
+        aria-hidden
+      />
+      <div
+        className="pointer-events-none absolute inset-0 rounded-[inherit] ring-1 ring-inset ring-white/28"
+        aria-hidden
+      />
+    </>
+  )
+}
+
+function SectionDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={outsideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-white/50 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+      <span
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
+      />
       <span
         className="h-px w-6 sm:w-10"
         style={{
           background:
-            "linear-gradient(to left, transparent, rgba(255, 255, 255, 0.55), transparent)",
+            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
         }}
       />
     </div>
@@ -71,13 +81,17 @@ function OutsideDivider() {
 function InsideDivider() {
   return (
     <div className="flex items-center justify-center gap-1.5">
-      <span className="h-px w-6 sm:w-10" style={insideDividerLineStyle} />
-      <span className="h-0.5 w-0.5 rounded-full bg-motif-deep/45 sm:h-1 sm:w-1" aria-hidden />
+      <span className="h-px w-6 sm:w-10" style={dividerLineStyle} />
+      <span
+        className="h-0.5 w-0.5 rounded-full sm:h-1 sm:w-1"
+        style={{ backgroundColor: palette.accent }}
+        aria-hidden
+      />
       <span
         className="h-px w-6 sm:w-10"
         style={{
           background:
-            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent))",
+            "linear-gradient(to left, transparent, color-mix(in srgb, var(--color-motif-deep) 38%, transparent), transparent)",
         }}
       />
     </div>
@@ -93,15 +107,14 @@ function VideoMessageTitle() {
           "--title-size": layeredSectionTitleSize.main,
           "--script-size": layeredSectionTitleSize.script,
           "--script-overlap": layeredSectionTitleSize.overlap,
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <span
         className={`${theSeasons.className} block uppercase leading-[0.78] tracking-[0.08em] min-[400px]:tracking-[0.11em] sm:tracking-[0.13em] md:tracking-[0.14em]`}
         style={{
           fontSize: "var(--title-size)",
-          color: OUTSIDE_TEXT,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.heading,
         }}
       >
         Send Us a Video Message
@@ -112,8 +125,9 @@ function VideoMessageTitle() {
         style={{
           marginTop: "var(--script-overlap)",
           fontSize: "var(--script-size)",
-          color: OUTSIDE_TEXT_MUTED,
-          textShadow: OUTSIDE_TITLE_SHADOW,
+          color: palette.accent,
+          textShadow:
+            "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
         }}
       >
         A message we will treasure
@@ -130,57 +144,51 @@ export function VideoMessage() {
   return (
     <section
       id="video-message"
-      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 bg-transparent pt-8 pb-8 sm:pt-10 sm:pb-10 md:pt-12 md:pb-12 lg:pt-14 lg:pb-14`}
+      className={`${theSeasons.variable} ${aboveTheBeyond.variable} relative z-10 overflow-visible bg-transparent py-6 sm:py-10 md:py-12 lg:py-16`}
     >
-      <div className="relative z-20 mx-auto max-w-4xl px-4 @container/video-message sm:px-6 md:px-8">
-        <div className="relative z-20 px-6 text-center sm:px-10 md:px-12">
-          <div className="mx-auto mb-5 sm:mb-6 md:mb-7">
-            <OutsideDivider />
-          </div>
-          <div className="mx-auto mt-2 sm:mt-3 md:mt-4">
-            <VideoMessageTitle />
-          </div>
-          <div className="flex items-center justify-center pt-3 sm:pt-4">
-            <span className="h-px w-16 sm:w-24 md:w-32 bg-white/50" />
-          </div>
-        </div>
-
+      <div className="relative z-10 mx-auto max-w-4xl px-2 @container/video-message sm:px-3 md:px-4 lg:px-6">
         <div
-          className="relative mt-6 overflow-hidden rounded-xl border backdrop-blur-xl sm:mt-8 sm:rounded-2xl sm:backdrop-blur-2xl md:mt-10"
-          style={cardStyle}
+          className="relative overflow-visible rounded-xl border backdrop-blur-xl sm:rounded-2xl sm:backdrop-blur-2xl"
+          style={glassPanelStyle}
         >
-          <div
-            className="pointer-events-none absolute inset-0 rounded-[inherit] bg-gradient-to-br from-white/35 via-white/8 to-transparent"
-            aria-hidden
-          />
+          <GlassSurfaceLayers />
 
-          <div className="relative z-20 space-y-4 px-4 py-6 text-center sm:space-y-5 sm:px-6 sm:py-8 md:space-y-6 md:px-8 md:py-10">
-            <div
-              className={`font-goudy-italic space-y-2.5 sm:space-y-3 ${sectionType.textRelaxed}`}
-              style={{ color: palette.body }}
-            >
-              <p>
-                As we begin this new chapter under the Lord&apos;s guidance, we are deeply grateful
-                for everyone He has placed in our lives.
-              </p>
-              <p style={{ color: palette.accent }}>
-                You are a blessing we hold close to our hearts.
-              </p>
-              <p>
-                We would love to receive a short video message from you—something we can keep and
-                look back on through the years ahead.
-              </p>
-              <p>
-                Your words will make our wedding day, and our life together, even more meaningful.
-                Thank you for your love and support.
-              </p>
+          <div className="relative z-10 px-4 py-6 text-center sm:px-6 sm:py-8 md:px-8 md:py-10">
+            <div className="relative mb-6 sm:mb-8 md:mb-10">
+              <div className="mx-auto mb-4 sm:mb-5">
+                <SectionDivider />
+              </div>
+              <VideoMessageTitle />
+              <div className="mt-3 flex items-center justify-center sm:mt-4">
+                <span className="h-px w-16 sm:w-24 md:w-32" style={dividerLineStyle} />
+              </div>
             </div>
 
-            <div className="mx-auto flex items-center justify-center pt-1 sm:pt-2">
+            <div
+  className={`font-goudy-italic space-y-2.5 sm:space-y-3 ${sectionType.textRelaxed}`}
+  style={{ color: palette.body }}
+>
+  <p>
+    As we celebrate twenty-five wonderful years of marriage, our hearts are filled with gratitude
+    for God's faithfulness and for the family and friends who have been part of our journey.
+  </p>
+  <p style={{ color: palette.accent }}>
+    Your presence and unwavering support have been one of life's greatest blessings.
+  </p>
+  <p>
+    We would be honored to receive a short video message from you—sharing your memories, warm
+    wishes, or words of encouragement as we celebrate this special Silver Wedding Anniversary.
+  </p>
+  <p>
+    Your heartfelt message will become a treasured keepsake that we will cherish for years to come.
+    Thank you for celebrating this meaningful milestone with us.
+  </p>
+</div>
+            <div className="mx-auto flex items-center justify-center pt-4 sm:pt-5 md:pt-6">
               <InsideDivider />
             </div>
 
-            <div className="space-y-3 pt-2 sm:space-y-4 sm:pt-3">
+            <div className="space-y-3 pt-4 sm:space-y-4 sm:pt-5 md:pt-6">
               <p
                 className={`font-goudy-italic ${sectionType.text}`}
                 style={{ color: palette.heading }}
