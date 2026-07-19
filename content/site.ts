@@ -10,19 +10,19 @@ export const siteConfig = {
     groom: "Toto Irinco", //Ltryl B. Benitez
     groomNickname: "Lara",
     monogram:"/monogram/monogram.png" ,//Ltryl
-    backgroundMusic:"/background_music/Keenan Te - Rest of My Life (Wedding Version).mp3"
+    backgroundMusic:"/background_music/Pasilyo (by_ @sunkissedlolamusic) Violin Cover by Emil Francisco.mp3"
   },
   googleAPI:{
-    messageForm: "https://docs.google.com/forms/d/e/1FAIpQLSfKXj_u3AgTP3DOCoYFjcG2dr9RVfAKy1rj8_nBikgihWHLLQ/formResponse",   //done
-    message: "https://script.google.com/macros/s/AKfycbw2s0D4xLBLE3I47XNJGluv_42XDIE-73vpTQlO9TC6C8Sa1RAC6VyrvrvM4h7mW8wp4w/exec",  //done
-    guestList: "https://script.google.com/macros/s/AKfycbzzNPlh5vP1Rq4wc42uvFcuSqe2oIIS77gUekf04sA9_Jq-TMX5YvV5b532zD1epKUb6A/exec",  //done
-    guestRequest: "https://script.google.com/macros/s/AKfycbx00EXh0FjJ3tLdVIMoexvqD_sA1Ya0dVzFQ0ddCY9jXsoW_8Xm1ix4ZEvSTlJmx0reYQ/exec",   //done
-    entourage: "https://script.google.com/macros/s/AKfycbwhkaucMi7NvUzTZ6e9AReD95b-rs3GO09kjqN6FmRhbGeys26GtM--5pMl53yL0MMFoA/exec",  //done
-    sponsors: "https://script.google.com/macros/s/AKfycbzu69SGFaQ1d8JU8xO8o3pJpxtIuyxBI4_2R4UflLmlWPEhSIFkfNc5ofnzxW7fdrdO/exec",  //done 
+    messageForm: "https://docs.google.com/forms/d/e/1FAIpQLSe1zcXly8WZiWDiqJhEqUqll8xpaCGzwzmowNtJLjg7xz0Oyw/formResponse",   //done
+    message: "https://script.google.com/macros/s/AKfycbzLRaIlrlZHmG9Cv0UpqW0IsiFoJdpt7hZRWw8cAPS7urr7ivCmpzmwDw_JXHD_YCEY/exec",  //done
+    guestList: "https://script.google.com/macros/s/AKfycbxU-Ry3UEQb2jeQizmnVuskmkYlkAE8hSzjxXFWd8Dn705s4oFmhPu9-FxzMkQPhQldKQ/exec",  //done
+    guestRequest: "https://script.google.com/macros/s/AKfycbwYc3SnxZVW3UlJR5t-b1lwVSRZJ33Oc7DG3-efLpWX70YGZLf6xvexvJ8py3Ad67-H7w/exec",   //done
+    entourage: "https://script.google.com/macros/s/AKfycbyBLJB9gPllv6_vw4xUtcKp1Bv_uC7LGZfAqU8cQerDSEzSH9P9UtMhnd3H1RwJuoqn8Q/exec",  //done
+    sponsors: "https://script.google.com/macros/s/AKfycbz_562RTc-tqqGG6kP6n_Xg53S4rAV41v_dMpKLH6Xn_nj7XzgpPxALcsa3mrRRcyHS-A/exec",  //done 
     proposalResponses: "https://script.google.com/macros/s/AKfycbwIUDKMoMIHVwbmr6KbgmBtlGRpMGj1Z9maeHSEwsFaXNi0dAH8WYhqbtiAfg_p5D4lgw/exec", // uses entourage script with action: proposal
-    weddingDetails: "https://script.google.com/macros/s/AKfycbwlxVhR5Hq-vPm6yEanBSSd45AAhP2opA1yjTZwdyx0D7wPTjaKwJuri-_uc_jHT5V7hA/exec",   //done
+    weddingDetails: "https://script.google.com/macros/s/AKfycbxlILpXCbq5UhynfyXWOKtOYnmLNu1DIBhJMXu8PDSvaW1LKst_JGZoT6jNZFGOfp0qig/exec",   //done
 ////google share 
-    googleShare: "https://docs.google.com/spreadsheets/d/1PxlVp4NBRGyAv68p_YZ0dd-s23tjfzW5Vhv403EZvDU/edit?usp=sharing", 
+    googleShare: "https://docs.google.com/spreadsheets/d/1aNRnpQ8Aiaa_iTjZMhV98lFaJCiALaaSdCAywIX8rZA/edit?usp=sharing", 
   },
   wedding: {
     date: "August 20,2026",
@@ -146,7 +146,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
   },
   snapShare: {
     googleDriveLink:
-      "https://drive.google.com/drive/folders/1aVvQuyGBtEX9rLoh7FxM2sJt9i8v-QCL?usp=sharing",
+      "https://drive.google.com/drive/folders/1mILJhQdmYJ0_9hsipZoGYft9nu22M0oH?usp=sharing",
     albumQR: "/QR/AlbumQR.png",
     hashtag: ["#TheLarasSilverCelebration",],
     instructions: "Please scan this QR Code and upload the photos and videos you have taken during our wedding reception. We are delighted to see your snaps too!",
