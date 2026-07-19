@@ -177,15 +177,15 @@ const attireGuide = {
   },
   
   guests: {
-    image: "/Details/guestnew.png",
+    image: "/Details/new-guest-attire.png",
     imageAspect: "677/369",
     ladies: {
-      colors: ["#BB9F89", "#CFAEA7", "#E9CFC2", "#E5D7CE"] as const,
-      description: "Semi-formal dresses",
+      colors: ["#FFB4A7", "#DE8189", "#F2CFBB", "#DDBC9D"] as const,
+      description: "",
     },
     gentlemen: {
-      colors: ["#BB9F89", "#CFAEA7", "#E9CFC2", "#E5D7CE"] as const,
-      description: "Semi-formal attire for gentlemen",
+      colors: ["#FFB4A7", "#DE8189", "#F2CFBB", "#DDBC9D"] as const,
+      description: "",
     },
   },
   guests2: {
@@ -1011,7 +1011,7 @@ export function Details() {
                   </p>
                 </ReminderCard>
 
-                <ReminderCard title="Strictly Formal" variant="accent">
+                <ReminderCard title="Semi-formal vs. Strictly-formal" variant="accent">
                   <div className="space-y-2.5">
                     <p>
                       Kindly follow our suggested attire and color palette above to match our wedding
