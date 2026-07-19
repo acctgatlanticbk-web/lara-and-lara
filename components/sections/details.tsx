@@ -181,11 +181,11 @@ const attireGuide = {
     imageAspect: "677/369",
     ladies: {
       colors: ["#FFB4A7", "#DE8189", "#F2CFBB", "#DDBC9D"] as const,
-      description: "",
+      description: "Formal Dresses",
     },
     gentlemen: {
       colors: ["#FFB4A7", "#DE8189", "#F2CFBB", "#DDBC9D"] as const,
-      description: "",
+      description: "Formal Attire for Gentlemen",
     },
   },
   guests2: {
@@ -1011,7 +1011,7 @@ export function Details() {
                   </p>
                 </ReminderCard>
 
-                <ReminderCard title="Semi-formal vs. Strictly-formal" variant="accent">
+                <ReminderCard title="Strictly Formal" variant="accent">
                   <div className="space-y-2.5">
                     <p>
                       Kindly follow our suggested attire and color palette above to match our wedding
