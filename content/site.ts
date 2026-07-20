@@ -5,11 +5,11 @@ import {
 
 export const siteConfig = {
   couple: {
-    bride: "May Manalo", //Noenyl Bryle M. Gonzaga
+    bride: "Lara", //Noenyl Bryle M. Gonzaga
     brideNickname: "Lara", //Ltryl
-    groom: "Toto Irinco", //Ltryl B. Benitez
-    groomNickname: "Lara",
-    monogram:"/monogram/monogram.png" ,//Ltryl
+    groom: "Deng", //Ltryl B. Benitez
+    groomNickname: "Deng",
+    monogram:"/monogram/newMonogram.png" ,//Ltryl
     backgroundMusic:"/background_music/Pasilyo (by_ @sunkissedlolamusic) Violin Cover by Emil Francisco.mp3"
   },
   googleAPI:{
@@ -25,12 +25,22 @@ export const siteConfig = {
     googleShare: "https://docs.google.com/spreadsheets/d/1aNRnpQ8Aiaa_iTjZMhV98lFaJCiALaaSdCAywIX8rZA/edit?usp=sharing", 
   },
   wedding: {
-    date: "August 20,2026",
+    date: "December 13, 2026",
     time: "1:00 PM",
     venue: "To Be Announced",
     tagline: "are getting married!!!!!",
     theme: "Our wedding palette is inspired by timeless elegance and warmth.Motif Colors: Champagne Gold, Soft Beige, Warm Soft Brown",
     motif: "#BBCED5, #B9C3A8, #F3D8C5, #D1C4D4, #ECD8BA, #F4E8D8, #E1DCCF",
+  },
+  hero: {
+    togetherWith: "Together with",
+    hosts: {
+      first: "Emanuel Dengabriel",
+      second: "Imanuel Yoshua",
+    },
+    inviteLine: "invite you to celebrate the",
+    eventTitle: "Renewal of Vows",
+    eventSubtitle: "Silver Wedding Anniversary",
   },
   proposal: {
     // Use "Maid of Honor" for unmarried, "Matron of Honor" for married
@@ -40,7 +50,7 @@ export const siteConfig = {
   },
   details: {
     rsvp: {
-      deadline: "August 10, 2026",
+      deadline: "December 13, 2026",
       coordinator: "To Be Announced",
       phone: "To Be Announced",
     },
@@ -72,7 +82,7 @@ export const siteConfig = {
     location: "To Be Announced",
     venue: "To Be Announced",
     map: "https://maps.app.goo.gl/6Uo3aPZHLPf4DmNAA",
-    date: "August 20, 2026",
+    date: "December 13, 2026",
     day: "Thursday",
     time: "1:00 PM",
     entourageTime: "12:00 PM",
@@ -83,7 +93,7 @@ export const siteConfig = {
     location: "To Be Announced",
     venue: "To Be Announced",
     map: "https://maps.app.goo.gl/6Uo3aPZHLPf4DmNAA",
-    date: "August 20, 2026",
+    date: "December 13, 2026",
     day: "Thursday",
     time: "5:00 PM",
     image: ["/Details/reception1.webp", "/Details/reception2.webp","/Details/reception3.webp"],

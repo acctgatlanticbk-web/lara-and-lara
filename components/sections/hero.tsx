@@ -138,7 +138,7 @@ export function Hero({ visible = true }: HeroProps) {
           />
 
           <div
-            className={`flex justify-center mb-4 sm:mb-5 ${
+            className={`flex justify-center mt-8 sm:mt-10 mb-8 sm:mb-10 ${
               phase >= 1
                 ? "opacity-100 scale-100 transition-all duration-700 ease-out"
                 : "opacity-0 scale-95 transition-all duration-700 ease-out"
@@ -158,17 +158,6 @@ export function Hero({ visible = true }: HeroProps) {
             />
           </div>
 
-          <p
-            className={`${aboveTheBeyond.className} text-[1rem] leading-none min-[400px]:text-[1.1rem] sm:text-[1.2rem] md:text-[1.3rem] ${vis(2)}`}
-            style={{
-              color: "var(--color-welcome-green)",
-              textShadow:
-                "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
-            }}
-          >
-            Together with their families
-          </p>
-
           <div className={`mt-4 mb-4 sm:mt-5 sm:mb-5 ${vis(2)}`}>
             <OrnamentalDivider compact />
           </div>
@@ -182,7 +171,7 @@ export function Hero({ visible = true }: HeroProps) {
                 lineHeight: 1.1,
               }}
             >
-              Silver Wedding
+              {siteConfig.hero.eventTitle}
             </p>
             <p
               className={`${aboveTheBeyond.className} mx-auto w-fit max-w-full px-1 leading-[0.9]`}
@@ -194,7 +183,7 @@ export function Hero({ visible = true }: HeroProps) {
                   "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
               }}
             >
-              anniversary celebration
+              {siteConfig.hero.eventSubtitle}
             </p>
           </div>
 
@@ -205,8 +194,8 @@ export function Hero({ visible = true }: HeroProps) {
             style={{
               transitionDelay: "40ms",
               backgroundColor: "var(--color-welcome-navy)",
-              WebkitMaskImage: "url(/Details/coupleName.png)",
-              maskImage: "url(/Details/coupleName.png)",
+              WebkitMaskImage: "url(/Details/couplenames.png)",
+              maskImage: "url(/Details/couplenames.png)",
               WebkitMaskSize: "contain",
               maskSize: "contain",
               WebkitMaskRepeat: "no-repeat",
@@ -217,6 +206,59 @@ export function Hero({ visible = true }: HeroProps) {
                 "drop-shadow(0 2px 12px color-mix(in srgb, var(--color-motif-deep) 12%, transparent))",
             }}
           />
+
+          <div className={`mt-6 sm:mt-7 space-y-3 sm:space-y-3.5 ${vis(3)}`} style={{ transitionDelay: "80ms" }}>
+            <div className="flex flex-col items-center gap-1.5 sm:gap-2">
+              <p
+                className={`${aboveTheBeyond.className} text-[1rem] leading-snug min-[400px]:text-[1.1rem] sm:text-[1.15rem]`}
+                style={{
+                  color: "var(--color-welcome-green)",
+                  textShadow:
+                    "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
+                }}
+              >
+                {siteConfig.hero.togetherWith}
+              </p>
+              <p
+                className={`${theSeasons.className} leading-tight tracking-[0.06em] min-[400px]:tracking-[0.08em] sm:tracking-[0.10em]`}
+                style={{
+                  fontSize: "clamp(1.05rem, 3.2vw, 1.35rem)",
+                  color: "var(--color-welcome-navy)",
+                }}
+              >
+                {siteConfig.hero.hosts.first}
+              </p>
+              <p
+                className={`${aboveTheBeyond.className} leading-none text-[0.95rem] min-[400px]:text-[1.05rem] sm:text-[1.15rem]`}
+                style={{
+                  color: "var(--color-welcome-green)",
+                  textShadow:
+                    "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
+                }}
+              >
+                and
+              </p>
+              <p
+                className={`${theSeasons.className} leading-tight tracking-[0.06em] min-[400px]:tracking-[0.08em] sm:tracking-[0.10em]`}
+                style={{
+                  fontSize: "clamp(1.05rem, 3.2vw, 1.35rem)",
+                  color: "var(--color-welcome-navy)",
+                }}
+              >
+                {siteConfig.hero.hosts.second}
+              </p>
+            </div>
+
+            <p
+              className={`${cinzel.className} mx-auto max-w-[18rem] font-medium uppercase leading-relaxed tracking-[0.18em] min-[400px]:tracking-[0.22em] sm:max-w-xs sm:tracking-[0.26em]`}
+              style={{
+                fontSize: "clamp(0.58rem, 1.45vw, 0.72rem)",
+                color: "rgba(28, 28, 30, 0.52)",
+              }}
+            >
+              {siteConfig.hero.inviteLine}
+            </p>
+          </div>
 
           <div className={`mt-6 sm:mt-7 ${vis(4)}`}>
             <div className="mx-auto flex w-full max-w-[20rem] flex-col items-center gap-3 sm:max-w-sm sm:gap-3.5">

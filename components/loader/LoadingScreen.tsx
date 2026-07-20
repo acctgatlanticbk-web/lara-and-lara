@@ -3,14 +3,10 @@
 import React, { useEffect, useState, useRef } from "react"
 import { siteConfig } from "@/content/site"
 import { SectionCornerDecorations } from "@/components/section-corner-decorations"
+import { parseWeddingDate } from "@/lib/wedding-date"
 import localFont from "next/font/local"
 import { Cinzel } from "next/font/google"
 import Image from "next/image"
-
-const brittany = localFont({
-  src: "../../Font/brittany-signature-script/BrittanySignatureScript.ttf",
-  display: "swap",
-})
 
 const cinzel = Cinzel({
   subsets: ["latin"],
@@ -19,6 +15,11 @@ const cinzel = Cinzel({
 
 const theSeasons = localFont({
   src: "../../Font/Fontspring-DEMO-theseasons-reg.otf",
+  display: "swap",
+})
+
+const aboveTheBeyond = localFont({
+  src: "../../Font/above-the-beyond-script.otf",
   display: "swap",
 })
 
@@ -45,8 +46,28 @@ function getDaysUntil(dateStr: string): number {
   return Math.max(0, Math.round((target.getTime() - today.getTime()) / 86_400_000))
 }
 
-const GHOST_NUMBERS = getDateSegments(siteConfig.wedding.date)
-const DAYS_REMAINING = getDaysUntil(siteConfig.wedding.date)
+const EVENT_DATE = siteConfig.ceremony.date ?? siteConfig.wedding.date
+const GHOST_NUMBERS = getDateSegments(EVENT_DATE)
+const DAYS_REMAINING = getDaysUntil(EVENT_DATE)
+const PARSED_EVENT = parseWeddingDate(EVENT_DATE)
+const CEREMONY_DAY = (siteConfig.ceremony.day ?? PARSED_EVENT.dayOfWeek).toUpperCase()
+const CEREMONY_TIME = siteConfig.ceremony.time ?? siteConfig.wedding.time
+
+const dateLabelStyle = {
+  fontFamily: "var(--font-cinzel), Cinzel, serif",
+  fontSize: "clamp(0.54rem, 1.3vw, 0.66rem)",
+  letterSpacing: "0.20em",
+  textTransform: "uppercase" as const,
+  color: "rgba(28, 28, 30, 0.48)",
+}
+
+const verticalRuleStyle = {
+  width: "1px",
+  height: "clamp(2rem, 5.5vw, 2.75rem)",
+  background:
+    "linear-gradient(to bottom, transparent, color-mix(in srgb, var(--color-motif-deep) 22%, transparent), transparent)",
+  flexShrink: 0,
+}
 
 /** Recumbent figure-eight infinity (jump-loader path) */
 const INFINITY_PATH =
@@ -58,15 +79,22 @@ const INFINITY_PATH_LEN = 242.776657104492
 function InfinityLoader({ visible }: { visible: boolean }) {
   return (
     <div
-      className={`relative flex h-10 w-[4.75rem] items-center justify-center sm:h-12 sm:w-[5.75rem] ${
+      className={`relative flex h-11 w-[5.25rem] items-center justify-center sm:h-[3.25rem] sm:w-[6.25rem] ${
         visible ? "scale-100 opacity-100" : "scale-95 opacity-0"
       } transition-all duration-700 ease-out`}
       aria-hidden
     >
+      <div
+        className="absolute inset-0 rounded-full opacity-40 blur-md"
+        style={{
+          background:
+            "radial-gradient(circle, color-mix(in srgb, var(--color-welcome-green) 35%, transparent) 0%, transparent 70%)",
+        }}
+      />
       <svg
         viewBox="0 0 187.3 93.7"
         preserveAspectRatio="xMidYMid meet"
-        className="relative h-full w-full overflow-visible"
+        className="relative h-full w-full overflow-visible drop-shadow-sm"
         aria-hidden
       >
         <path
@@ -90,6 +118,162 @@ function InfinityLoader({ visible }: { visible: boolean }) {
           strokeMiterlimit={10}
         />
       </svg>
+    </div>
+  )
+}
+
+function CeremonyDateDisplay({ visible }: { visible: boolean }) {
+  return (
+    <div
+      className={`mx-auto flex w-full max-w-[18rem] flex-col items-center gap-2.5 sm:max-w-[19rem] sm:gap-3 ${
+        visible
+          ? "opacity-100 translate-y-0 transition-all duration-700 ease-out"
+          : "opacity-0 translate-y-4 transition-all duration-700 ease-out"
+      }`}
+      aria-label={`${CEREMONY_DAY}, ${EVENT_DATE} at ${CEREMONY_TIME}`}
+    >
+      <div
+        className="h-px w-full max-w-[9rem]"
+        style={{
+          background:
+            "linear-gradient(to right, transparent, color-mix(in srgb, var(--color-motif-deep) 28%, transparent), transparent)",
+        }}
+      />
+
+      <p
+        className={`${cinzel.className} font-semibold uppercase tracking-[0.28em] sm:tracking-[0.32em]`}
+        style={{
+          ...dateLabelStyle,
+          color: "rgba(28, 28, 30, 0.55)",
+          fontSize: "clamp(0.6rem, 1.45vw, 0.74rem)",
+          letterSpacing: "0.28em",
+        }}
+      >
+        {PARSED_EVENT.month}
+      </p>
+
+      <div className="flex w-full items-center justify-center" style={{ lineHeight: 1 }}>
+        <p
+          className={`${cinzel.className} shrink-0 font-semibold uppercase`}
+          style={{
+            ...dateLabelStyle,
+            paddingRight: "clamp(0.55rem, 1.8vw, 0.85rem)",
+          }}
+        >
+          {CEREMONY_DAY}
+        </p>
+
+        <div style={verticalRuleStyle} aria-hidden />
+
+        <p
+          className={`${theSeasons.className} shrink-0 tabular-nums`}
+          style={{
+            fontSize: "clamp(2.15rem, 7vw, 3rem)",
+            letterSpacing: "-0.01em",
+            color: "var(--color-welcome-navy)",
+            padding: "0 clamp(0.55rem, 1.8vw, 0.85rem)",
+            lineHeight: 1,
+          }}
+        >
+          {PARSED_EVENT.day}
+        </p>
+
+        <div style={verticalRuleStyle} aria-hidden />
+
+        <p
+          className={`${cinzel.className} shrink-0 font-semibold uppercase`}
+          style={{
+            ...dateLabelStyle,
+            letterSpacing: "0.12em",
+            paddingLeft: "clamp(0.55rem, 1.8vw, 0.85rem)",
+          }}
+        >
+          At {CEREMONY_TIME}
+        </p>
+      </div>
+
+      <p
+        className={`${cinzel.className} font-semibold uppercase tabular-nums tracking-[0.28em] sm:tracking-[0.32em]`}
+        style={{
+          ...dateLabelStyle,
+          color: "rgba(28, 28, 30, 0.42)",
+          fontSize: "clamp(0.6rem, 1.45vw, 0.74rem)",
+          letterSpacing: "0.28em",
+        }}
+      >
+        {PARSED_EVENT.year}
+      </p>
+    </div>
+  )
+}
+
+function LoadingProgress({
+  progress,
+  visible,
+}: {
+  progress: number
+  visible: boolean
+}) {
+  return (
+    <div
+      className={`mt-7 flex w-full max-w-[16rem] flex-col items-center sm:max-w-[18rem] ${
+        visible
+          ? "opacity-100 translate-y-0 transition-all duration-700 ease-out"
+          : "opacity-0 translate-y-4 transition-all duration-700 ease-out"
+      }`}
+    >
+      <InfinityLoader visible={visible} />
+
+      <div className="mt-5 w-full">
+        <div
+          className="mb-2.5 flex items-center justify-between gap-3"
+          style={{ fontFamily: "var(--font-cinzel), Cinzel, serif" }}
+        >
+          <p
+            className="font-semibold uppercase"
+            style={{
+              fontSize: "clamp(0.56rem, 1.35vw, 0.66rem)",
+              letterSpacing: "0.22em",
+              color: "color-mix(in srgb, var(--color-welcome-text) 62%, transparent)",
+            }}
+          >
+            Preparing your invitation
+          </p>
+          <p
+            className="shrink-0 tabular-nums font-semibold uppercase"
+            style={{
+              fontSize: "clamp(0.56rem, 1.35vw, 0.66rem)",
+              letterSpacing: "0.18em",
+              color: "var(--color-welcome-green)",
+            }}
+            aria-live="polite"
+          >
+            {progress}%
+          </p>
+        </div>
+
+          <div
+            className="relative h-1.5 w-full overflow-hidden rounded-full"
+            style={{
+              background:
+                "color-mix(in srgb, var(--color-motif-deep) 10%, var(--color-welcome-bg))",
+              boxShadow: "inset 0 1px 2px color-mix(in srgb, var(--color-motif-deep) 8%, transparent)",
+            }}
+            aria-hidden
+          >
+            <div
+              className="loader-progress-fill absolute inset-y-0 left-0 overflow-hidden rounded-full"
+            style={{
+              width: `${progress}%`,
+              background:
+                "linear-gradient(90deg, var(--color-welcome-green), color-mix(in srgb, var(--color-welcome-navy) 75%, var(--color-welcome-green)))",
+              boxShadow:
+                "0 0 12px color-mix(in srgb, var(--color-welcome-green) 35%, transparent)",
+              transition: "width 280ms ease-out",
+            }}
+          />
+        </div>
+      </div>
     </div>
   )
 }
@@ -455,6 +639,28 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             stroke-dashoffset: ${INFINITY_PATH_LEN * -0.99};
           }
         }
+
+        .loader-progress-fill::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.35) 50%,
+            transparent 100%
+          );
+          animation: loader-progress-shimmer 1.8s ease-in-out infinite;
+        }
+
+        @keyframes loader-progress-shimmer {
+          0% {
+            transform: translateX(-120%);
+          }
+          100% {
+            transform: translateX(120%);
+          }
+        }
       `}</style>
 
       <div
@@ -548,17 +754,31 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
           </div>
 
           <p
-            className={`${brittany.className} ${vis(1)}`}
+            className={`${theSeasons.className} ${vis(1)} uppercase`}
             style={{
-              fontSize: "clamp(1.85rem, 4.5vw, 2.75rem)",
+              fontSize: "clamp(1.35rem, 3.8vw, 2rem)",
               color: "var(--color-welcome-navy)",
-              lineHeight: 0.95,
+              lineHeight: 1.1,
+              letterSpacing: "0.10em",
               marginTop: "clamp(1rem, 2.8vh, 1.5rem)",
-              marginBottom: "clamp(0.85rem, 2.2vh, 1.35rem)",
-              letterSpacing: "0.02em",
+              marginBottom: "clamp(0.35rem, 1.2vh, 0.65rem)",
             }}
           >
-            Save the Date
+            {siteConfig.hero.eventTitle}
+          </p>
+
+          <p
+            className={`${aboveTheBeyond.className} ${vis(1)}`}
+            style={{
+              fontSize: "clamp(1.05rem, 2.8vw, 1.35rem)",
+              color: "var(--color-welcome-green)",
+              lineHeight: 1,
+              marginBottom: "clamp(0.85rem, 2.2vh, 1.35rem)",
+              textShadow:
+                "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
+            }}
+          >
+            {siteConfig.hero.eventSubtitle}
           </p>
 
           <p
@@ -570,7 +790,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
               marginTop: 0,
             }}
           >
-            {DAYS_REMAINING} more days to go
+            {DAYS_REMAINING} {DAYS_REMAINING === 1 ? "day" : "days"} to go
           </p>
 
           <div className={`mt-3 ${vis(1)}`}>
@@ -594,17 +814,19 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                   "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 8px 28px color-mix(in srgb, var(--color-motif-deep) 6%, transparent)",
               }}
             >
-              {siteConfig.couple.brideNickname.trim()}
+              {siteConfig.couple.groomNickname.trim()}
             </span>
 
             <span
-              className={`${brittany.className} block`}
+              className={`${aboveTheBeyond.className} block`}
               style={{
                 fontSize: "clamp(1.35rem, 3.5vw, 2.1rem)",
                 color: "var(--color-welcome-green)",
                 lineHeight: 1.1,
                 marginTop: "clamp(0.45rem, 2vw, 0.95rem)",
                 marginBottom: "clamp(0.45rem, 2vw, 0.95rem)",
+                textShadow:
+                  "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
               }}
             >
               and
@@ -621,7 +843,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
                   "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 8px 28px color-mix(in srgb, var(--color-motif-deep) 6%, transparent)",
               }}
             >
-              {siteConfig.couple.groomNickname.trim()}
+              {siteConfig.couple.brideNickname.trim()}
             </span>
           </h1>
         </div>
@@ -631,72 +853,58 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
             <OrnamentalDivider compact />
           </div>
 
-          <p
-            className={`${cinzel.className} mt-4 font-semibold uppercase ${vis(3)}`}
-            style={{
-              fontSize: "clamp(0.62rem, 1.5vw, 0.74rem)",
-              letterSpacing: "0.28em",
-              color: "color-mix(in srgb, var(--color-welcome-text) 72%, transparent)",
-              transitionDelay: "80ms",
-            }}
-          >
-            Together with their families
-          </p>
-
-          <p
-            className={`${cinzel.className} mt-4 font-semibold uppercase leading-none ${vis(4)}`}
-            style={{
-              fontSize: "clamp(0.64rem, 1.6vw, 0.78rem)",
-              letterSpacing: "0.24em",
-              color: "color-mix(in srgb, var(--color-welcome-navy) 78%, transparent)",
-            }}
-            aria-label={`${siteConfig.ceremony.day}, ${siteConfig.wedding.date} · ${siteConfig.ceremony.time}`}
-          >
-            <span>{siteConfig.ceremony.day}</span>
-            <span
-              className="mx-2"
-              style={{ color: "color-mix(in srgb, var(--color-motif-deep) 22%, transparent)" }}
-              aria-hidden
-            >
-              ·
-            </span>
-            <span className="tabular-nums">{siteConfig.wedding.date}</span>
-            <span
-              className="mx-2"
-              style={{ color: "color-mix(in srgb, var(--color-motif-deep) 22%, transparent)" }}
-              aria-hidden
-            >
-              ·
-            </span>
-            <span className="tabular-nums">{siteConfig.ceremony.time}</span>
-          </p>
-
-          <div className={`mt-8 flex flex-col items-center ${vis(5)}`}>
-            <InfinityLoader visible={phase >= 5} />
-
+          <div className={`${vis(3)} flex flex-col items-center gap-1.5 sm:gap-2`}>
             <p
-              className={`${cinzel.className} mt-5 font-semibold uppercase`}
+              className={`${aboveTheBeyond.className}`}
               style={{
-                fontSize: "clamp(0.58rem, 1.4vw, 0.68rem)",
-                letterSpacing: "0.26em",
-                color: "color-mix(in srgb, var(--color-welcome-text) 58%, transparent)",
+                fontSize: "clamp(1rem, 2.6vw, 1.2rem)",
+                color: "var(--color-welcome-green)",
+                lineHeight: 1.1,
+                textShadow:
+                  "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
               }}
             >
-              Preparing your invitation
+              {siteConfig.hero.togetherWith}
             </p>
-
             <p
-              className={`${cinzel.className} mt-3 tabular-nums font-semibold uppercase`}
+              className={`${theSeasons.className}`}
               style={{
-                fontSize: "clamp(0.54rem, 1.2vw, 0.62rem)",
-                letterSpacing: "0.28em",
-                color: "color-mix(in srgb, var(--color-welcome-text) 42%, transparent)",
+                fontSize: "clamp(0.95rem, 2.4vw, 1.15rem)",
+                color: "var(--color-welcome-navy)",
+                letterSpacing: "0.06em",
               }}
-              aria-live="polite"
             >
-              {progress}%
+              {siteConfig.hero.hosts.first}
+            </p>
+            <p
+              className={`${aboveTheBeyond.className}`}
+              style={{
+                fontSize: "clamp(0.95rem, 2.4vw, 1.1rem)",
+                color: "var(--color-welcome-green)",
+                lineHeight: 1,
+                textShadow:
+                  "0 1px 0 color-mix(in srgb, var(--color-welcome-bg) 95%, white), 0 0 10px color-mix(in srgb, var(--color-welcome-bg) 65%, white)",
+              }}
+            >
+              and
+            </p>
+            <p
+              className={`${theSeasons.className}`}
+              style={{
+                fontSize: "clamp(0.95rem, 2.4vw, 1.15rem)",
+                color: "var(--color-welcome-navy)",
+                letterSpacing: "0.06em",
+              }}
+            >
+              {siteConfig.hero.hosts.second}
             </p>
           </div>
+
+          <div className={`mt-5 sm:mt-6 ${vis(4)}`}>
+            <CeremonyDateDisplay visible={phase >= 4} />
+          </div>
+
+          <LoadingProgress progress={progress} visible={phase >= 5} />
         </div>
       </div>
     </>

@@ -167,7 +167,7 @@ export function LoveStory() {
   layout="image-left"
   isLast={true}
   imageSrc="/mobile-background/image.png"
-  title="Twenty-Five Years of Memories"
+  title="Twenty Five Years of Memories"
   text={
     <>
       <p className="mb-4">
